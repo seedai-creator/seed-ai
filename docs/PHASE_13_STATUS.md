@@ -29,8 +29,8 @@ Em implementação desde 10/10/2026. **NOT READY FOR CLOSED BETA.** A aprovaçã
 
 | Item | Situação | Responsável / próximo passo |
 | --- | --- | --- |
-| Staging isolado | Não existe | Titular cria seed-ai-staging vazio no Supabase; informar URL, guardar secrets localmente |
-| Versionamento remoto | `origin` vinculado a `seedai-creator/seed-ai`; vazio e público na inspeção | Histórico local preparado; aguardar decisão sobre privacidade; nenhum código enviado ou CI remoto executado |
+| Staging isolado | Projeto `dgqvcvebydjxxkuvrgkl` conectado, schema instalado pelo titular e nove verificações de integração aprovadas | Configurar aplicação e provedores de testes; validar navegador, e-mail, integrações e recuperação |
+| Versionamento remoto | `origin` vinculado a `seedai-creator/seed-ai`; titular autorizou expressamente o envio público em 10/10/2026 | Enviar histórico local revisado e confirmar execução do CI; proteção de branch ainda pendente |
 | Backups e plano de banco | Não confirmados | Titular confirma plano, frequência e retenção no Supabase; não contratar automaticamente |
 | Restore em staging | Não executado | Realizar com fixtures e backup, medir tempo, conferir dados e permissões |
 | Credenciais já expostas anteriormente | Rotação não comprovada | Rotacionar no provider e substituir no ambiente; não basta remover uma mensagem ou arquivo |
@@ -66,17 +66,17 @@ Legenda: **local** = código/testes locais, ainda sujeito a staging; **parcial**
 
 | Critério | Estado / evidência e pendência |
 | --- | --- |
-| 1. Ambientes separados | Parcial: validador bloqueia o banco de produção; novo staging ainda não fornecido |
+| 1. Ambientes separados | Parcial: banco staging `dgqvcvebydjxxkuvrgkl` instalado e testado; validador bloqueia produção; aplicação e Preview ainda pendentes |
 | 2. Secrets | Parcial: servidor, arquivos ignorados, logs filtrados; rotação histórica não comprovada |
 | 3. Secret scanning | Local: scanner de arquivos versionáveis; não substitui análise de histórico/ferramenta especializada |
 | 4. CI/CD | Parcial: workflow sem secrets/deploy; execução remota e proteção de branch pendentes |
-| 5. Migrações | Local: testes PostgreSQL/PGlite; aplicação real em staging pendente |
+| 5. Migrações | Bootstrap das 32 migrações aplicado pelo titular em staging; controles e contratos de acesso validados via API; ensaio de upgrade/rollback e histórico CLI pendentes |
 | 6. Rollback | Procedimento escrito; ensaio pendente |
 | 7–8. Flags e kill switches | Local: flags centralizadas e controles no banco; ensaio em múltiplas instâncias pendente |
 | 9. Checklist Supabase | Procedimento escrito; configuração do titular pendente |
 | 10–11. Backup/restore | Pendentes: contratação/configuração não presumidas, nenhum restore drill realizado |
-| 12–13. RLS/cross-tenant | Local: suíte e testes novos de beta/RPC; confirmar PostgREST/Auth reais |
-| 14. Auth | Parcial: login/cadastro existentes, recuperação adicionada; SMTP e links reais pendentes |
+| 12–13. RLS/cross-tenant | Local e staging: Auth/PostgREST reais validaram perfis, memberships, empresas, fatos, suporte, revogação e RPCs críticos; cobertura das demais entidades e E2E ainda pendente |
+| 14. Auth | Parcial: duas contas fictícias convidadas e login por senha validados no Auth real, registro sem convite rejeitado; SMTP, links e navegador ainda pendentes |
 | 15–16. RBAC/admin | Parcial: papéis, auditoria, confirmação e versões; MFA e recuperação administrativa pendentes |
 | 17–18. Inputs/Structured Outputs | Local: contratos existentes e limite de corpo por bytes/tempo; testes adversariais remotos pendentes |
 | 19. XSS/CSRF/CORS/headers | Local: origem sem confiar em Host, CSP nonce, headers; navegador/produção pendentes |
@@ -137,3 +137,18 @@ Legenda: **local** = código/testes locais, ainda sujeito a staging; **parcial**
 | Dependências de produção | Auditoria executada com zero vulnerabilidades conhecidas; cinco alertas altos permanecem na cadeia dev de lint |
 
 A regressão foi fechada por reexecução direcionada de todos os casos afetados, não por ocultação das falhas iniciais. Evidências locais em `.test-build/phase-13-*.log/json` (ignoradas no Git, sem inclusão de credenciais). O servidor temporário da porta 3002 foi encerrado depois dos testes. Nenhum desses testes substitui navegador autenticado, integrações reais, carga/restore em staging ou avaliação de IA desta fase.
+
+## Preparação do staging em 10/10/2026
+
+- Criado `.env.staging.local` privado, ignorado pelo Git, sem copiar credenciais da produção. O titular salvou as chaves do novo projeto diretamente no arquivo.
+- Verificação inicial detectou schema ausente (`PGRST205`). Após o titular aplicar o bootstrap, a consulta confirmou a instalação com beta fechado, IA e uploads pausados. Nenhuma migração foi aplicada em produção.
+- Instalador inicial gerado a partir das 32 migrações, com transação única e proteção contra banco preenchido. O titular executou o SQL no projeto de staging porque o controle do navegador está indisponível.
+- Dois testes locais aprovados: configuração rejeita produção/hosts inválidos/chaves ausentes; bootstrap verifica rollback integral, instalação completa, RLS em todas as tabelas públicas, bloqueio de segunda instalação e IA/uploads pausados.
+- Lint dos scripts aprovado. Scanner executado em 392 arquivos versionáveis, sem achados. A instalação inicial manual não registra histórico da CLI do Supabase; reconciliar antes de adotar `db push`.
+- A aplicação ainda não foi iniciada usando staging. `.env.staging.local` é carregado somente pelos scripts de preparação/verificação; SMTP, provedores externos e administrador de testes ainda precisam de configuração e validação. As contas fictícias da integração foram temporárias e já removidas.
+
+### Integração real no novo Supabase
+
+`npm run staging:test` aprovado em 10/10/2026, com nove grupos de verificações: controles fechados/IA pausada; cadastro exige convite; dois logins reais com perfis e empresas independentes; negação de leitura anônima e de leitura/alteração de outra empresa; memória confirmada e isolamento da RPC; usuário sem acesso para alterar controles administrativos; suporte isolado; revogação bloqueia dados/RPCs mas preserva pedidos de privacidade; expiração bloqueia acesso.
+
+Contas criadas somente pela API administrativa para fixtures, com e-mails fictícios e confirmação administrativa. Isso **não valida entrega de e-mail, confirmação pelo usuário, recuperação de senha nem fluxos de navegador**. Nenhuma conta recebeu papel administrativo, PRO ou orçamento adicional. Controles operacionais preservados; nenhuma chamada a OpenAI/Stripe. Limpeza confirmada de usuários, empresas, convites e registros associados ao teste. Relatório em `.test-build/staging-integration-report.json`; manifesto privado em `.test-build/staging-integration-state.json` com estado `cleaned`.

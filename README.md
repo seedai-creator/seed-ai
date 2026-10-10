@@ -17,7 +17,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; preparação de segurança e operação para beta fechado. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: em implementação; staging separado instalado e nove verificações reais de Auth/RLS aprovadas. Aplicação, integrações e operação do beta ainda em preparação. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
 
 ## Executar localmente
@@ -56,6 +56,13 @@ fixtures e recursos externos desligados; não use esse build em produção.
 `node scripts/verify-build.mjs --serve` abre esse build em `127.0.0.1:3002`
 apenas para testes HTTP anônimos. A Fase 13 permanece bloqueada para beta até
 as validações remotas e operacionais descritas no relatório.
+
+Preparação do banco de staging: `npm run staging:prepare` gera o instalador
+inicial para um banco vazio; `npm run staging:check` verifica conexão/schema;
+`npm run staging:test` executa testes remotos com contas fictícias temporárias
+e limpeza ao terminar, mantendo IA pausada. Esses comandos usam exclusivamente
+`.env.staging.local`, ignorado pelo Git. Esse arquivo não inicia nem configura
+automaticamente o app Next.js. Consulte o procedimento antes de executar.
 
 ## Uso
 1. Criar conta com nome, e-mail e senha; confirmar o e-mail e entrar.

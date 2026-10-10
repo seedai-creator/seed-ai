@@ -16,9 +16,19 @@ Estado: implementação local; beta fechado ainda não liberado. Este documento 
 
 O build `npm run build:verify` usa fixtures e não comprova conexão com staging, SMTP, Stripe ou OpenAI. Não deve ser publicado nem usado para atender usuários.
 
+### Configuração inicial recebida
+
+O titular informou o projeto de staging `dgqvcvebydjxxkuvrgkl`, distinto da produção `gqumxaapjyujrpqggnon`. As chaves devem permanecer somente em `.env.staging.local`, ignorado pelo Git. Esse arquivo é lido explicitamente pelos scripts abaixo e **não é carregado automaticamente pelo Next.js**. A configuração da aplicação e dos demais provedores ainda precisa ser concluída antes de executar o app contra staging.
+
+- `npm run staging:prepare`: reúne as migrações em `.test-build/staging-bootstrap.sql`, com hashes das fontes, sem acessar serviços externos. Esse SQL destina-se apenas à instalação inicial no projeto vazio. Exige ausência de tabelas públicas e usuários Auth, aplica tudo numa transação e deixa beta fechado, IA e uploads pausados. Não clona dados, cria usuários ou concede acesso administrativo.
+- `npm run staging:check`: lê somente o arquivo privado de staging, valida projeto/URL e verifica a chave pública e a tabela de controles no projeto informado. Não imprime credenciais e não altera o banco.
+- `npm run staging:test`: teste remoto explícito de Auth/PostgREST/RLS, usando contas e empresas fictícias temporárias. Exige beta fechado, IA e uploads pausados. Não altera esses controles nem usa OpenAI/Stripe. Apaga somente as fixtures identificadas pelo manifesto da execução; rejeita empresas compartilhadas com outros usuários. Não executar simultaneamente. Se a limpeza falhar, revisar `.test-build/staging-integration-state.json` antes de repetir; o script recusa um manifesto anterior ainda pendente. Relatório em `.test-build/staging-integration-report.json`, sem senhas ou tokens. Esse teste não valida e-mail, navegador ou todos os módulos do produto.
+
+Revisar o projeto selecionado no SQL Editor antes de instalar o bootstrap. Se houver erro, a transação inteira deve ser revertida; não executar trechos isolados nem retirar a proteção de banco vazio. O bootstrap manual não registra histórico na tabela de migrações da CLI do Supabase; reconciliar esse histórico antes de adotar `supabase db push`, sem reaplicar migrações já instaladas.
+
 ## GitHub e publicação
 
-- Remoto informado: `https://github.com/seedai-creator/seed-ai.git`. Na inspeção inicial estava público e vazio. Aguardar a decisão do titular sobre privacidade antes do primeiro envio.
+- Remoto informado: `https://github.com/seedai-creator/seed-ai.git`. Titular autorizou expressamente o envio do código ao repositório público em 10/10/2026. Essa autorização não inclui credenciais, dados privados, publicação da aplicação ou alterações no banco de produção.
 - Executar scanner de secrets e revisar os arquivos do primeiro commit; `.env*`, `.vercel`, `.test-build`, dependências e artefatos de build ficam fora do Git. Somente `.env.example` é versionável.
 - O workflow `SEED quality gates` instala dependências, verifica secrets, auditoria de produção, lint, tipos, testes/migrações locais e build isolado. Actions fixadas por SHA; permissões de leitura; nenhum secret de produção e nenhum deploy.
 - Após o primeiro envio, confirmar o workflow verde e configurar proteção da branch exigindo o job `quality`. A existência do arquivo YAML não comprova execução nem bloqueio de merge.

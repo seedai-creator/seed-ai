@@ -17,7 +17,10 @@
     "eval:diagnosis": "tsc -p tsconfig.test.json && node scripts/eval-diagnosis.mjs",
     "eval:journal": "tsc -p tsconfig.test.json && node scripts/eval-journal.mjs",
     "security:scan": "node scripts/security-scan.mjs",
-    "build:verify": "node scripts/verify-build.mjs"
+    "build:verify": "node scripts/verify-build.mjs",
+    "staging:prepare": "node scripts/prepare-staging.mjs",
+    "staging:check": "node scripts/check-staging.mjs",
+    "staging:test": "node scripts/test-staging.mjs --run"
   },
   "engines": {
     "node": ">=22.0.0"
