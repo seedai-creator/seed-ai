@@ -1,0 +1,142 @@
+{
+  "reviewed_at": "2026-10-01T17:17:53.387Z",
+  "synthetic_only": true,
+  "scope": "Latest low-effort battery plus targeted rechecks after fixes; reviewed against rubrics. Not a statistical success-rate estimate.",
+  "cases": [
+    {
+      "id": "sell",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Entendo que você quer vender mais. Ainda não dá para recomendar uma ação comercial com segurança: primeiro precisamos descobrir se o limite está na chegada de interessados ou na conversão em vendas. Como próximo passo, compare contatos e vendas no mesmo período. Quantas pessoas interessadas procuraram sua empresa no último mês? Quantas dessas pessoas compraram? Com esses números, podemos escolher um teste pequeno e acompanhar se ele melhora as vendas.",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "discount",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Ainda não dá para recomendar 30% de desconto com segurança. Você informou que cobra R$ 100, mas, sem conhecer o custo e a margem, não sabemos se a venda com desconto continuaria vantajosa. Antes de oferecer a promoção, levante o custo por venda. Qual é esse custo? O que você pretende alcançar com o desconto? Depois, vale verificar o volume de vendas e a capacidade de atender mais pedidos antes de decidir.",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "hiring",
+      "source": "evals/reliability-complete_discount-hiring.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Ainda não dá para recomendar a contratação de dois vendedores com segurança. Antes de assumir esse custo, eu verificaria se a equipe atual está deixando oportunidades de venda sem atendimento; se estiver, vale comparar contratar com redistribuir o trabalho. Quantas oportunidades de venda ficam sem atendimento hoje? Qual seria o custo mensal total dos dois vendedores? Com esses dados, dá para avaliar a demanda e o compromisso financeiro antes de decidir.",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "ads",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Em setembro, você relata 300 leads e 21 vendas, mas a operação já está no limite. Por isso, ainda não é seguro recomendar dobrar os anúncios: mais procura pode aumentar atrasos sem gerar vendas que a equipe consiga atender.\n\nMinha prioridade seria identificar onde está o limite antes de ampliar a campanha. Quantas vendas adicionais a operação consegue entregar por mês, sem comprometer o atendimento? E, dos 300 leads de setembro, quantos receberam atendimento? Com essas respostas, dá para avaliar se o próximo passo é melhorar o atendimento, ampliar a capacidade ou testar mais anúncios em pequena escala.",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "expansion",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Ainda não dá para recomendar a abertura com segurança. Antes de comprometer capital, eu compararia a nova unidade com melhorar a operação atual ou testar a demanda em menor escala. O primeiro passo é verificar se há demanda suficiente e se a unidade atual gera caixa para sustentar a expansão sem comprometer a operação.\n\nHá sinais concretos de demanda na região onde você pensa em abrir? Quanto capital estaria disponível para investir?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "emotional",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Parece desgastante trabalhar tanto sem perceber avanço. Pelo seu relato, há muito esforço e uma sensação de estagnação, mas ainda não dá para identificar o gargalo nem recomendar uma mudança com segurança. O primeiro passo é escolher uma medida de avanço e comparar períodos iguais. O que você gostaria que estivesse melhorando agora: vendas, lucro ou outra coisa? Qual foi o resultado dessa medida nos dois últimos meses?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "conflict",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Ainda não dá para recomendar uma redução de preço com segurança: você estima margem de 18%, mas a planilha mostra 35%. Antes de decidir, vale conferir se os dois números usam a mesma base e incluem os mesmos custos. Se a margem real for menor, um desconto pode comprometer o ganho por venda. Como a planilha calcula os 35%? De onde vem a estimativa de 18%? Depois de conciliar os números, podemos avaliar o preço e os custos por venda.",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "hypothesis",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Pode ser, mas ainda não dá para concluir que o preço está alto nem recomendar uma redução com segurança. Antes de mudar, vale verificar se a dificuldade está no preço ou na forma como os clientes percebem a oferta. Qual é o preço atual do produto ou serviço que preocupa você? O que fez você suspeitar do preço: comentários de clientes ou queda nas vendas?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "negative",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "O teste enfraquece a hipótese de que o preço era o principal obstáculo: segundo seu relato, as objeções de preço sumiram, mas a conversão continua baixa e o tempo de resposta piorou. Isso não prova que a demora causou a baixa conversão. Ainda não dá para recomendar manter o preço reduzido com segurança, especialmente sem conhecer a margem.\n\nO próximo passo é comparar os contatos do período anterior e do teste: tempo até a primeira resposta e proporção que virou venda. Se a demora aparecer junto das perdas, vale testar uma resposta inicial mais rápida, sem ampliar o desconto, e revisar a conversão após o teste.\n\nVocês têm esses tempos e as quantidades de contatos e vendas nos dois períodos?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "simple",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Sinto que a loja esteja passando por um momento difícil. Por enquanto, não há dados suficientes para identificar o problema nem recomendar uma mudança com segurança. O primeiro passo é comparar as vendas dos dois últimos meses, usando períodos equivalentes. Quanto a loja vendeu em cada mês? E o que você percebeu mudar: o movimento de clientes ou a quantidade de compras?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "advanced",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "O CAC subiu 18%, o LTV está estável e a conversão comercial caiu, segundo seu relato. Isso sugere investigar primeiro a conversão antes de aumentar a aquisição, mas ainda não dá para apontar a causa com segurança.\n\nCompare a taxa de conversão por canal e etapa do funil nos dois períodos. O sinal a observar é onde a queda se concentra; depois, verifique se houve mudança na qualidade dos leads ou no processo comercial. Quais períodos você está comparando? Em qual etapa da conversão ocorreu a queda?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "causality",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Ainda não. Você relatou que as vendas subiram na mesma semana em que começou a campanha, mas essa coincidência não mostra, por si só, que a campanha causou o aumento. Outros fatores podem ter influenciado as vendas.\n\nAntes de atribuir o resultado à campanha, compare as vendas com um período anterior equivalente e verifique quantas vendas vieram de clientes alcançados por ela. Isso ajuda a avaliar a contribuição da campanha, sem tratar a comparação como prova definitiva. Você consegue identificar quais vendas vieram da campanha?",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "sufficient",
+      "source": "evals/reliability-sufficient.json",
+      "validation": "WITHHELD",
+      "error": null,
+      "sufficiency": "INSUFFICIENT",
+      "answer": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+      "notes": "Month-versus-week context: calculation withheld and clarification required."
+    },
+    {
+      "id": "thanks",
+      "source": "evals/reliability-all.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": null,
+      "answer": "Por nada!",
+      "notes": "Reviewed against fixture rubric."
+    },
+    {
+      "id": "complete_discount",
+      "source": "evals/reliability-complete_discount-hiring.json",
+      "validation": "PASSED",
+      "error": null,
+      "sufficiency": "PARTIALLY_SUFFICIENT",
+      "answer": "O preço unitário com o desconto proposto é 80. Esse valor é apenas o preço do cenário, não uma previsão de vendas ou de lucro. Recomendo testar o desconto somente na semana indicada, sem assumir que a meta de 120 unidades será atingida. Ao final da semana, compare as unidades vendidas com a base de 100 e a meta de 120, e confira a contribuição por unidade antes de decidir se mantém ou encerra a oferta. O resultado ainda é desconhecido.",
+      "notes": "Software-rendered price 80. Limited test, no prediction of sales."
+    }
+  ]
+}

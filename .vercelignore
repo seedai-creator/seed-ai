@@ -1,0 +1,8 @@
+.env*
+.test-build/
+.git/
+.vercel/
+.next/
+node_modules/
+*.tsbuildinfo
+npm-debug.log*

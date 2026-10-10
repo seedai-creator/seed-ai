@@ -1,0 +1,628 @@
+{
+  "date": "2026-10-01T13:26:53.695Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "discount",
+      "message": "Posso dar 30% de desconto? Meu preço atual é 100 reais, mas não sei meu custo nem margem.",
+      "rubric": "Insuficiente; pedir custo/margem, não aprovar.",
+      "error": "INVALID_AI_RESPONSE",
+      "lastOutput": "{\n  \"intent\": \"PRICING\",\n  \"answer\": \"Com 30% de desconto, o preço ficaria em {{calc:preco_com_desconto}}. Mas isso não basta para saber se compensa: sem conhecer os custos, a margem e o volume de vendas, ainda não é seguro recomendar a promoção.\\n\\nPrimeiro, levante o que você gasta em cada venda. Quais gastos entram no produto ou serviço, nas taxas e na entrega? E o que você pretende alcançar com o desconto?\",\n  \"facts_detected\": [],\n  \"reliability\": {\n    \"evidence\": [\n      {\n        \"id\": \"preco\",\n        \"key\": \"price\",\n        \"kind\": \"METRIC\",\n        \"text\": \"Preço atual informado de 100 reais; item não especificado.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Meu preço atual é 100 reais\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": 100,\n        \"unit\": \"BRL\"\n      },\n      {\n        \"id\": \"desconto\",\n        \"key\": \"discount\",\n        \"kind\": \"ASSUMPTION\",\n        \"text\": \"Desconto de 30% considerado como cenário, não como decisão tomada.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Posso dar 30% de desconto?\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": 30,\n        \"unit\": \"PERCENT\"\n      },\n      {\n        \"id\": \"custos_desconhecidos\",\n        \"key\": \"cost\",\n        \"kind\": \"OBSERVATION\",\n        \"text\": \"O usuário relata não conhecer seu custo nem sua margem.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"não sei meu custo nem margem.\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": null,\n        \"unit\": null\n      }\n    ],\n    \"missing_information\": [\n      \"Custos fixos relevantes e capacidade para atender a uma possível mudança no volume.\"\n    ],\n    \"essential_missing\": [\n      \"Custo variável por venda e margem atual.\",\n      \"Volume habitual de vendas e volume esperado com o desconto.\",\n      \"Objetivo da promoção.\"\n    ],\n    \"conflicts\": [],\n    \"sufficiency\": \"INSUFFICIENT\",\n    \"confidence\": \"LOW\",\n    \"assumptions\": [\n      \"Os 30% de desconto são apenas uma possibilidade em avaliação.\"\n    ],\n    \"recommendation\": {\n      \"action\": \"Levantar os gastos por venda antes de decidir sobre o desconto; em seguida, comparar o volume habitual com o necessário para que a promoção faça sentido.\",\n      \"rationale_summary\": \"O preço e o desconto proposto são conhecidos, mas faltam custos, margem e volume para avaliar o efeito da promoção.\",\n      \"evidence_ids\": [\"preco\", \"desconto\", \"custos_desconhecidos\"],\n      \"expected_signal\": \"Custos por venda e volume habitual identificados.\",\n      \"indicator\": \"Custo variável por venda e unidades vendidas no mesmo período.\",\n      \"review\": \"Reavaliar a proposta quando esses dados e o objetivo da promoção estiverem claros.\",\n      \"risks\": [\n        \"O desconto pode reduzir ou eliminar o ganho por venda.\",\n        \"Um aumento de pedidos pode pressionar a capacidade de atendimento.\"\n      ],\n      \"change_if\": \"Com custos, volume e objetivo conhecidos, comparar o cenário com e sem desconto antes de decidir.\",\n      \"mode\": \"INVESTIGATE\"\n    },\n    \"alternatives\": [],\n    \"calculations\": [\n      {\n        \"id\": \"preco_com_desconto\",\n        \"operation\": \"DISCOUNTED_PRICE\",\n        \"left\": \"preco\",\n        \"right\": \"desconto\"\n      }\n    ],\n    \"revision\": null\n  },\n  \"memory_detected\": [\n    {\n      \"key\": \"current_price\",\n      \"kind\": \"METRIC\",\n      \"value\": \"Preço atual informado de 100 reais; produto ou serviço não especificado.\",\n      \"evidence\": \"Meu preço atual é 100 reais\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": true\n    }\n  ],\n  \"diagnosis\": {\n    \"situation\": \"O usuário informa um preço atual de 100 reais e considera um desconto de 30%, mas relata desconhecer custos e margem.\",\n    \"objective\": \"Avaliar se pode oferecer o desconto.\",\n    \"main_bottleneck\": \"Falta de informações sobre custos e margem para avaliar a promoção.\",\n    \"secondary_bottlenecks\": [],\n    \"evidence\": [\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Posso dar 30% de desconto?\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Meu preço atual é 100 reais\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"não sei meu custo nem margem.\"\n      }\n    ],\n    \"hypotheses\": [],\n    \"missing_data\": [\n      \"Custo variável por venda e margem.\",\n      \"Volume habitual de vendas.\",\n      \"Objetivo da promoção.\"\n    ],\n    \"opportunities\": [\n      \"Comparar os cenários com e sem desconto após levantar os dados.\"\n    ],\n    \"risks\": [\n      \"Reduzir ou eliminar o ganho por venda.\",\n      \"Gerar demanda acima da capacidade de atendimento.\"\n    ],\n    \"priorities\": [\n      \"Levantar os gastos por venda antes de decidir.\",\n      \"Apurar o volume habitual e esclarecer o objetivo da promoção.\"\n    ],\n    \"confidence\": \"LOW\"\n  }\n}",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 815,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 62,
+            "output_tokens_details": {
+              "reasoning_tokens": 29
+            },
+            "total_tokens": 877
+          },
+          "latency_ms": 2036
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4067,
+            "input_tokens_details": {
+              "cache_write_tokens": 4064,
+              "cached_tokens": 0
+            },
+            "output_tokens": 2581,
+            "output_tokens_details": {
+              "reasoning_tokens": 1335
+            },
+            "total_tokens": 6648
+          },
+          "latency_ms": 33852
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "message": "Testamos baixar o preço. As objeções de preço sumiram, mas a conversão segue baixa e o tempo de resposta piorou. A hipótese anterior era preço alto.",
+      "rubric": "Revisar hipótese, não defender preço como causa certa.",
+      "intent": "SALES",
+      "answer": "O teste enfraquece a hipótese de que o preço era o principal obstáculo: as objeções de preço sumiram, mas a conversão continua baixa. O tempo de resposta piorou e merece investigação, mas ainda não dá para afirmar que ele causou a baixa conversão.\n\nAntes de manter o preço reduzido ou mudar a estratégia comercial, eu compararia atendimento e conversão em períodos equivalentes. A margem também importa para decidir se vale manter a redução. Qual foi o tempo médio de resposta antes e depois do teste? E qual foi a conversão em cada período?",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "price_hypothesis",
+          "kind": "HYPOTHESIS",
+          "value": "A hipótese anterior era que o preço estava alto.",
+          "evidence": "A hipótese anterior era preço alto.",
+          "certainty": "EXPLICIT",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        }
+      ],
+      "diagnosis": {
+        "situation": "Foi testada uma redução de preço. As objeções de preço sumiram, mas a conversão segue baixa e o tempo de resposta piorou.",
+        "objective": null,
+        "main_bottleneck": "Possível gargalo no atendimento relacionado ao tempo de resposta; sua influência na conversão ainda não foi demonstrada.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Testamos baixar o preço."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "As objeções de preço sumiram"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a conversão segue baixa"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "o tempo de resposta piorou"
+          }
+        ],
+        "hypotheses": [
+          "O tempo de resposta pode estar contribuindo para a baixa conversão.",
+          "O preço alto pode não ser o principal obstáculo à venda."
+        ],
+        "missing_data": [
+          "Tempo médio de resposta antes e depois do teste.",
+          "Conversão em períodos comparáveis antes e depois do teste.",
+          "Margem com o preço reduzido."
+        ],
+        "opportunities": [
+          "Localizar onde a conversão está sendo perdida antes de fazer outra mudança comercial."
+        ],
+        "risks": [
+          "Atribuir a baixa conversão ao tempo de resposta sem comparação suficiente.",
+          "Manter o preço reduzido sem avaliar a margem."
+        ],
+        "priorities": [
+          "Comparar tempo de resposta e conversão em períodos equivalentes.",
+          "Avaliar a margem antes de decidir manter o preço reduzido."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "price_test",
+              "kind": "OBSERVATION",
+              "text": "Foi testada uma redução de preço.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Testamos baixar o preço.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e2",
+              "key": "price_objections",
+              "kind": "OBSERVATION",
+              "text": "Segundo o relato, as objeções de preço sumiram após o teste.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "As objeções de preço sumiram",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e3",
+              "key": "conversion",
+              "kind": "OBSERVATION",
+              "text": "A conversão foi relatada como ainda baixa.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a conversão segue baixa",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e4",
+              "key": "response_time",
+              "kind": "OBSERVATION",
+              "text": "O tempo de resposta foi relatado como pior.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "o tempo de resposta piorou",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e5",
+              "key": "previous_price_hypothesis",
+              "kind": "HYPOTHESIS",
+              "text": "A hipótese anterior era que o preço estava alto.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "A hipótese anterior era preço alto.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Margem com o preço reduzido e condições do teste.",
+            "Volume de contatos em cada período."
+          ],
+          "essential_missing": [
+            "Tempo médio de resposta antes e depois do teste.",
+            "Conversão em períodos comparáveis antes e depois do teste."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar tempo de resposta e conversão antes e depois do teste, em períodos equivalentes, antes de decidir se mantém o preço reduzido.",
+            "rationale_summary": "As objeções de preço desapareceram sem melhora relatada na conversão; o tempo de resposta piorou, mas a relação entre esses fatos não está demonstrada.",
+            "evidence_ids": [
+              "e1",
+              "e2",
+              "e3",
+              "e4"
+            ],
+            "expected_signal": "Verificar se períodos com respostas mais rápidas também apresentam melhor conversão; uma associação não provará causalidade.",
+            "indicator": "Tempo médio de resposta e conversão, com volume de contatos em cada período.",
+            "review": "Revisar quando houver dados comparáveis dos dois períodos.",
+            "risks": [
+              "Diferenças no volume ou no perfil dos contatos podem distorcer a comparação.",
+              "Manter o preço reduzido sem conhecer a margem pode prejudicar o resultado."
+            ],
+            "change_if": "Se o tempo de resposta não acompanhar a conversão, investigar outras etapas do atendimento e as perdas; se a margem não comportar o novo preço, reavaliar o desconto.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": "O teste enfraquece a hipótese anterior de preço alto como principal explicação. O tempo de resposta passa a ser uma hipótese a investigar, não uma causa confirmada."
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "price_test",
+            "kind": "OBSERVATION",
+            "text": "Foi testada uma redução de preço.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Testamos baixar o preço.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e2",
+            "key": "price_objections",
+            "kind": "OBSERVATION",
+            "text": "Segundo o relato, as objeções de preço sumiram após o teste.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "As objeções de preço sumiram",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e3",
+            "key": "conversion",
+            "kind": "OBSERVATION",
+            "text": "A conversão foi relatada como ainda baixa.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a conversão segue baixa",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e4",
+            "key": "response_time",
+            "kind": "OBSERVATION",
+            "text": "O tempo de resposta foi relatado como pior.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "o tempo de resposta piorou",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e5",
+            "key": "previous_price_hypothesis",
+            "kind": "HYPOTHESIS",
+            "text": "A hipótese anterior era que o preço estava alto.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "A hipótese anterior era preço alto.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Margem com o preço reduzido e condições do teste.",
+          "Volume de contatos em cada período."
+        ],
+        "essential_missing": [
+          "Tempo médio de resposta antes e depois do teste.",
+          "Conversão em períodos comparáveis antes e depois do teste."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar tempo de resposta e conversão antes e depois do teste, em períodos equivalentes, antes de decidir se mantém o preço reduzido.",
+          "rationale_summary": "As objeções de preço desapareceram sem melhora relatada na conversão; o tempo de resposta piorou, mas a relação entre esses fatos não está demonstrada.",
+          "evidence_ids": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "expected_signal": "Verificar se períodos com respostas mais rápidas também apresentam melhor conversão; uma associação não provará causalidade.",
+          "indicator": "Tempo médio de resposta e conversão, com volume de contatos em cada período.",
+          "review": "Revisar quando houver dados comparáveis dos dois períodos.",
+          "risks": [
+            "Diferenças no volume ou no perfil dos contatos podem distorcer a comparação.",
+            "Manter o preço reduzido sem conhecer a margem pode prejudicar o resultado."
+          ],
+          "change_if": "Se o tempo de resposta não acompanhar a conversão, investigar outras etapas do atendimento e as perdas; se a margem não comportar o novo preço, reavaliar o desconto.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": "O teste enfraquece a hipótese anterior de preço alto como principal explicação. O tempo de resposta passa a ser uma hipótese a investigar, não uma causa confirmada."
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 825,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 201,
+            "output_tokens_details": {
+              "reasoning_tokens": 170
+            },
+            "total_tokens": 1026
+          },
+          "latency_ms": 3236
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4183,
+            "input_tokens_details": {
+              "cache_write_tokens": 4180,
+              "cached_tokens": 0
+            },
+            "output_tokens": 2484,
+            "output_tokens_details": {
+              "reasoning_tokens": 593
+            },
+            "total_tokens": 6667
+          },
+          "latency_ms": 30391
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "message": "Nosso CAC subiu 18%, LTV está estável e a conversão comercial caiu. O que investigar?",
+      "rubric": "Profundidade adaptada, sem inventar números absolutos.",
+      "intent": "DIAGNOSIS",
+      "answer": "A queda da conversão comercial é o primeiro ponto a investigar: ela pode estar relacionada à alta do CAC, mas os dados relatados ainda não mostram a causa. O LTV estável não elimina a necessidade de olhar margem e qualidade dos clientes. Ainda não dá para recomendar com segurança aumentar ou cortar investimento.\n\nCompare a conversão por etapa do funil e por canal, usando os mesmos períodos do CAC. Isso deve mostrar onde a perda aparece; depois, vale verificar custo e qualidade dos leads. **Qual é o período de comparação dos indicadores? Em qual etapa do funil comercial a conversão caiu?**",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Foi relatada alta do CAC, estabilidade do LTV e queda da conversão comercial; os períodos e a etapa afetada não foram informados.",
+        "objective": "Investigar o que está por trás da mudança nos indicadores.",
+        "main_bottleneck": "A conversão comercial é o primeiro gargalo a examinar, mas sua relação com a alta do CAC ainda não está demonstrada.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Nosso CAC subiu 18%"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "LTV está estável"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a conversão comercial caiu"
+          }
+        ],
+        "hypotheses": [
+          "A perda pode estar concentrada em uma etapa do processo comercial.",
+          "Mudanças no custo, no volume ou na qualidade dos leads podem contribuir para a alta do CAC."
+        ],
+        "missing_data": [
+          "Período de comparação e critérios dos indicadores.",
+          "Conversão por etapa e canal.",
+          "Custo e qualidade dos leads por canal."
+        ],
+        "opportunities": [
+          "Localizar a etapa da queda antes de decidir onde intervir."
+        ],
+        "risks": [
+          "Atribuir a alta do CAC à conversão sem comparar períodos e canais equivalentes.",
+          "Tomar o LTV estável como sinal de margem estável."
+        ],
+        "priorities": [
+          "Comparar a conversão por etapa e canal nos mesmos períodos do CAC.",
+          "Se a queda não explicar a variação, examinar custo e qualidade dos leads."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "cac",
+              "kind": "OBSERVATION",
+              "text": "Foi relatada alta de 18% no CAC, sem período de comparação informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Nosso CAC subiu 18%",
+              "scope": null,
+              "period": null,
+              "numeric_value": 18,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "e2",
+              "key": "ltv",
+              "kind": "OBSERVATION",
+              "text": "O LTV foi relatado como estável, sem período informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "LTV está estável",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e3",
+              "key": "sales_conversion",
+              "kind": "OBSERVATION",
+              "text": "Foi relatada queda da conversão comercial, sem indicação da etapa ou do período.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a conversão comercial caiu",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Canais, custo de aquisição e qualidade dos leads por canal.",
+            "Critério de cálculo do CAC e evolução da margem."
+          ],
+          "essential_missing": [
+            "Período de comparação dos indicadores.",
+            "Etapa do funil em que a conversão caiu."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar a conversão por etapa e canal nos mesmos períodos usados para acompanhar o CAC.",
+            "rationale_summary": "A conversão caiu, mas ainda não se sabe onde ocorreu a perda nem se os indicadores são comparáveis.",
+            "evidence_ids": [
+              "e1",
+              "e3"
+            ],
+            "expected_signal": "Identificar se a perda está concentrada em uma etapa ou canal, sem atribuir a ela toda a alta do CAC.",
+            "indicator": "Conversão por etapa e canal, acompanhada do CAC nos mesmos períodos.",
+            "review": "Após reunir a comparação entre os mesmos períodos e canais.",
+            "risks": [
+              "Períodos ou critérios diferentes podem produzir uma comparação enganosa.",
+              "LTV estável não significa margem estável."
+            ],
+            "change_if": "Se a conversão não explicar a variação observada, priorizar a investigação do custo e da qualidade dos leads por canal.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "cac",
+            "kind": "OBSERVATION",
+            "text": "Foi relatada alta de 18% no CAC, sem período de comparação informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Nosso CAC subiu 18%",
+            "scope": null,
+            "period": null,
+            "numeric_value": 18,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "e2",
+            "key": "ltv",
+            "kind": "OBSERVATION",
+            "text": "O LTV foi relatado como estável, sem período informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "LTV está estável",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e3",
+            "key": "sales_conversion",
+            "kind": "OBSERVATION",
+            "text": "Foi relatada queda da conversão comercial, sem indicação da etapa ou do período.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a conversão comercial caiu",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Canais, custo de aquisição e qualidade dos leads por canal.",
+          "Critério de cálculo do CAC e evolução da margem."
+        ],
+        "essential_missing": [
+          "Período de comparação dos indicadores.",
+          "Etapa do funil em que a conversão caiu."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar a conversão por etapa e canal nos mesmos períodos usados para acompanhar o CAC.",
+          "rationale_summary": "A conversão caiu, mas ainda não se sabe onde ocorreu a perda nem se os indicadores são comparáveis.",
+          "evidence_ids": [
+            "e1",
+            "e3"
+          ],
+          "expected_signal": "Identificar se a perda está concentrada em uma etapa ou canal, sem atribuir a ela toda a alta do CAC.",
+          "indicator": "Conversão por etapa e canal, acompanhada do CAC nos mesmos períodos.",
+          "review": "Após reunir a comparação entre os mesmos períodos e canais.",
+          "risks": [
+            "Períodos ou critérios diferentes podem produzir uma comparação enganosa.",
+            "LTV estável não significa margem estável."
+          ],
+          "change_if": "Se a conversão não explicar a variação observada, priorizar a investigação do custo e da qualidade dos leads por canal.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 814,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 114,
+            "output_tokens_details": {
+              "reasoning_tokens": 81
+            },
+            "total_tokens": 928
+          },
+          "latency_ms": 2738
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4056,
+            "input_tokens_details": {
+              "cache_write_tokens": 4053,
+              "cached_tokens": 0
+            },
+            "output_tokens": 2235,
+            "output_tokens_details": {
+              "reasoning_tokens": 759
+            },
+            "total_tokens": 6291
+          },
+          "latency_ms": 29367
+        }
+      ]
+    },
+    {
+      "id": "sufficient",
+      "message": "Para o produto A, em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades. Objetivo vender 120 unidades. Proponho desconto de 20% no mesmo produto por sete dias. Capacidade 150 unidades. Analise o preço após desconto e a hipótese; não garanta resultado.",
+      "rubric": "Análise contextual e cálculo determinístico se solicitado, sem previsão garantida.",
+      "error": "VALIDATION_OR_PROVIDER_FAILED",
+      "lastOutput": "{\"intent\":\"PRICING\",\"materiality\":\"HIGH\",\"task\":\"STRATEGIC\",\"profile\":\"DISCOUNT\"}",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 865,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 97,
+            "output_tokens_details": {
+              "reasoning_tokens": 64
+            },
+            "total_tokens": 962
+          },
+          "latency_ms": 2105
+        }
+      ]
+    }
+  ]
+}

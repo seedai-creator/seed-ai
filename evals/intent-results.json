@@ -1,0 +1,166 @@
+{
+  "date": "2026-09-26T09:03:12.888Z",
+  "model": "gpt-6-astra",
+  "passed": 26,
+  "total": 26,
+  "inputTokens": 17503,
+  "outputTokens": 413,
+  "results": [
+    {
+      "id": "decision-hire",
+      "expected": "DECISION",
+      "actual": "DECISION",
+      "passed": true
+    },
+    {
+      "id": "decision-partner",
+      "expected": "DECISION",
+      "actual": "DECISION",
+      "passed": true
+    },
+    {
+      "id": "diagnosis-overview",
+      "expected": "DIAGNOSIS",
+      "actual": "DIAGNOSIS",
+      "passed": true
+    },
+    {
+      "id": "diagnosis-unknown",
+      "expected": "DIAGNOSIS",
+      "actual": "DIAGNOSIS",
+      "passed": true
+    },
+    {
+      "id": "expansion-capacity",
+      "expected": "EXPANSION",
+      "actual": "EXPANSION",
+      "passed": true
+    },
+    {
+      "id": "expansion-decision",
+      "expected": "EXPANSION",
+      "actual": "EXPANSION",
+      "passed": true
+    },
+    {
+      "id": "follow-up",
+      "expected": "PRICING",
+      "actual": "PRICING",
+      "passed": true
+    },
+    {
+      "id": "forced-label",
+      "expected": "SALES",
+      "actual": "SALES",
+      "passed": true
+    },
+    {
+      "id": "general-greeting",
+      "expected": "GENERAL",
+      "actual": "GENERAL",
+      "passed": true
+    },
+    {
+      "id": "general-vague",
+      "expected": "GENERAL",
+      "actual": "GENERAL",
+      "passed": true
+    },
+    {
+      "id": "growth-plan",
+      "expected": "GROWTH",
+      "actual": "GROWTH",
+      "passed": true
+    },
+    {
+      "id": "growth-scale",
+      "expected": "GROWTH",
+      "actual": "GROWTH",
+      "passed": true
+    },
+    {
+      "id": "launch-marketing",
+      "expected": "LAUNCH",
+      "actual": "LAUNCH",
+      "passed": true
+    },
+    {
+      "id": "launch-product",
+      "expected": "LAUNCH",
+      "actual": "LAUNCH",
+      "passed": true
+    },
+    {
+      "id": "marketing-campaign",
+      "expected": "MARKETING",
+      "actual": "MARKETING",
+      "passed": true
+    },
+    {
+      "id": "marketing-leads",
+      "expected": "MARKETING",
+      "actual": "MARKETING",
+      "passed": true
+    },
+    {
+      "id": "memory-not-intent",
+      "expected": "PRICING",
+      "actual": "PRICING",
+      "passed": true
+    },
+    {
+      "id": "mixed-no-priority",
+      "expected": "GENERAL",
+      "actual": "GENERAL",
+      "passed": true
+    },
+    {
+      "id": "mixed-priority",
+      "expected": "PRICING",
+      "actual": "PRICING",
+      "passed": true
+    },
+    {
+      "id": "positioning-audience",
+      "expected": "POSITIONING",
+      "actual": "POSITIONING",
+      "passed": true
+    },
+    {
+      "id": "positioning-value",
+      "expected": "POSITIONING",
+      "actual": "POSITIONING",
+      "passed": true
+    },
+    {
+      "id": "pricing-decision",
+      "expected": "PRICING",
+      "actual": "PRICING",
+      "passed": true
+    },
+    {
+      "id": "pricing-discount",
+      "expected": "PRICING",
+      "actual": "PRICING",
+      "passed": true
+    },
+    {
+      "id": "sales-growth-word",
+      "expected": "SALES",
+      "actual": "SALES",
+      "passed": true
+    },
+    {
+      "id": "sales-negation",
+      "expected": "SALES",
+      "actual": "SALES",
+      "passed": true
+    },
+    {
+      "id": "topic-change",
+      "expected": "POSITIONING",
+      "actual": "POSITIONING",
+      "passed": true
+    }
+  ]
+}

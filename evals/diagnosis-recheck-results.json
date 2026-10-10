@@ -1,0 +1,84 @@
+{
+  "date": "2026-09-26T23:36:39.794Z",
+  "model": "gpt-6-astra",
+  "review": "Revisado: atendimento/conversão como gargalo provável, evidências literais, hipóteses alternativas, ausência de benchmark ou taxa calculada pela IA e investigação antes de anúncios. Caso misto classificado como MARKETING, sem prejuízo do diagnóstico. Teto do classificador corrigido para 800.",
+  "results": [
+    {
+      "id": "conversion",
+      "message": "Minha loja recebeu 200 pedidos de orçamento no último mês e fechou 4 vendas. Demoramos três dias para responder. Quero dobrar os anúncios. O que devo fazer?",
+      "facts": [
+        {
+          "key": "segment",
+          "value": "Loja de móveis"
+        }
+      ],
+      "rubric": "Investigar conversão e demora antes de anúncios; distinguir causa hipotética de relato; não inventar benchmark.",
+      "intent": "MARKETING",
+      "answer": "Eu não dobraria os anúncios agora. Você relatou 200 pedidos de orçamento, 4 vendas e três dias para responder. Isso aponta para um possível gargalo no atendimento e na conversão, mas ainda não prova que a demora causou a perda de vendas.\n\nTrazer mais pedidos antes de resolver essa etapa pode aumentar a fila, sem aumentar as vendas. Ainda não é possível recomendar a ampliação com segurança.\n\nMinha prioridade seria organizar a resposta aos orçamentos:\n- Identificar por que os pedidos ficam três dias esperando e definir quem acompanha a fila.\n- Testar uma rotina de resposta mais rápida e acompanhamento dos orçamentos, antes de ampliar os anúncios.\n- Registrar tempo de resposta, vendas e motivos de perda dos pedidos recebidos no mesmo período, para avaliar o resultado.\n\nDuas perguntas para orientar a decisão:\n1. As 4 vendas vieram desses 200 pedidos ou incluem orçamentos de meses anteriores?\n2. O que hoje faz a resposta levar três dias?",
+      "facts_detected": [
+        {
+          "key": "business_objective",
+          "value": "Dobrar os anúncios",
+          "evidence": "Quero dobrar os anúncios.",
+          "certainty": "EXPLICIT"
+        }
+      ],
+      "diagnosis": {
+        "situation": "Loja de móveis com relato de 200 pedidos de orçamento e 4 vendas no último mês, além de demora de três dias para responder. Não está confirmado se as vendas correspondem aos mesmos pedidos.",
+        "objective": "Dobrar os anúncios; o resultado empresarial pretendido com essa ampliação ainda não foi informado.",
+        "main_bottleneck": "Possível gargalo no atendimento e na conversão, associado ao tempo de resposta relatado.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "CONFIRMED_MEMORY",
+            "quote": "Loja de móveis"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Minha loja recebeu 200 pedidos de orçamento no último mês e fechou 4 vendas."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Demoramos três dias para responder."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Quero dobrar os anúncios."
+          }
+        ],
+        "hypotheses": [
+          "A demora na resposta pode contribuir para a perda de interessados.",
+          "Qualidade dos pedidos e condições da oferta também podem limitar os fechamentos."
+        ],
+        "missing_data": [
+          "Correspondência entre as 4 vendas e os 200 pedidos.",
+          "Causa da demora no atendimento.",
+          "Motivos de perda dos orçamentos."
+        ],
+        "opportunities": [
+          "Testar uma rotina de resposta mais rápida e acompanhamento dos orçamentos."
+        ],
+        "risks": [
+          "Ampliar anúncios pode aumentar a fila sem melhorar as vendas.",
+          "Comparar pedidos e vendas de origens ou períodos diferentes pode distorcer a avaliação."
+        ],
+        "priorities": [
+          "Confirmar a origem temporal das vendas e investigar a demora.",
+          "Organizar o atendimento e medir tempo de resposta, fechamentos e motivos de perda.",
+          "Reavaliar a ampliação dos anúncios após o teste e a verificação da capacidade de atendimento."
+        ],
+        "confidence": "MEDIUM"
+      },
+      "calls": [
+        {
+          "status": "completed",
+          "outputTokens": 208
+        },
+        {
+          "status": "completed",
+          "outputTokens": 934
+        }
+      ]
+    }
+  ]
+}

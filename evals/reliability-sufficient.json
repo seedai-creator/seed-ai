@@ -1,0 +1,303 @@
+{
+  "date": "2026-10-01T17:17:06.362Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "sufficient",
+      "message": "Para o produto A, em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades. Objetivo vender 120 unidades. Proponho desconto de 20% no mesmo produto por sete dias. Capacidade 150 unidades. Analise o preço após desconto e a hipótese; não garanta resultado.",
+      "rubric": "Análise contextual e cálculo determinístico se solicitado, sem previsão garantida.",
+      "intent": "PRICING",
+      "answer": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+        "objective": "Vender 120 unidades; o período da meta não foi informado.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Objetivo vender 120 unidades"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Proponho desconto de 20% no mesmo produto por sete dias"
+          }
+        ],
+        "hypotheses": [
+          "O desconto pode elevar as unidades vendidas, mas seu efeito sobre o resultado é desconhecido."
+        ],
+        "missing_data": [
+          "Custo variável por unidade durante a promoção",
+          "Vendas habituais em sete dias sem desconto",
+          "Período da meta e da capacidade"
+        ],
+        "opportunities": [],
+        "risks": [
+          "Reduzir o resultado por unidade sem aumento suficiente nas vendas."
+        ],
+        "priorities": [],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "preco",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço unitário informado para o produto A em setembro de 2026.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "preço unitário 100 reais",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "custo",
+              "key": "cost",
+              "kind": "METRIC",
+              "text": "Custo unitário informado, sem composição especificada.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "custo unitário 60 reais",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 60,
+              "unit": "BRL"
+            },
+            {
+              "id": "vendas",
+              "key": "sales",
+              "kind": "METRIC",
+              "text": "Foram vendidas 100 unidades no mês informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "vendemos 100 unidades",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 100,
+              "unit": "COUNT"
+            },
+            {
+              "id": "meta",
+              "key": "goal",
+              "kind": "OBSERVATION",
+              "text": "Objetivo declarado de vender 120 unidades.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Objetivo vender 120 unidades",
+              "scope": "produto A",
+              "period": null,
+              "numeric_value": 120,
+              "unit": "COUNT"
+            },
+            {
+              "id": "desconto",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto proposto para um cenário de sete dias, não aplicado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Proponho desconto de 20% no mesmo produto por sete dias",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 20,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "capacidade",
+              "key": "capacity",
+              "kind": "OBSERVATION",
+              "text": "Capacidade declarada de 150 unidades; período não informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Capacidade 150 unidades",
+              "scope": "produto A",
+              "period": null,
+              "numeric_value": 150,
+              "unit": "COUNT"
+            }
+          ],
+          "missing_information": [
+            "Composição dos custos fixos e variáveis relevantes",
+            "Período da meta e da capacidade"
+          ],
+          "essential_missing": [
+            "Custo variável por unidade durante a promoção",
+            "Vendas habituais em sete dias sem desconto"
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [
+            "O desconto proposto incide sobre o preço unitário informado; o período exato do teste não foi definido."
+          ],
+          "recommendation": null,
+          "alternatives": [],
+          "calculations": [
+            {
+              "id": "preco_descontado",
+              "operation": "DISCOUNTED_PRICE",
+              "left": "preco",
+              "right": "desconto"
+            }
+          ],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "preco",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço unitário informado para o produto A em setembro de 2026.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "preço unitário 100 reais",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "custo",
+            "key": "cost",
+            "kind": "METRIC",
+            "text": "Custo unitário informado, sem composição especificada.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "custo unitário 60 reais",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 60,
+            "unit": "BRL"
+          },
+          {
+            "id": "vendas",
+            "key": "sales",
+            "kind": "METRIC",
+            "text": "Foram vendidas 100 unidades no mês informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "vendemos 100 unidades",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 100,
+            "unit": "COUNT"
+          },
+          {
+            "id": "meta",
+            "key": "goal",
+            "kind": "OBSERVATION",
+            "text": "Objetivo declarado de vender 120 unidades.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Objetivo vender 120 unidades",
+            "scope": "produto A",
+            "period": null,
+            "numeric_value": 120,
+            "unit": "COUNT"
+          },
+          {
+            "id": "desconto",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto proposto para um cenário de sete dias, não aplicado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Proponho desconto de 20% no mesmo produto por sete dias",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 20,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "capacidade",
+            "key": "capacity",
+            "kind": "OBSERVATION",
+            "text": "Capacidade declarada de 150 unidades; período não informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Capacidade 150 unidades",
+            "scope": "produto A",
+            "period": null,
+            "numeric_value": 150,
+            "unit": "COUNT"
+          }
+        ],
+        "missing_information": [
+          "Composição dos custos fixos e variáveis relevantes",
+          "Período da meta e da capacidade"
+        ],
+        "essential_missing": [
+          "Custo variável por unidade durante a promoção",
+          "Vendas habituais em sete dias sem desconto"
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [
+          "O desconto proposto incide sobre o preço unitário informado; o período exato do teste não foi definido."
+        ],
+        "recommendation": null,
+        "alternatives": [],
+        "calculations": [
+          {
+            "id": "preco_descontado",
+            "operation": "DISCOUNTED_PRICE",
+            "left": "preco",
+            "right": "desconto"
+          }
+        ],
+        "revision": null
+      },
+      "validation": "WITHHELD",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 865,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 83,
+            "output_tokens_details": {
+              "reasoning_tokens": 50
+            },
+            "total_tokens": 948
+          },
+          "latency_ms": 2755
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4325,
+            "input_tokens_details": {
+              "cache_write_tokens": 79,
+              "cached_tokens": 4243
+            },
+            "output_tokens": 1646,
+            "output_tokens_details": {
+              "reasoning_tokens": 284
+            },
+            "total_tokens": 5971
+          },
+          "latency_ms": 21259
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,307 @@
+{
+  "date": "2026-10-01T13:28:52.473Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "discount",
+      "message": "Posso dar 30% de desconto? Meu preço atual é 100 reais, mas não sei meu custo nem margem.",
+      "rubric": "Insuficiente; pedir custo/margem, não aprovar.",
+      "intent": "PRICING",
+      "answer": "Ainda não dá para recomendar os 30% de desconto com segurança. Você informou que o preço atual é 100 reais, mas não conhece o custo nem a margem; sem isso, não sabemos se a venda com desconto ainda compensaria. Antes de decidir, compare o custo por venda com o preço atual e com o preço após o desconto. Qual é o custo variável por venda? O que você pretende alcançar com o desconto: vender mais unidades, atrair clientes ou outro objetivo?",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "current_price",
+          "kind": "METRIC",
+          "value": "Preço atual informado: 100 reais; produto ou serviço não especificado.",
+          "evidence": "Meu preço atual é 100 reais",
+          "certainty": "AMBIGUOUS",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        }
+      ],
+      "diagnosis": {
+        "situation": "O usuário avalia um desconto de 30% sobre um preço atual informado de 100 reais, sem conhecer custo ou margem.",
+        "objective": "Avaliar se pode oferecer o desconto.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Posso dar 30% de desconto?"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Meu preço atual é 100 reais"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "não sei meu custo nem margem."
+          }
+        ],
+        "hypotheses": [
+          "O desconto pode reduzir excessivamente o valor que sobra por venda; isso depende dos custos."
+        ],
+        "missing_data": [
+          "Custo variável por venda.",
+          "Objetivo do desconto.",
+          "Volume de vendas atual."
+        ],
+        "opportunities": [
+          "Comparar o valor que sobra por venda antes e depois do desconto quando houver dados."
+        ],
+        "risks": [
+          "Oferecer desconto sem saber se a venda cobre seus custos."
+        ],
+        "priorities": [
+          "Levantar o custo variável por venda antes de decidir sobre o desconto."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço atual informado: 100 reais.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Meu preço atual é 100 reais",
+              "scope": null,
+              "period": null,
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "e2",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto de 30% em avaliação, não decidido.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Posso dar 30% de desconto?",
+              "scope": null,
+              "period": null,
+              "numeric_value": 30,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "e3",
+              "key": "cost",
+              "kind": "OBSERVATION",
+              "text": "O usuário relata não conhecer custo nem margem.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "não sei meu custo nem margem.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Volume atual de vendas e capacidade para atender a uma eventual demanda maior.",
+            "Custos fixos relevantes e produto ou serviço ao qual o preço se refere."
+          ],
+          "essential_missing": [
+            "Custo variável por venda.",
+            "Objetivo do desconto.",
+            "Volume de vendas para avaliar o efeito total."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [
+            "O desconto de 30% é uma possibilidade em avaliação, não uma decisão tomada."
+          ],
+          "recommendation": {
+            "action": "Levantar o custo variável por venda antes de decidir sobre o desconto.",
+            "rationale_summary": "O preço atual e o desconto proposto não mostram, sozinhos, se cada venda com desconto compensa.",
+            "evidence_ids": [
+              "e1",
+              "e2",
+              "e3"
+            ],
+            "expected_signal": "Identificar se o preço com desconto cobre o custo variável por venda.",
+            "indicator": "Valor que sobra por venda após os custos variáveis, antes e depois do desconto.",
+            "review": "Reavaliar quando o custo for conhecido; verificar volume e objetivo antes da decisão final.",
+            "risks": [
+              "O desconto pode deixar pouco ou nenhum valor para cobrir os demais custos.",
+              "Vender mais unidades pode não compensar a redução por venda."
+            ],
+            "change_if": "Reavaliar a orientação quando houver custos, volume e objetivo definidos.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço atual informado: 100 reais.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Meu preço atual é 100 reais",
+            "scope": null,
+            "period": null,
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "e2",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto de 30% em avaliação, não decidido.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Posso dar 30% de desconto?",
+            "scope": null,
+            "period": null,
+            "numeric_value": 30,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "e3",
+            "key": "cost",
+            "kind": "OBSERVATION",
+            "text": "O usuário relata não conhecer custo nem margem.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "não sei meu custo nem margem.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Volume atual de vendas e capacidade para atender a uma eventual demanda maior.",
+          "Custos fixos relevantes e produto ou serviço ao qual o preço se refere."
+        ],
+        "essential_missing": [
+          "Custo variável por venda.",
+          "Objetivo do desconto.",
+          "Volume de vendas para avaliar o efeito total."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [
+          "O desconto de 30% é uma possibilidade em avaliação, não uma decisão tomada."
+        ],
+        "recommendation": {
+          "action": "Levantar o custo variável por venda antes de decidir sobre o desconto.",
+          "rationale_summary": "O preço atual e o desconto proposto não mostram, sozinhos, se cada venda com desconto compensa.",
+          "evidence_ids": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "expected_signal": "Identificar se o preço com desconto cobre o custo variável por venda.",
+          "indicator": "Valor que sobra por venda após os custos variáveis, antes e depois do desconto.",
+          "review": "Reavaliar quando o custo for conhecido; verificar volume e objetivo antes da decisão final.",
+          "risks": [
+            "O desconto pode deixar pouco ou nenhum valor para cobrir os demais custos.",
+            "Vender mais unidades pode não compensar a redução por venda."
+          ],
+          "change_if": "Reavaliar a orientação quando houver custos, volume e objetivo definidos.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 815,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 69,
+            "output_tokens_details": {
+              "reasoning_tokens": 36
+            },
+            "total_tokens": 884
+          },
+          "latency_ms": 2379
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4131,
+            "input_tokens_details": {
+              "cache_write_tokens": 4128,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1882,
+            "output_tokens_details": {
+              "reasoning_tokens": 693
+            },
+            "total_tokens": 6013
+          },
+          "latency_ms": 26420
+        }
+      ]
+    },
+    {
+      "id": "sufficient",
+      "message": "Para o produto A, em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades. Objetivo vender 120 unidades. Proponho desconto de 20% no mesmo produto por sete dias. Capacidade 150 unidades. Analise o preço após desconto e a hipótese; não garanta resultado.",
+      "rubric": "Análise contextual e cálculo determinístico se solicitado, sem previsão garantida.",
+      "error": "INCOMPLETE_RESPONSE",
+      "lastOutput": "{\n  \"intent\": \"PRICING\",\n  \"answer\": \"Usando o preço de setembro apenas como base, o desconto proposto levaria o produto A a R$ {{calc:discounted_price}} por unidade. É um preço hipotético, não uma indicação de que a promoção venderá mais.\\n\\nVocê relatou 100 unidades vendidas em setembro, mas ainda não dá para comparar esse mês com uma oferta de sete dias nem recomendar o desconto com segurança. O custo unitário também precisa continuar válido para avaliar o efeito sobre o ganho por venda. Eu começaria confirmando esses dados e comparando as vendas dos sete dias com um período equivalente; se houver teste, acompanhe também o ganho por unidade, não só a quantidade vendida.\\n\\nA meta de 120 unidades é mensal ou para os sete dias? O preço de R$ 100 e o custo de R$ 60 ainda valeriam durante a oferta?\",\n  \"facts_detected\": [],\n  \"reliability\": {\n    \"evidence\": [\n      {\n        \"id\": \"price\",\n        \"key\": \"price\",\n        \"kind\": \"METRIC\",\n        \"text\": \"Preço unitário informado para o produto A em setembro de 2026, usado como base do cenário.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"em setembro de 2026, preço unitário 100 reais\",\n        \"scope\": \"produto A\",\n        \"period\": \"setembro de 2026; base para cenário de sete dias sem datas informadas\",\n        \"numeric_value\": 100,\n        \"unit\": \"BRL\"\n      },\n      {\n        \"id\": \"cost\",\n        \"key\": \"cost\",\n        \"kind\": \"METRIC\",\n        \"text\": \"Custo unitário informado para o produto A em setembro de 2026.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"custo unitário 60 reais\",\n        \"scope\": \"produto A\",\n        \"period\": \"setembro de 2026\",\n        \"numeric_value\": 60,\n        \"unit\": \"BRL\"\n      },\n      {\n        \"id\": \"sales\",\n        \"key\": \"sales\",\n        \"kind\": \"METRIC\",\n        \"text\": \"Unidades do produto A vendidas em setembro de 2026.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"vendemos 100 unidades\",\n        \"scope\": \"produto A\",\n        \"period\": \"setembro de 2026\",\n        \"numeric_value\": 100,\n        \"unit\": \"COUNT\"\n      },\n      {\n        \"id\": \"goal\",\n        \"key\": \"goal\",\n        \"kind\": \"OBSERVATION\",\n        \"text\": \"Meta relatada de 120 unidades, sem período definido.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Objetivo vender 120 unidades.\",\n        \"scope\": \"produto A\",\n        \"period\": null,\n        \"numeric_value\": 120,\n        \"unit\": \"COUNT\"\n      },\n      {\n        \"id\": \"discount\",\n        \"key\": \"discount\",\n        \"kind\": \"ASSUMPTION\",\n        \"text\": \"Desconto proposto, ainda não adotado, aplicado hipoteticamente ao preço-base de setembro.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Proponho desconto de 20% no mesmo produto por sete dias.\",\n        \"scope\": \"produto A\",\n        \"period\": \"setembro de 2026; base para cenário de sete dias sem datas informadas\",\n        \"numeric_value\": 20,\n        \"unit\": \"PERCENT\"\n      },\n      {\n        \"id\": \"capacity\",\n        \"key\": \"capacity\",\n        \"kind\": \"OBSERVATION\",\n        \"text\": \"Capacidade relatada de 150 unidades, sem período definido.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Capacidade 150 unidades.\",\n        \"scope\": \"produto A\",\n        \"period\": null,\n        \"numeric_value\": 150,\n        \"unit\": \"COUNT\"\n      }\n    ],\n    \"missing_information\": [\n      \"Vendas do produto A em um período comparável de sete dias.\",\n      \"Período a que se referem a meta e a capacidade.\"\n    ],\n    \"essential_missing\": [\n      \"Confirmação de que preço e custo unitários de setembro continuam válidos na oferta.\",\n      \"Período da meta de 120 unidades.\"\n    ],\n    \"conflicts\": [],\n    \"sufficiency\": \"PARTIALLY_SUFFICIENT\",\n    \"confidence\": \"LOW\",\n    \"assumptions\": [\n      \"O preço após desconto é apenas um cenário que usa R$ 100 como base; não pressupõe que esse preço ainda esteja em vigor.\",\n      \"O desconto de 20% é uma proposta, não uma promoção executada.\"\n    ],\n    \"recommendation\": {\n      \"action\": \"Confirmar o período da meta e a validade do preço e do custo antes de decidir sobre a oferta; levantar vendas de sete dias comparáveis.\",\n      \"rationale_summary\": \"A meta não tem período definido, e os valores unitários são de setembro; ainda não há base para estimar o efeito da oferta.\",\n      \"evidence_ids\": [\"price\", \"cost\", \"sales\", \"goal\", \"discount\"],\n      \"expected_signal\": \"Dados comparáveis para avaliar se a oferta aumentaria unidades sem comprometer excessivamente o ganho por venda.\",\n      \"indicator\": \"Unidades vendidas e ganho por unidade em períodos comparáveis de sete dias.\",\n      \"review\": \"Reavaliar antes de iniciar a promoção, após confirmar os dados; se houver teste, revisar ao fim dos sete dias.\",\n      \"risks\": [\n        \"Reduzir o ganho por unidade sem aumento suficiente nas vendas.\",\n        \"Comparar sete dias com um mês inteiro e atribuir ao desconto uma diferença que pode ter outras causas.\"\n      ],\n      \"change_if\": \"Se preço, custo ou período da meta forem diferentes dos considerados, refazer o cenário antes de decidir.\",\n      \"mode\": \"INVESTIGATE\"\n    },\n    \"alternatives\": [],\n    \"calculations\": [\n      {\n        \"id\": \"discounted_price\",\n        \"operation\": \"DISCOUNTED_PRICE\",\n        \"left\": \"price\",\n        \"right\": \"discount\"\n      }\n    ],\n    \"revision\": null\n  },\n  \"memory_detected\": [\n    {\n      \"key\": \"product_a_unit_price\",\n      \"kind\": \"METRIC\",\n      \"value\": \"Preço unitário do produto A: 100 reais em setembro de 2026.\",\n      \"evidence\": \"em setembro de 2026, preço unitário 100 reais\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": false\n    },\n    {\n      \"key\": \"product_a_unit_cost\",\n      \"kind\": \"METRIC\",\n      \"value\": \"Custo unitário do produto A: 60 reais em setembro de 2026.\",\n      \"evidence\": \"custo unitário 60 reais\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": false\n    },\n    {\n      \"key\": \"product_a_units_sold\",\n      \"kind\": \"METRIC\",\n      \"value\": \"Foram vendidas 100 unidades do produto A em setembro de 2026.\",\n      \"evidence\": \"vendemos 100 unidades\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": false\n    },\n    {\n      \"key\": \"business_objective\",\n      \"kind\": \"GOAL\",\n      \"value\": \"Vender 120 unidades do produto A; período não informado.\",\n      \"evidence\": \"Objetivo vender 120 unidades.\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": false\n    }\n  ],\n  \"diagnosis\": {\n    \"situation\": \"Para o produto A, há preço, custo e vendas relatados para setembro de 2026. Foi proposto um desconto de sete dias, ainda sem resultado observado.\",\n    \"objective\": \"Vender 120 unidades do produto A; período não informado.\",\n    \"main_bottleneck\": null,\n    \"secondary_bottlenecks\": [],\n    \"evidence\": [\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Para o produto A, em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades.\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Objetivo vender 120 unidades.\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Proponho desconto de 20% no mesmo produto por sete dias.\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Capacidade 150 unidades.\"\n      }\n    ],\n    \"hypotheses\": [\n      \"O desconto pode elevar as unidades vendidas, mas também reduzir o ganho por unidade; nenhum desses efeitos foi medido.\"\n    ],\n    \"missing_data\": [\n      \"Período da meta e da capacidade.\",\n      \"Validade do preço e do custo durante a oferta.\",\n      \"Vendas em sete dias comparáveis.\"\n    ],\n    \"opportunities\": [\n      \"Avaliar uma oferta limitada usando períodos comparáveis, caso os valores unitários sejam confirmados.\"\n    ],\n    \"risks\": [\n      \"Vender mais unidades sem compensar a",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 865,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 71,
+            "output_tokens_details": {
+              "reasoning_tokens": 38
+            },
+            "total_tokens": 936
+          },
+          "latency_ms": 1613
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "incomplete",
+          "usage": {
+            "input_tokens": 4181,
+            "input_tokens_details": {
+              "cache_write_tokens": 79,
+              "cached_tokens": 4099
+            },
+            "output_tokens": 3800,
+            "output_tokens_details": {
+              "reasoning_tokens": 1696
+            },
+            "total_tokens": 7981
+          },
+          "latency_ms": 49886
+        }
+      ]
+    }
+  ]
+}

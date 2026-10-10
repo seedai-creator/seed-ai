@@ -1,0 +1,12 @@
+import { ChatError } from "../chat/contracts";
+
+export function reservationError(reason: unknown): ChatError {
+  switch (reason) {
+    case "DIAGNOSIS_LIMIT": return new ChatError(429, "DIAGNOSIS_LIMIT", "Sua cota de análises foi utilizada. Consulte o saldo e a renovação em Minha assinatura.");
+    case "HARD_LIMIT": return new ChatError(429, "USAGE_LIMIT", "Seu limite de uso foi atingido. Seus dados continuam disponíveis.");
+    case "RATE_LIMIT": return new ChatError(429, "RATE_LIMIT", "Aguarde a análise em andamento ou tente novamente em um minuto.");
+    case "DUPLICATE_REQUEST": return new ChatError(409, "DUPLICATE_REQUEST", "Esta solicitação já foi recebida. Aguarde antes de reenviar.");
+    case "PRO_REQUIRED": return new ChatError(403, "PRO_REQUIRED", "Relatórios automáticos estão disponíveis no plano PRO. Seus registros anteriores continuam disponíveis.");
+    default: return new ChatError(503, "USAGE_UNAVAILABLE", "Não foi possível verificar seu saldo. Tente novamente em instantes.");
+  }
+}

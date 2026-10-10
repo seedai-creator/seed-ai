@@ -1,0 +1,6077 @@
+# ============================================================
+# SEED AI | FASE 9.5
+# SEED BUSINESS MODEL
+# MODELO VIVO DA EMPRESA + BUSINESS GRAPH
+# ============================================================
+
+## 0. ORDEM DE EXECUÇÃO
+
+Executar SOMENTE após:
+
+- Fase 9.2 concluída e validada;
+- Strategic Reliability Layer concluída;
+- Fase 9.3 concluída e validada;
+- Fase 9.4 concluída e validada.
+
+Antes de alterar código:
+
+1. inspecionar toda a arquitetura atual;
+2. localizar Companies;
+3. Business Memory;
+4. Business Journal invisível;
+5. Weekly Intelligence;
+6. Diagnoses;
+7. Recommendations;
+8. Action Plans;
+9. Actions;
+10. Decisions;
+11. Experiments;
+12. Results;
+13. Learnings;
+14. Goals;
+15. Metrics;
+16. Context Engine;
+17. SEED Brain;
+18. Strategic Reliability Layer;
+19. Model Router;
+20. usage/cost logging;
+21. RLS/multi-tenancy;
+22. i18n/markets;
+23. tela Minha Empresa;
+24. APIs/services existentes;
+25. migrations existentes relacionadas ao domínio empresarial.
+
+REUTILIZAR estruturas existentes sempre que possível.
+
+NÃO duplicar tabelas.
+
+NÃO criar dois sources of truth para a mesma informação.
+
+NÃO refatorar componentes estáveis sem necessidade.
+
+NÃO iniciar Fase 9.6.
+
+Ao terminar:
+
+- executar migrations necessárias;
+- lint;
+- typecheck;
+- testes unitários;
+- testes de integração;
+- testes RLS;
+- build;
+- validação manual;
+- relatório técnico;
+- PARAR;
+- aguardar aprovação.
+
+# ============================================================
+# 1. OBJETIVO
+# ============================================================
+
+Construir o MODELO VIVO DA EMPRESA.
+
+A SEED já consegue saber fatos como:
+
+"Empresa possui 4 vendedores."
+
+"Investe R$5.000 em Meta Ads."
+
+"Recebe 600 interessados."
+
+"Vende o Produto A."
+
+Na Fase 9.5, ela deve compreender também COMO essas informações se relacionam.
+
+Exemplo:
+
+Meta Ads
+↓
+gera interessados
+↓
+WhatsApp
+↓
+equipe comercial
+↓
+processo de vendas
+↓
+vendas
+↓
+receita
+↓
+operação
+↓
+entrega
+↓
+recompra
+
+O Business Model deve representar:
+
+ENTIDADES
++
+RELAÇÕES
++
+ESTADO ATUAL
++
+HISTÓRICO
++
+FONTES
++
+CONFIANÇA
++
+DEPENDÊNCIAS
++
+RESTRIÇÕES
+
+Objetivo final:
+
+A SEED deve conseguir responder internamente, de forma estruturada:
+
+"Como esta empresa funciona?"
+
+Não apenas gerar uma descrição textual bonita.
+
+# ============================================================
+# 2. DIFERENÇA ENTRE AS CAMADAS
+# ============================================================
+
+MEMORY
+=
+o que sabemos sobre a empresa.
+
+BUSINESS JOURNAL
+=
+o que aconteceu ao longo do tempo.
+
+EXECUTION LOOP
+=
+o que estamos tentando fazer, executar, medir e aprender.
+
+BUSINESS MODEL
+=
+como o negócio funciona e como suas partes se relacionam.
+
+Essas estruturas devem cooperar.
+
+Não devem competir como sources of truth.
+
+# ============================================================
+# 3. PRINCÍPIO DE UX
+# ============================================================
+
+O usuário NÃO deve precisar:
+
+- desenhar fluxogramas;
+- preencher Business Model Canvas;
+- criar entidades;
+- definir relações;
+- entender grafos;
+- cadastrar processos complexos;
+- preencher dezenas de campos;
+- administrar uma ontologia.
+
+Princípio:
+
+"O empresário conversa.
+A SEED constrói o modelo da empresa."
+
+A sofisticação fica nos bastidores.
+
+# ============================================================
+# 4. NÃO CRIAR NOVO ITEM DE MENU
+# ============================================================
+
+NÃO adicionar:
+
+Business Model
+Business Graph
+Modelo Vivo
+DNA da Empresa
+
+à sidebar principal.
+
+A navegação permanece simples:
+
++ Nova conversa
+
+Conversas
+
+Minha Empresa
+
+Diagnóstico
+
+Meu Plano Estratégico
+
+Configurações
+
+Business Model é inteligência interna.
+
+# ============================================================
+# 5. SEED BUSINESS GRAPH
+# ============================================================
+
+Criar conceito interno:
+
+SEED BUSINESS GRAPH
+
+Representar:
+
+ENTITIES
++
+RELATIONSHIPS
+
+Business Graph NÃO significa obrigatoriamente graph database.
+
+Preferir PostgreSQL/Supabase.
+
+Não adicionar:
+
+Neo4j
+graph database externo
+infraestrutura adicional
+
+sem necessidade técnica comprovada.
+
+# ============================================================
+# 6. ENTIDADES PRINCIPAIS
+# ============================================================
+
+Suportar inicialmente:
+
+COMPANY
+
+PRODUCT_SERVICE
+
+OFFER
+
+CUSTOMER_SEGMENT
+
+CHANNEL
+
+SALES_PROCESS
+
+SALES_STAGE
+
+TEAM
+
+TEAM_ROLE
+
+OPERATION
+
+CAPACITY
+
+COST_STRUCTURE
+
+REVENUE_STREAM
+
+LOCATION
+
+SUPPLIER
+
+GOAL
+
+CONSTRAINT
+
+METRIC
+
+MARKET
+
+CUSTOMER_JOURNEY
+
+Quando necessário e justificado:
+
+BUSINESS_UNIT
+
+BRAND
+
+PARTNER
+
+ASSET
+
+COMPETITOR
+
+Não criar entidades apenas para completar taxonomia.
+
+Cada entidade precisa possuir utilidade real para raciocínio estratégico.
+
+# ============================================================
+# 7. COMPANY
+# ============================================================
+
+Reutilizar Company existente.
+
+Possíveis informações:
+
+name
+business_type
+industry
+country_code
+currency_code
+timezone
+locale
+business_stage
+employee_count
+physical_digital_hybrid
+years_in_business
+
+Não duplicar company profile.
+
+# ============================================================
+# 8. PRODUCT_SERVICE
+# ============================================================
+
+Representar produtos e serviços relevantes.
+
+Possíveis campos:
+
+id
+company_id
+name
+description
+type
+category
+price
+currency_code
+estimated_margin nullable
+status
+is_primary
+created_at
+updated_at
+
+Estados:
+
+ACTIVE
+INACTIVE
+DISCONTINUED
+PLANNED
+
+Não exigir preço ou margem quando desconhecidos.
+
+# ============================================================
+# 9. OFFER
+# ============================================================
+
+Separar:
+
+PRODUTO/SERVIÇO
+
+de:
+
+OFERTA.
+
+Exemplo:
+
+Produto:
+Consultoria empresarial.
+
+Oferta:
+Diagnóstico + 3 encontros + plano por R$X.
+
+Oferta pode conter quando conhecido:
+
+product/service
+price
+conditions
+bonus
+target_segment
+positioning
+CTA
+validity
+
+Não exigir todos os campos.
+
+# ============================================================
+# 10. CUSTOMER SEGMENT
+# ============================================================
+
+Representar grupos relevantes de clientes.
+
+Exemplos:
+
+"Pequenos empresários locais."
+
+"Consumidores da região."
+
+"Empresas do agronegócio."
+
+Possíveis atributos:
+
+name
+description
+business_type
+main_need
+purchase_reason
+typical_objections
+status
+
+Evitar inferir atributos pessoais sensíveis desnecessários.
+
+# ============================================================
+# 11. CHANNEL
+# ============================================================
+
+Representar canais.
+
+Exemplos:
+
+Instagram
+Meta Ads
+Google
+WhatsApp
+Indicação
+Loja física
+Marketplace
+Parceiros
+Equipe comercial
+
+Papéis possíveis:
+
+ACQUISITION
+COMMUNICATION
+SALES
+RETENTION
+
+Um canal pode possuir múltiplos papéis.
+
+# ============================================================
+# 12. SALES PROCESS
+# ============================================================
+
+Representar como vendas acontecem.
+
+Exemplo:
+
+Instagram
+↓
+WhatsApp
+↓
+Atendimento
+↓
+Proposta
+↓
+Negociação
+↓
+Venda
+
+Não impor funil formal a todas as empresas.
+
+Deve funcionar para:
+
+loja
+padaria
+restaurante
+clínica
+serviços
+consultoria
+e-commerce
+indústria
+B2B.
+
+# ============================================================
+# 13. SALES STAGE
+# ============================================================
+
+Quando aplicável:
+
+LEAD
+CONTACT
+QUALIFICATION
+PROPOSAL
+NEGOTIATION
+SALE
+
+Permitir processos personalizados.
+
+Não obrigar negócios simples a utilizar estrutura de CRM.
+
+# ============================================================
+# 14. TEAM
+# ============================================================
+
+Representar capacidade humana relevante.
+
+Exemplos:
+
+owner
+sales
+marketing
+production
+delivery
+support
+management
+
+Foco:
+
+capacidade empresarial.
+
+Não transformar SEED em RH.
+
+Não armazenar dados pessoais desnecessários.
+
+# ============================================================
+# 15. OPERATION
+# ============================================================
+
+Representar como empresa entrega valor.
+
+Exemplos:
+
+produção
+atendimento
+agenda
+entrega
+estoque
+instalação
+consultoria
+logística
+
+Permitir relações:
+
+SALES
+↓
+OPERATION
+↓
+DELIVERY
+
+# ============================================================
+# 16. CAPACITY
+# ============================================================
+
+Representar limites conhecidos.
+
+Exemplos:
+
+40 atendimentos/dia
+
+100 pedidos/dia
+
+10 projetos simultâneos
+
+20 consultas/dia
+
+500 unidades/mês
+
+Guardar quando disponíveis:
+
+value
+unit
+period
+source
+confidence
+observed_at
+
+Não transformar aproximação em limite exato.
+
+Exemplo:
+
+"Quando passa de umas 80 encomendas começamos a atrasar."
+
+Não registrar:
+
+maximum_capacity = exactly 80
+
+como fato absoluto.
+
+# ============================================================
+# 17. COST STRUCTURE
+# ============================================================
+
+Representar custos estrategicamente relevantes.
+
+Categorias:
+
+FIXED
+VARIABLE
+SEMI_VARIABLE
+MARKETING
+LABOR
+LOGISTICS
+PRODUCTION
+OTHER
+
+Não construir contabilidade completa.
+
+Objetivo:
+
+permitir análise estratégica.
+
+# ============================================================
+# 18. REVENUE STREAM
+# ============================================================
+
+Representar fontes de receita.
+
+Exemplos:
+
+Produto A
+Produto B
+Assinatura
+Consultoria
+Loja física
+Marketplace
+Serviços adicionais
+
+Relacionar com Product/Service quando apropriado.
+
+# ============================================================
+# 19. LOCATION
+# ============================================================
+
+Representar quando relevante:
+
+unidade
+loja
+escritório
+região atendida
+
+Não exigir Location para negócios digitais.
+
+# ============================================================
+# 20. SUPPLIER
+# ============================================================
+
+Representar fornecedor somente quando estrategicamente relevante.
+
+Exemplos:
+
+fornecedor crítico
+dependência de fornecedor
+prazo
+custo relevante
+restrição de fornecimento
+
+Não construir procurement system.
+
+# ============================================================
+# 21. GOAL
+# ============================================================
+
+Reutilizar Goals existentes.
+
+Exemplo:
+
+"Chegar a R$150 mil/mês."
+
+Relacionar quando apropriado com:
+
+metrics
+products
+channels
+plans
+diagnoses
+constraints
+
+# ============================================================
+# 22. CONSTRAINT
+# ============================================================
+
+Representar limitações.
+
+Exemplos:
+
+capital
+equipe
+tempo
+estoque
+produção
+capacidade
+tecnologia
+dependência do proprietário
+
+Origem:
+
+KNOWN
+INFERRED
+
+Duração:
+
+TEMPORARY
+STRUCTURAL
+
+Inferência nunca deve virar fato automaticamente.
+
+# ============================================================
+# 23. METRIC
+# ============================================================
+
+Reutilizar Metrics existentes.
+
+Não duplicar.
+
+Relacionar métricas a entidades.
+
+Exemplos:
+
+conversion
+→ Sales Process
+
+revenue
+→ Company / Revenue Stream
+
+CAC
+→ Channel
+
+capacity utilization
+→ Operation
+
+average ticket
+→ Product / Company / Revenue Stream
+
+# ============================================================
+# 24. CUSTOMER JOURNEY
+# ============================================================
+
+Quando informações permitirem:
+
+DESCOBERTA
+↓
+INTERESSE
+↓
+CONTATO
+↓
+AVALIAÇÃO
+↓
+COMPRA
+↓
+ENTREGA
+↓
+RECOMPRA
+
+Não impor jornada padrão.
+
+# ============================================================
+# 25. RELAÇÕES
+# ============================================================
+
+Criar sistema de relações.
+
+Exemplos:
+
+COMPANY
+SELLS
+PRODUCT
+
+PRODUCT
+TARGETS
+CUSTOMER_SEGMENT
+
+OFFER
+PROMOTES
+PRODUCT
+
+CHANNEL
+GENERATES
+OPPORTUNITY
+
+CUSTOMER_SEGMENT
+USES
+CHANNEL
+
+SALES_PROCESS
+USES
+CHANNEL
+
+TEAM
+OPERATES
+SALES_PROCESS
+
+PRODUCT
+GENERATES
+REVENUE_STREAM
+
+PRODUCT
+CONSUMES
+CAPACITY
+
+OPERATION
+DELIVERS
+PRODUCT_SERVICE
+
+GOAL
+DEPENDS_ON
+METRIC
+
+CONSTRAINT
+LIMITS
+GOAL
+
+CONSTRAINT
+LIMITS
+OPERATION
+
+LOCATION
+SERVES
+CUSTOMER_SEGMENT
+
+Não permitir relações semanticamente absurdas sem validação.
+
+# ============================================================
+# 26. BUSINESS RELATIONSHIPS
+# ============================================================
+
+Criar/adaptar estrutura equivalente:
+
+business_relationships
+
+Campos conceituais:
+
+id
+company_id
+
+source_entity_type
+source_entity_id
+
+relationship_type
+
+target_entity_type
+target_entity_id
+
+status
+
+confidence
+
+source_type
+source_reference_id
+
+valid_from
+valid_until
+
+created_at
+updated_at
+
+metadata
+
+Antes de criar tabela genérica:
+
+verificar se relações importantes já possuem FKs adequadas.
+
+Utilizar abordagem híbrida quando apropriado.
+
+# ============================================================
+# 27. SOURCE OF TRUTH
+# ============================================================
+
+Regra crítica:
+
+NÃO criar cópias completas de entidades existentes.
+
+Se products já existe:
+
+Business Graph referencia Product.
+
+Se goals já existe:
+
+referencia Goal.
+
+Se metrics já existe:
+
+referencia Metric.
+
+Se plans já existe:
+
+referencia Plan.
+
+Evitar divergência.
+
+# ============================================================
+# 28. ESTADO ATUAL
+# ============================================================
+
+Business Model precisa distinguir:
+
+CURRENT STATE
+
+de:
+
+HISTORICAL STATE.
+
+Exemplo:
+
+Janeiro:
+4 vendedores.
+
+Setembro:
+7 vendedores.
+
+Atual:
+7.
+
+Histórico:
+4 → 7.
+
+# ============================================================
+# 29. TEMPORALIDADE
+# ============================================================
+
+Quando relevante:
+
+valid_from
+valid_until
+observed_at
+created_at
+updated_at
+is_current/status
+
+Não aplicar versionamento pesado onde não agrega valor.
+
+# ============================================================
+# 30. HISTÓRICO
+# ============================================================
+
+Não apagar automaticamente mudanças relevantes.
+
+Exemplo:
+
+Instagram era principal canal.
+
+Depois Google passa a ser principal.
+
+Preservar evolução quando útil.
+
+# ============================================================
+# 31. SOURCE
+# ============================================================
+
+Toda informação importante deve possuir proveniência quando possível.
+
+Tipos:
+
+USER_EXPLICIT
+
+CHAT
+
+DOCUMENT
+
+IMPORT
+
+INTEGRATION
+
+SYSTEM_DERIVED
+
+MANUAL_EDIT
+
+EXTERNAL
+
+EXTERNAL será utilizado principalmente na Fase 9.8.
+
+Não implementar 9.8 agora.
+
+# ============================================================
+# 32. SOURCE REFERENCE
+# ============================================================
+
+Quando possível:
+
+source_message_id
+journal_entry_id
+document_id/file reference
+metric_id
+manual_edit reference
+system_calculation
+
+A SEED deve distinguir:
+
+"O usuário informou."
+
+de:
+
+"A SEED inferiu."
+
+# ============================================================
+# 33. STRATEGIC RELIABILITY LAYER
+# ============================================================
+
+Esta fase DEVE reutilizar a Strategic Reliability Layer.
+
+Não criar outro sistema paralelo.
+
+Preservar:
+
+FACT
+
+METRIC
+
+DERIVED_METRIC
+
+OBSERVATION
+
+HYPOTHESIS
+
+INFERENCE
+
+ASSUMPTION
+
+DIAGNOSIS
+
+RECOMMENDATION
+
+RESULT
+
+LEARNING
+
+# ============================================================
+# 34. FACT ≠ INFERENCE
+# ============================================================
+
+Exemplo:
+
+Usuário:
+
+"Tenho quatro vendedores."
+
+FACT.
+
+Dados:
+
+leads aumentando
+tempo de resposta aumentando
+conversion caindo.
+
+SEED:
+
+"Capacidade comercial pode estar pressionada."
+
+INFERENCE/HYPOTHESIS.
+
+Não salvar:
+
+"Equipe comercial está sobrecarregada."
+
+como FACT.
+
+# ============================================================
+# 35. CONFIANÇA
+# ============================================================
+
+Reutilizar confidence existente.
+
+Exemplo:
+
+HIGH
+MODERATE
+LOW
+
+Confidence pode considerar:
+
+source
+recency
+consistency
+explicitness
+conflicts
+quality of evidence
+
+Não interpretar como chance de sucesso.
+
+# ============================================================
+# 36. BUSINESS MODEL BUILDER
+# ============================================================
+
+Criar serviço interno equivalente:
+
+BusinessModelBuilder
+
+Responsabilidades:
+
+receber fatos estruturados;
+
+receber eventos;
+
+receber métricas;
+
+detectar entidades;
+
+resolver entidades existentes;
+
+criar entidades quando apropriado;
+
+atualizar atributos;
+
+construir relações;
+
+atualizar estado atual;
+
+preservar histórico;
+
+registrar fontes;
+
+registrar confiança;
+
+detectar conflitos;
+
+evitar duplicações.
+
+# ============================================================
+# 37. ENTITY RESOLUTION
+# ============================================================
+
+Evitar duplicações como:
+
+Meta
+Meta Ads
+Facebook Ads
+Anúncios da Meta
+
+quando contexto indicar mesma entidade.
+
+Outro exemplo:
+
+Whats
+WhatsApp
+WhatsApp Business
+
+Resolver quando apropriado.
+
+Não mesclar automaticamente quando houver ambiguidade relevante.
+
+# ============================================================
+# 38. ENTITY IDENTITY
+# ============================================================
+
+Criar estratégia determinística quando possível:
+
+normalized_name
+entity_type
+company_id
+canonical identifier
+
+Usar IA apenas quando necessário.
+
+Não depender exclusivamente de similaridade textual.
+
+# ============================================================
+# 39. DEDUPLICAÇÃO
+# ============================================================
+
+Reprocessar uma mensagem não pode criar:
+
+dois produtos iguais;
+
+dois canais iguais;
+
+duas relações iguais;
+
+duas capacidades iguais.
+
+Utilizar:
+
+unique constraints
+source references
+upserts
+semantic resolution
+
+conforme apropriado.
+
+# ============================================================
+# 40. CONFLITOS
+# ============================================================
+
+Exemplo:
+
+Memory:
+6 funcionários.
+
+Mensagem:
+
+"Agora somos 9."
+
+Provável atualização.
+
+Outro:
+
+"Tenho 9 pessoas na produção."
+
+Não assumir:
+
+employee_count = 9.
+
+Se informação for material:
+
+perguntar.
+
+# ============================================================
+# 41. CONFLICT STATES
+# ============================================================
+
+Preparar estados equivalentes:
+
+CONFIRMED
+PROVISIONAL
+CONFLICTING
+STALE
+UNKNOWN
+
+Não mostrar códigos técnicos ao usuário.
+
+# ============================================================
+# 42. UNKNOWN ≠ DOES NOT EXIST
+# ============================================================
+
+SEED não sabe se empresa utiliza CRM.
+
+Isso NÃO significa:
+
+Empresa não usa CRM.
+
+Preservar UNKNOWN.
+
+# ============================================================
+# 43. STALENESS
+# ============================================================
+
+Algumas informações envelhecem.
+
+Exemplo:
+
+employee_count informado 18 meses atrás.
+
+Pode continuar correto.
+
+Mas pode exigir atualização dependendo da análise.
+
+Criar conceito de staleness por categoria quando útil.
+
+Não invalidar automaticamente dados estáveis.
+
+# ============================================================
+# 44. MANUAL EDIT
+# ============================================================
+
+Correção manual do usuário possui prioridade apropriada.
+
+Exemplo:
+
+Minha Empresa:
+
+Equipe comercial
+4 pessoas
+
+[Editar]
+
+Usuário altera para 5.
+
+Registrar:
+
+MANUAL_EDIT
+
+Atualizar current state.
+
+Preservar histórico quando apropriado.
+
+# ============================================================
+# 45. BUSINESS MODEL INCREMENTAL
+# ============================================================
+
+Não exigir modelo completo.
+
+Business Model nasce parcial.
+
+Cresce com:
+
+conversas
+memória
+Journal
+métricas
+documentos
+planos
+resultados
+correções.
+
+Não criar onboarding enorme.
+
+# ============================================================
+# 46. MODEL COVERAGE
+# ============================================================
+
+Criar avaliação interna de cobertura.
+
+Domínios possíveis:
+
+COMPANY
+
+OFFER
+
+CUSTOMERS
+
+ACQUISITION
+
+SALES
+
+OPERATIONS
+
+FINANCE
+
+TEAM
+
+GOALS
+
+Estados:
+
+UNKNOWN
+LIMITED
+PARTIAL
+SUFFICIENT
+STRONG
+
+Não criar percentual
+# ============================================================
+# 47. COVERAGE RULES
+# ============================================================
+
+Model Coverage deve possuir critérios claros e documentados.
+
+Não permitir que o modelo atribua livremente um nível sem critérios.
+
+Exemplo:
+
+FINANCE = UNKNOWN
+
+quando praticamente não existem informações financeiras.
+
+FINANCE = LIMITED
+
+quando conhece faturamento, mas desconhece custos e margem.
+
+FINANCE = PARTIAL
+
+quando conhece faturamento, alguns custos e margem aproximada, mas existem lacunas relevantes.
+
+FINANCE = SUFFICIENT
+
+quando existem dados suficientes para determinada classe de análise.
+
+FINANCE = STRONG
+
+quando existem dados atuais, consistentes, contextualizados e historicamente úteis.
+
+IMPORTANTE:
+
+Coverage é contextual.
+
+SUFFICIENT não significa:
+
+"Sabemos tudo sobre as finanças."
+
+Significa:
+
+"Existe informação suficiente para determinadas análises."
+
+# ============================================================
+# 48. COVERAGE → STRATEGIC SUFFICIENCY
+# ============================================================
+
+Integrar Model Coverage com o Strategic Sufficiency Gate existente.
+
+Exemplo:
+
+Usuário:
+
+"Posso dar 20% de desconto?"
+
+Business Model:
+
+price = known
+
+cost = unknown
+
+margin = unknown
+
+FINANCE = LIMITED
+
+Resultado:
+
+sufficiency = INSUFFICIENT
+
+A SEED deve perguntar pelos dados essenciais.
+
+Não inventar margem.
+
+Não recomendar desconto sem avaliar impacto quando essa informação for material.
+
+# ============================================================
+# 49. DEPENDENCY MAP
+# ============================================================
+
+Permitir representar dependências entre componentes do negócio.
+
+Exemplo:
+
+GOAL
+Aumentar receita
+↓
+DEPENDS_ON
+VOLUME DE VENDAS
++
+TICKET
++
+FREQUÊNCIA
+
+VOLUME DE VENDAS
+↓
+DEPENDS_ON
+OPORTUNIDADES
++
+CONVERSÃO
+
+OPORTUNIDADES
+↓
+DEPENDS_ON
+CANAIS DE AQUISIÇÃO
+
+CONVERSÃO
+↓
+PODE DEPENDER DE
+OFERTA
+PROCESSO COMERCIAL
+TEMPO DE RESPOSTA
+PREÇO
+EQUIPE
+SEGMENTO
+
+ENTREGA
+↓
+DEPENDS_ON
+CAPACIDADE OPERACIONAL
+
+A arquitetura deve permitir representar essas relações sem assumir causalidade automaticamente.
+
+Uma dependência estrutural conhecida não significa que qualquer alteração em A causará necessariamente alteração em B.
+
+# ============================================================
+# 50. BUSINESS FLOW
+# ============================================================
+
+Quando houver informações suficientes, construir o fluxo principal da empresa.
+
+Exemplo:
+
+META ADS
+↓
+INTERESSADO
+↓
+WHATSAPP
+↓
+ATENDIMENTO
+↓
+PROPOSTA
+↓
+VENDA
+↓
+PRODUÇÃO
+↓
+ENTREGA
+↓
+RECOMPRA
+
+Cada etapa pode possuir, quando disponíveis:
+
+metrics
+capacity
+constraints
+channel
+responsible_role
+costs
+conversion
+processing_time
+
+Não exigir que toda empresa possua todas as etapas.
+
+# ============================================================
+# 51. BUSINESS FLOW NÃO É FIXO
+# ============================================================
+
+A arquitetura deve funcionar para negócios diferentes.
+
+Varejo físico:
+
+TRÁFEGO LOCAL
+↓
+LOJA
+↓
+ATENDIMENTO
+↓
+COMPRA
+↓
+RECOMPRA
+
+Restaurante:
+
+DESCOBERTA
+↓
+VISITA/PEDIDO
+↓
+COMPRA
+↓
+PRODUÇÃO
+↓
+ENTREGA/CONSUMO
+↓
+RETORNO
+
+Consultoria:
+
+CONTEÚDO/INDICAÇÃO
+↓
+CONTATO
+↓
+DIAGNÓSTICO
+↓
+PROPOSTA
+↓
+FECHAMENTO
+↓
+ENTREGA
+↓
+RENOVAÇÃO/INDICAÇÃO
+
+Indústria:
+
+PROSPECÇÃO
+↓
+OPORTUNIDADE
+↓
+ORÇAMENTO
+↓
+NEGOCIAÇÃO
+↓
+PEDIDO
+↓
+PRODUÇÃO
+↓
+LOGÍSTICA
+↓
+RECOMPRA
+
+Não criar arquitetura dependente de um único modelo de negócio.
+
+# ============================================================
+# 52. GROWTH MODEL INTEGRATION
+# ============================================================
+
+Integrar Business Model ao Growth Model existente:
+
+ACQUISITION
+↓
+CONVERSION
+↓
+TICKET
+↓
+FREQUENCY
+↓
+RETENTION
+↓
+MARGIN
+
+O Business Model fornece contexto estrutural.
+
+O Growth Model ajuda a interpretar crescimento.
+
+Não duplicar Growth Engine.
+
+# ============================================================
+# 53. NÃO REDUZIR EMPRESA AO FUNIL
+# ============================================================
+
+O Business Model também deve representar fatores fora do funil:
+
+OPERATION
+TEAM
+CAPACITY
+COST
+CASH CONSTRAINTS quando existentes
+SUPPLIERS
+LOCATIONS
+OWNER DEPENDENCY
+DELIVERY
+PRODUCT MIX
+BUSINESS MODEL
+GOALS
+
+Exemplo:
+
+vendas podem estar saudáveis enquanto a operação está no limite.
+
+A SEED precisa enxergar isso.
+
+# ============================================================
+# 54. EXECUTION LOOP INTEGRATION
+# ============================================================
+
+Integrar com Fase 9.4.
+
+Business Model deve fornecer contexto para:
+
+DIAGNOSIS
+RECOMMENDATION
+NEXT BEST ACTION
+PLAN
+ACTION
+DECISION
+EXPERIMENT
+RESULT
+LEARNING
+REVIEW
+
+Exemplo:
+
+Diagnóstico:
+baixa conversão.
+
+Business Model fornece quando disponíveis:
+
+canal
+segmento
+oferta
+processo comercial
+equipe
+capacidade
+preço
+restrições
+
+Isso permite recomendação contextualizada.
+
+# ============================================================
+# 55. RESULT → BUSINESS MODEL
+# ============================================================
+
+Resultados do Execution Loop podem atualizar Business Model quando representarem nova informação estrutural.
+
+Exemplo:
+
+um novo canal começa a gerar oportunidades consistentemente.
+
+Isso pode atualizar relações relevantes.
+
+Mas um único resultado fraco não deve automaticamente redefinir o modelo da empresa.
+
+Considerar:
+
+evidence
+confidence
+repetition
+period
+scope
+context
+
+# ============================================================
+# 56. LEARNING → BUSINESS MODEL
+# ============================================================
+
+Learnings podem informar o modelo.
+
+Exemplo:
+
+"Clientes do segmento X apresentaram ticket observado superior durante os últimos três períodos."
+
+Pode ser relevante.
+
+Mas deve continuar distinguido de fato estrutural absoluto.
+
+Preservar:
+
+source
+period
+evidence_level
+confidence
+scope
+
+# ============================================================
+# 57. JOURNAL INTEGRATION
+# ============================================================
+
+Business Journal:
+
+O QUE ACONTECEU.
+
+Business Model:
+
+COMO O NEGÓCIO FUNCIONA AGORA.
+
+Nem todo Journal Entry deve alterar Business Model.
+
+Exemplo:
+
+"Hoje tivemos uma reunião."
+
+Journal.
+
+Provavelmente não altera Business Model.
+
+Exemplo:
+
+"Agora todas as vendas online passam pelo WhatsApp."
+
+Pode alterar Business Model.
+
+# ============================================================
+# 58. MEMORY INTEGRATION
+# ============================================================
+
+Memory e Business Model devem cooperar.
+
+Não criar duas versões conflitantes do mesmo fato.
+
+Definir claramente:
+
+Memory:
+conhecimento persistente e recuperável.
+
+Business Model:
+estrutura empresarial, entidades, relações e estado.
+
+Quando possível, Business Model deve referenciar informações já estruturadas em vez de copiá-las.
+
+# ============================================================
+# 59. CONTEXT ENGINE
+# ============================================================
+
+Atualizar Context Engine para utilizar Business Model.
+
+Regra:
+
+NÃO enviar Business Graph inteiro em toda chamada.
+
+Recuperar somente subgrafo relevante.
+
+Exemplo:
+
+Usuário:
+
+"Vale aumentar meus anúncios?"
+
+Contexto relevante pode incluir:
+
+GOAL
+↓
+CHANNEL
+↓
+ACQUISITION METRICS
+↓
+SALES PROCESS
+↓
+CONVERSION
+↓
+SALES CAPACITY
+↓
+OPERATIONAL CAPACITY
+↓
+MARGIN
+↓
+CONSTRAINTS
+
+Não incluir informações irrelevantes.
+
+# ============================================================
+# 60. BUSINESS CONTEXT RESOLVER
+# ============================================================
+
+Criar serviço interno equivalente:
+
+BusinessContextResolver
+
+Entrada conceitual:
+
+companyId
+intent
+mentionedEntities
+timeframe
+goalId nullable
+diagnosisId nullable
+planId nullable
+
+Saída:
+
+relevantEntities
+relevantRelationships
+relevantMetrics
+relevantConstraints
+relevantHistory
+relevantLearnings
+coverage
+missingInformation
+confidence
+
+Adaptar à arquitetura existente.
+
+# ============================================================
+# 61. SUBGRAPH RETRIEVAL
+# ============================================================
+
+O Context Resolver deve conseguir recuperar um subgrafo.
+
+Critérios:
+
+relação direta com pergunta
+relação com objetivo
+relação com diagnóstico
+impacto estratégico
+recência
+estado atual
+confiança
+histórico relevante
+
+Não utilizar somente similaridade semântica.
+
+Dados estruturados devem aproveitar consultas determinísticas.
+
+# ============================================================
+# 62. CONTEXT BUDGET
+# ============================================================
+
+Criar controle de contexto.
+
+Prioridade:
+
+1. fatos diretamente relacionados;
+2. métricas diretamente relacionadas;
+3. restrições;
+4. estado atual;
+5. relações estruturais;
+6. histórico relevante;
+7. learnings relevantes;
+8. hipóteses relevantes.
+
+Evitar desperdício de tokens.
+
+# ============================================================
+# 63. MINHA EMPRESA
+# ============================================================
+
+Evoluir a tela "Minha Empresa" sem transformá-la em dashboard complexo.
+
+Possível estrutura:
+
+MINHA EMPRESA
+
+Sobre seu negócio
+
+O que você vende
+
+Para quem você vende
+
+Como os clientes chegam
+
+Como as vendas acontecem
+
+Como você entrega
+
+Sua equipe
+
+Seus principais números
+
+Seu objetivo atual
+
+O que pode limitar seu crescimento
+
+Mostrar somente seções com informação útil.
+
+# ============================================================
+# 64. LINGUAGEM DA TELA
+# ============================================================
+
+Não mostrar:
+
+PRODUCT_SERVICE ENTITY
+
+CUSTOMER_SEGMENT
+
+RELATIONSHIP
+
+CAPACITY NODE
+
+CONSTRAINT TYPE
+
+Mostrar:
+
+O que você vende
+
+Seus clientes
+
+Como os clientes chegam
+
+Como você vende
+
+Como entrega
+
+Sua equipe
+
+Seus limites atuais
+
+# ============================================================
+# 65. NÃO MOSTRAR GRAFO
+# ============================================================
+
+Não mostrar ao usuário:
+
+nodes
+edges
+graph IDs
+relationship IDs
+confidence = 0.82
+ontology
+raw JSON
+
+O Business Graph é interno.
+
+# ============================================================
+# 66. EDIÇÃO PELO USUÁRIO
+# ============================================================
+
+Usuário deve conseguir corrigir informações relevantes.
+
+Exemplo:
+
+Equipe comercial
+4 pessoas
+
+[Editar]
+
+Usuário:
+5 pessoas.
+
+Sistema:
+
+atualiza current state;
+
+preserva histórico quando relevante;
+
+registra MANUAL_EDIT;
+
+mantém source;
+
+reavalia relações dependentes quando necessário.
+
+# ============================================================
+# 67. INFORMAÇÕES FALTANTES
+# ============================================================
+
+Não criar onboarding enorme para completar Business Model.
+
+Se informação faltar e for importante para resolver problema atual:
+
+perguntar dentro da conversa.
+
+Exemplo:
+
+"Para analisar se vale aumentar os anúncios, preciso entender uma coisa: quantos novos contatos sua equipe consegue atender bem por dia?"
+
+A resposta:
+
+resolve a análise atual
+
+e
+
+enriquece Business Model.
+
+# ============================================================
+# 68. NO PROFILE COMPLETION GAMIFICATION
+# ============================================================
+
+Não mostrar:
+
+"Seu perfil está 37% completo."
+
+Não criar gamificação arbitrária.
+
+Coverage é ferramenta interna de confiabilidade.
+
+# ============================================================
+# 69. APIs / SERVICE LAYER
+# ============================================================
+
+Criar camada de serviços clara.
+
+Possíveis serviços:
+
+BusinessModelService
+
+BusinessModelBuilder
+
+EntityResolutionService
+
+RelationshipService
+
+BusinessContextResolver
+
+BusinessModelHistoryService
+
+BusinessModelCoverageService
+
+BusinessModelConsistencyService
+
+Adaptar nomes à arquitetura existente.
+
+Não criar abstrações vazias.
+
+# ============================================================
+# 70. GET BUSINESS MODEL
+# ============================================================
+
+Criar endpoint/action equivalente quando necessário:
+
+GET /api/companies/:companyId/business-model
+
+Retornar versão segura e amigável para UI.
+
+Não retornar metadados internos desnecessários.
+
+Aplicar:
+
+authentication
+authorization
+company membership
+RLS.
+
+# ============================================================
+# 71. UPDATE BUSINESS MODEL
+# ============================================================
+
+Criar endpoint/action equivalente:
+
+PATCH /api/companies/:companyId/business-model
+
+Uso:
+
+correções explícitas do usuário.
+
+Validar:
+
+company access
+field
+entity
+schema
+history
+source
+
+Registrar:
+
+MANUAL_EDIT.
+
+# ============================================================
+# 72. INTERNAL CONTEXT API
+# ============================================================
+
+Preferir service interno para Context Resolver.
+
+Conceitualmente:
+
+resolveBusinessContext({
+  companyId,
+  intent,
+  entities,
+  timeframe,
+  goalId,
+  diagnosisId,
+  planId
+})
+
+Não criar endpoint público sem necessidade.
+
+# ============================================================
+# 73. HISTORY ACCESS
+# ============================================================
+
+Criar service/endpoint seguro quando necessário para auditoria.
+
+Exemplo:
+
+business-model/history
+
+Não carregar histórico completo por padrão.
+
+# ============================================================
+# 74. PROCESSAMENTO APÓS CONVERSA
+# ============================================================
+
+Fluxo:
+
+USER MESSAGE
+↓
+CHAT RESPONSE PIPELINE
+↓
+STRUCTURED EXTRACTION
+↓
+MEMORY
+↓
+JOURNAL
+↓
+BUSINESS MODEL BUILDER
+↓
+ENTITY RESOLUTION
+↓
+RELATIONSHIP UPDATE
+↓
+CURRENT STATE UPDATE
+↓
+HISTORY
+↓
+SOURCE + CONFIDENCE
+↓
+CONSISTENCY CHECK
+
+Não atrasar resposta principal desnecessariamente.
+
+# ============================================================
+# 75. PROCESSAMENTO ASSÍNCRONO
+# ============================================================
+
+Quando arquitetura permitir:
+
+resposta ao usuário deve poder concluir sem esperar todo processamento secundário.
+
+Mas NÃO utilizar fire-and-forget inseguro.
+
+Garantir quando aplicável:
+
+queue/job mechanism existente
+retry control
+idempotência
+error logging
+observability.
+
+Não adicionar infraestrutura externa desnecessária sem justificativa.
+
+# ============================================================
+# 76. IDEMPOTÊNCIA
+# ============================================================
+
+Reprocessar mesma mensagem não pode duplicar:
+
+product
+channel
+customer segment
+relationship
+capacity
+constraint
+revenue stream.
+
+Utilizar:
+
+source_message_id
+canonical identity
+unique constraints
+upsert
+processing keys
+
+conforme apropriado.
+
+# ============================================================
+# 77. DOCUMENT PROCESSING
+# ============================================================
+
+Quando anexos já forem suportados:
+
+informações extraídas podem alimentar Business Model.
+
+Exemplo:
+
+usuário envia tabela de preços.
+
+SEED identifica:
+
+products
+prices
+
+Guardar:
+
+DOCUMENT source.
+
+Considerar:
+
+document date
+document relevance
+currentness
+
+Documento antigo não deve automaticamente substituir informação atual explícita.
+
+# ============================================================
+# 78. CONVERSATIONAL UPDATE
+# ============================================================
+
+Usuário:
+
+"Não vendemos mais esse produto."
+
+Sistema:
+
+identifica Product;
+
+altera status quando suficientemente claro;
+
+preserva histórico;
+
+atualiza relações atuais.
+
+Não excluir silenciosamente histórico de receita/ações ligado ao produto.
+
+# ============================================================
+# 79. RELATIONSHIP HISTORY
+# ============================================================
+
+Relações podem mudar.
+
+Exemplo:
+
+Antes:
+
+Instagram
+PRIMARY_ACQUISITION_CHANNEL.
+
+Depois:
+
+Google
+PRIMARY_ACQUISITION_CHANNEL.
+
+Preservar evolução quando relevante.
+
+# ============================================================
+# 80. DERIVED KNOWLEDGE
+# ============================================================
+
+Permitir conhecimento derivado deterministicamente.
+
+Exemplos:
+
+conversion = sales / leads
+
+average_ticket = revenue / sales
+
+capacity_utilization = actual_volume / known_capacity
+
+quando inputs forem compatíveis.
+
+Guardar:
+
+inputs
+formula/version
+period
+scope
+calculated_at
+
+Não tratar como informação explicitamente informada pelo usuário.
+
+# ============================================================
+# 81. DETERMINISTIC FIRST
+# ============================================================
+
+Não usar IA quando código/SQL resolve.
+
+Usar código para:
+
+matemática
+temporalidade determinística
+unique constraints
+current state
+known relations
+lookups
+validation
+
+Usar IA para:
+
+interpretação semântica
+entity extraction
+relationship inference
+ambiguity resolution assistance
+
+quando necessário.
+
+# ============================================================
+# 82. CONSISTENCY ENGINE
+# ============================================================
+
+Criar verificações de consistência.
+
+Exemplo:
+
+100 leads
+
+20 vendas
+
+usuário informa:
+
+conversion = 35%
+
+Sistema calcula:
+
+20%.
+
+Não sobrescrever silenciosamente.
+
+Marcar conflito.
+
+Quando material para decisão:
+
+SEED deve esclarecer.
+
+# ============================================================
+# 83. CONSISTENCY TYPES
+# ============================================================
+
+Detectar quando possível:
+
+NUMERIC_CONFLICT
+
+TEMPORAL_CONFLICT
+
+ENTITY_CONFLICT
+
+RELATIONSHIP_CONFLICT
+
+SCOPE_CONFLICT
+
+SOURCE_CONFLICT
+
+Não mostrar códigos técnicos ao usuário.
+
+# ============================================================
+# 84. SCOPE
+# ============================================================
+
+Informações devem respeitar escopo.
+
+Exemplos:
+
+COMPANY
+LOCATION
+PRODUCT
+CHANNEL
+BUSINESS_UNIT
+PERIOD
+
+Não misturar:
+
+vendas da unidade A
+
+com:
+
+leads da empresa inteira
+
+para calcular conversion.
+
+# ============================================================
+# 85. BUSINESS MODEL SNAPSHOTS
+# ============================================================
+
+Preparar capacidade de comparar evolução do negócio.
+
+Não criar cópia completa diária do banco.
+
+Utilizar:
+
+history
+temporal records
+event sourcing parcial
+snapshots ocasionais
+
+conforme arquitetura adequada.
+
+Objetivo futuro:
+
+"Como sua empresa mudou nos últimos 12 meses?"
+
+# ============================================================
+# 86. SCHEMA VERSION
+# ============================================================
+
+Versionar modelo conceitual.
+
+Exemplo:
+
+business_model_schema_version
+
+Isso permitirá evolução futura sem destruir histórico.
+
+# ============================================================
+# 87. MODEL ROUTER
+# ============================================================
+
+Integrar ao Model Router.
+
+ECONOMY pode ser usado para:
+
+entity extraction
+classification
+normalization
+simple entity resolution
+simple relationship extraction
+
+STRATEGIC pode ser usado para:
+
+complex relationship inference
+business flow interpretation
+dependency analysis
+structural ambiguity
+important consistency analysis
+
+Não hardcode nomes dos modelos.
+
+# ============================================================
+# 88. AI COST
+# ============================================================
+
+Registrar features equivalentes:
+
+BUSINESS_MODEL_EXTRACTION
+
+BUSINESS_MODEL_ENTITY_RESOLUTION
+
+BUSINESS_MODEL_RELATIONSHIP_INFERENCE
+
+BUSINESS_MODEL_CONTEXT_RESOLUTION
+
+BUSINESS_MODEL_CONSISTENCY_ANALYSIS
+
+Integrar usage/cost da Fase 9.1.
+
+# ============================================================
+# 89. NÃO FAZER CHAMADA DE IA AO ABRIR TELA
+# ============================================================
+
+Abrir:
+
+Minha Empresa
+
+não deve automaticamente gerar nova chamada paga de IA se dados já estão persistidos.
+
+A tela deve ler dados estruturados.
+
+# ============================================================
+# 90. MULTI-TENANCY
+# ============================================================
+
+Toda entidade/relação deve estar associada corretamente a company_id.
+
+RLS obrigatório.
+
+Nenhum contexto de Empresa A pode aparecer na Empresa B.
+
+Testar explicitamente cross-tenant leakage.
+
+# ============================================================
+# 91. PRIVACIDADE
+# ============================================================
+
+Aplicar:
+
+data minimization
+purpose limitation
+access control
+correction
+deletion
+export readiness
+
+Não armazenar indiscriminadamente:
+
+dados pessoais de clientes
+dados pessoais de funcionários
+dados sensíveis
+
+Foco:
+
+estrutura empresarial.
+
+# ============================================================
+
+# ============================================================
+# 92. DELEÇÃO E HISTÓRICO — CONTINUAÇÃO
+# ============================================================
+
+Respeitar políticas reais de exclusão e privacidade.
+
+Ao remover uma entidade que possui relações:
+
+não deixar referências quebradas.
+
+Aplicar estratégia adequada:
+
+INACTIVE
+DISCONTINUED
+SOFT_DELETE
+ANONYMIZATION
+HARD_DELETE
+
+conforme:
+
+tipo de dado
+necessidade funcional
+política de privacidade
+obrigações aplicáveis
+
+Não utilizar soft delete como forma de impedir uma exclusão que juridicamente precise ser definitiva.
+
+# ============================================================
+# 93. GLOBAL READY
+# ============================================================
+
+Business Model deve funcionar com a arquitetura internacional já criada.
+
+Respeitar:
+
+preferred_language
+country_code
+market_code
+locale
+currency_code
+timezone
+
+Não hardcode:
+
+Brasil
+BRL
+R$
+dd/mm/yyyy
+português brasileiro
+processos comerciais brasileiros
+
+A estrutura deve funcionar inicialmente para:
+
+BR
+PT
+ES
+US
+
+e ser extensível para novos mercados.
+
+# ============================================================
+# 94. MULTI-CURRENCY
+# ============================================================
+
+Valores monetários devem possuir:
+
+numeric_value
+currency_code
+
+Exemplo:
+
+10000
+BRL
+
+Não armazenar somente:
+
+"R$10.000"
+
+como valor textual.
+
+Permitir:
+
+BRL
+EUR
+USD
+
+e outras moedas futuramente.
+
+Não realizar conversão cambial automaticamente sem necessidade e fonte adequada.
+
+# ============================================================
+# 95. BUSINESS TYPES
+# ============================================================
+
+Testar Business Model com empresas diferentes.
+
+Pelo menos:
+
+RETAIL
+
+RESTAURANT / FOOD
+
+PROFESSIONAL SERVICES
+
+CLINIC / LOCAL SERVICE
+
+B2B
+
+SMALL INDUSTRY
+
+ECOMMERCE
+
+AGENCY
+
+CONSULTANCY
+
+Não construir arquitetura que funcione apenas para:
+
+SaaS
+e-commerce
+agência
+B2B
+funil digital.
+
+# ============================================================
+# 96. EXEMPLO — PADARIA
+# ============================================================
+
+Usuário:
+
+"Tenho uma padaria. Faturamos em média R$120 mil por mês. O salão representa uns 40%, balcão 35% e encomendas o restante."
+
+Esperado:
+
+COMPANY
+industry = bakery/food
+
+METRIC
+revenue ≈ BRL 120000/month
+
+REVENUE STREAMS:
+
+salão
+≈ 40%
+
+balcão
+≈ 35%
+
+encomendas
+≈ 25%
+
+IMPORTANTE:
+
+25% foi derivado matematicamente.
+
+Portanto:
+
+source_type = SYSTEM_DERIVED
+
+e não:
+
+USER_EXPLICIT.
+
+Preservar aproximação.
+
+# ============================================================
+# 97. EXEMPLO — CANAIS
+# ============================================================
+
+Usuário:
+
+"A maioria das encomendas vem pelo Instagram e fecha no WhatsApp."
+
+Business Model deve conseguir representar:
+
+Instagram
+→ gera interesse/oportunidades para encomendas
+
+WhatsApp
+→ utilizado no fechamento
+
+Encomendas
+→ revenue stream/product context
+
+Não criar novos canais se Instagram e WhatsApp já existirem.
+
+# ============================================================
+# 98. EXEMPLO — CAPACIDADE
+# ============================================================
+
+Usuário:
+
+"Quando passa de umas 80 encomendas por dia a cozinha começa a atrasar."
+
+Registrar:
+
+OPERATION:
+cozinha/produção
+
+CAPACITY OBSERVATION:
+≈ 80 encomendas/dia
+
+CONSTRAINT/HYPOTHESIS:
+capacidade operacional pode começar a pressionar entrega acima dessa faixa.
+
+Não registrar:
+
+maximum_capacity = exactly 80
+
+como fato absoluto.
+
+Preservar:
+
+aproximação
+fonte
+data
+contexto.
+
+# ============================================================
+# 99. EXEMPLO — DECISÃO FUTURA
+# ============================================================
+
+Depois o usuário pergunta:
+
+"Quero dobrar os anúncios das encomendas. O que você acha?"
+
+BusinessContextResolver deve conseguir recuperar:
+
+current advertising channel
+current lead/order volume
+conversion quando disponível
+order volume
+kitchen capacity
+delivery capacity
+margin quando disponível
+goal
+constraints
+historical results
+
+Isso prepara a Fase 9.6.
+
+Nesta fase NÃO executar Decision Simulator completo.
+
+# ============================================================
+# 100. EXEMPLO — CONSULTORIA
+# ============================================================
+
+Usuário:
+
+"Meus clientes vêm principalmente do Instagram. Eu faço uma reunião de diagnóstico, depois mando uma proposta e fecho mais ou menos 30%."
+
+Business Model:
+
+CHANNEL:
+Instagram
+
+SALES PROCESS:
+
+Instagram
+↓
+Contato
+↓
+Diagnóstico
+↓
+Proposta
+↓
+Fechamento
+
+METRIC:
+
+conversion ≈ 30%
+
+Guardar escopo e fonte.
+
+Não assumir que 30% se aplica a todos os períodos históricos.
+
+# ============================================================
+# 101. EXEMPLO — NOVO CANAL
+# ============================================================
+
+Depois:
+
+"Agora comecei a captar também pelo Google."
+
+Não substituir Instagram.
+
+Adicionar/reutilizar:
+
+Google
+
+Criar relação apropriada como novo canal de aquisição.
+
+Estado atual:
+
+Instagram + Google.
+
+Não inferir automaticamente qual é o principal canal.
+
+# ============================================================
+# 102. EXEMPLO — CONFLITO DE EQUIPE
+# ============================================================
+
+Business Model atual:
+
+sales_team_size = 4
+
+Usuário:
+
+"Hoje cinco pessoas atenderam clientes."
+
+Não concluir automaticamente:
+
+sales_team_size = 5.
+
+Pode ter ocorrido:
+
+ajuda temporária
+proprietário atendendo
+funcionário de outro setor
+situação excepcional
+
+Registrar evento quando relevante.
+
+Perguntar somente se essa informação for material para a análise atual.
+
+# ============================================================
+# 103. EXEMPLO — INFERÊNCIA
+# ============================================================
+
+Dados:
+
+leads ↑
+
+response time ↑
+
+conversion ↓
+
+SEED pode formular:
+
+HYPOTHESIS / INFERENCE:
+
+"A capacidade de atendimento pode estar contribuindo para a queda da conversão."
+
+Não criar:
+
+FACT:
+
+"Equipe comercial está sobrecarregada."
+
+# ============================================================
+# 104. EXEMPLO — PRODUTO DESCONTINUADO
+# ============================================================
+
+Usuário:
+
+"Não trabalhamos mais com o Produto X."
+
+Esperado:
+
+Produto X:
+DISCONTINUED ou INACTIVE conforme contexto.
+
+Preservar:
+
+histórico
+vendas anteriores
+decisões relacionadas
+experimentos
+resultados
+learnings
+
+Não apagar a existência histórica do produto.
+
+# ============================================================
+# 105. EXEMPLO — ALTERAÇÃO DE PREÇO
+# ============================================================
+
+Usuário:
+
+"Subimos o Produto A de R$199 para R$249."
+
+Esperado:
+
+current_price = BRL 249
+
+preservar preço anterior:
+
+BRL 199
+
+com temporalidade apropriada.
+
+Registrar:
+
+source
+observed_at
+valid_from
+
+quando disponíveis.
+
+# ============================================================
+# 106. EXEMPLO — OBJETIVO
+# ============================================================
+
+Usuário:
+
+"Quero chegar a R$200 mil de faturamento mensal até junho."
+
+Reutilizar Goal existente.
+
+Business Model deve relacionar:
+
+GOAL
+monthly_revenue = 200000
+currency = BRL
+deadline = June appropriate year
+
+com métricas e dependências relevantes.
+
+Não assumir automaticamente como chegar lá.
+
+# ============================================================
+# 107. EXEMPLO — RESTRIÇÃO
+# ============================================================
+
+Usuário:
+
+"Não quero contratar ninguém nos próximos seis meses."
+
+Registrar como:
+
+CONSTRAINT / BUSINESS PREFERENCE
+
+Relacionar quando relevante a:
+
+TEAM
+CAPACITY
+GOAL
+PLAN
+
+Isso deve influenciar futuras recomendações.
+
+A SEED não deve recomendar contratação como primeira solução sem considerar essa restrição.
+
+# ============================================================
+# 108. EXEMPLO — DEPENDÊNCIA DO PROPRIETÁRIO
+# ============================================================
+
+Usuário:
+
+"Todas as vendas grandes ainda dependem de mim."
+
+Registrar:
+
+OBSERVATION / STRUCTURAL CONSTRAINT
+
+relacionada a:
+
+OWNER
+SALES PROCESS
+HIGH_VALUE_SALES
+
+Não transformar imediatamente em diagnóstico.
+
+Pode posteriormente contribuir para diagnóstico de:
+
+owner dependency
+sales scalability
+
+# ============================================================
+# 109. EXEMPLO — MULTI-UNIDADE
+# ============================================================
+
+Empresa possui:
+
+Loja Centro
+
+Loja Bairro
+
+Usuário:
+
+"A unidade do Centro faturou R$80 mil e a outra R$45 mil."
+
+Guardar escopo corretamente.
+
+Não registrar:
+
+company_revenue = R$80 mil
+
+ou:
+
+company_revenue = R$45 mil.
+
+Se períodos forem compatíveis e dados representarem todas as unidades conhecidas, total pode ser calculado deterministicamente:
+
+R$125 mil
+
+marcado como:
+
+SYSTEM_DERIVED
+
+com inputs preservados.
+
+# ============================================================
+# 110. EXEMPLO — DOCUMENTO ANTIGO
+# ============================================================
+
+Documento de 2025:
+
+5 produtos ativos.
+
+Usuário em 2026:
+
+"Hoje trabalhamos somente com três produtos."
+
+Priorizar informação atual explícita.
+
+Não reativar produtos antigos automaticamente ao reprocessar documento.
+
+Documento permanece como histórico.
+
+# ============================================================
+# 111. STRATEGIC RELIABILITY TEST
+# ============================================================
+
+Para qualquer informação relevante adicionada ao Business Model, o sistema deve conseguir responder internamente:
+
+O que sabemos?
+
+Qual é a fonte?
+
+É fato ou inferência?
+
+Qual é o período?
+
+Qual é o escopo?
+
+É estado atual ou histórico?
+
+Existe conflito?
+
+Qual é o nível de confiança?
+
+A informação está suficientemente atual?
+
+# ============================================================
+# 112. FUTURE READINESS — FASE 9.6
+# ============================================================
+
+Business Model deve preparar dados para:
+
+SEED DECISION SIMULATOR.
+
+A Fase 9.6 precisará consultar:
+
+current state
+relationships
+dependencies
+constraints
+capacity
+costs
+metrics
+goals
+historical results
+learnings
+missing information
+confidence
+
+Não implementar simulação nesta fase.
+
+# ============================================================
+# 113. FUTURE READINESS — FASE 9.7
+# ============================================================
+
+Business Model deve preparar dados para:
+
+SEED RADAR.
+
+Radar precisará identificar:
+
+changes
+anomalies
+constraints
+risks
+opportunities
+patterns
+capacity pressure
+goal deviation
+
+Não implementar Radar nesta fase.
+
+# ============================================================
+# 114. FUTURE READINESS — FASE 9.8
+# ============================================================
+
+Preparar separação explícita entre:
+
+INTERNAL KNOWLEDGE
+
+e:
+
+EXTERNAL KNOWLEDGE.
+
+Internal:
+
+dados da própria empresa.
+
+External:
+
+mercado
+concorrência
+tendências
+fontes públicas
+informações externas.
+
+Toda informação externa futura deverá possuir:
+
+source
+retrieved_at
+freshness
+reliability/provenance
+
+Não implementar External Intelligence nesta fase.
+
+# ============================================================
+# 115. NÃO IMPLEMENTAR INTELIGÊNCIA COLETIVA
+# ============================================================
+
+Não implementar nesta fase:
+
+cross-company learning
+
+benchmarks derivados de outros usuários SEED
+
+comparação entre empresas privadas
+
+industry intelligence derivada da base de clientes
+
+collective intelligence
+
+Cada empresa permanece isolada.
+
+# ============================================================
+# 116. NÃO VAZAR DADOS ENTRE EMPRESAS
+# ============================================================
+
+Regra absoluta:
+
+Empresa A nunca pode contribuir diretamente com contexto privado da Empresa B.
+
+Isso vale para:
+
+Business Model
+Memory
+Journal
+Metrics
+Plans
+Decisions
+Experiments
+Results
+Learnings
+
+Futuro benchmark coletivo exigirá arquitetura própria.
+
+# ============================================================
+# 117. PERFORMANCE
+# ============================================================
+
+Criar índices apropriados para consultas comuns.
+
+Considerar:
+
+company_id
+
+entity_type
+
+entity_id
+
+relationship_type
+
+status/current
+
+valid_from
+
+valid_until
+
+source_message_id
+
+created_at
+
+updated_at
+
+Não criar índices indiscriminadamente.
+
+Validar query patterns reais.
+
+# ============================================================
+# 118. NÃO CARREGAR GRAPH INTEIRO
+# ============================================================
+
+Mesmo que empresa possua milhares de entidades/relações no futuro:
+
+não carregar tudo em memória/prompt.
+
+Usar:
+
+pagination
+filtered queries
+subgraph retrieval
+relevance
+scope
+timeframe
+
+# ============================================================
+# 119. OBSERVABILIDADE
+# ============================================================
+
+Registrar quando apropriado:
+
+Business Model build failures
+
+entity resolution conflicts
+
+relationship conflicts
+
+consistency conflicts
+
+stale information
+
+processing retries
+
+AI usage
+
+latency
+
+Context Resolver failures
+
+Não registrar conteúdo empresarial sensível desnecessariamente em logs técnicos.
+
+# ============================================================
+# 120. ERROR HANDLING
+# ============================================================
+
+Falha no Business Model Builder não deve necessariamente impedir usuário de receber resposta do chat.
+
+Quando processamento secundário falhar:
+
+registrar erro;
+
+permitir retry seguro;
+
+não duplicar dados;
+
+não corromper Memory;
+
+não corromper Journal;
+
+não apresentar informação incompleta como confirmada.
+
+# ============================================================
+# 121. MIGRATIONS
+# ============================================================
+
+Migrations devem:
+
+ser incrementais;
+
+preservar dados;
+
+não resetar banco;
+
+não apagar tabelas existentes sem justificativa;
+
+possuir defaults seguros;
+
+ser reversíveis quando possível;
+
+ser documentadas.
+
+Antes de criar nova tabela:
+
+verificar se estrutura equivalente já existe.
+
+# ============================================================
+# 122. RLS
+# ============================================================
+
+Todas as novas tabelas expostas ao Supabase/API devem possuir RLS apropriado.
+
+Políticas devem considerar:
+
+user
+company
+membership
+admin authorization
+
+Não confiar em company_id recebido do frontend sem autorização server-side.
+
+# ============================================================
+# 123. API SECURITY
+# ============================================================
+
+Endpoints/actions devem validar:
+
+authentication
+
+authorization
+
+company membership
+
+payload schema
+
+allowed fields
+
+entity ownership
+
+Não expor:
+
+service role key
+OpenAI key
+internal secrets
+sensitive metadata.
+
+# ============================================================
+# 124. INPUT VALIDATION
+# ============================================================
+
+Validar entradas.
+
+Exemplo:
+
+price deve ser numeric válido.
+
+currency_code deve ser suportado.
+
+entity type deve pertencer à taxonomia permitida.
+
+relationship type deve ser permitido.
+
+Não aceitar relação arbitrária simplesmente porque veio do frontend.
+
+# ============================================================
+# 125. RELATIONSHIP VALIDATION
+# ============================================================
+
+Criar matriz/regras de relações permitidas quando apropriado.
+
+Exemplo:
+
+COMPANY → SELLS → PRODUCT_SERVICE
+
+válido.
+
+GOAL → DEPENDS_ON → METRIC
+
+válido.
+
+CHANNEL → GENERATES → OPPORTUNITY/SALES FLOW
+
+válido conforme modelagem.
+
+Evitar:
+
+PRODUCT → EMPLOYS → CURRENCY
+
+ou relações semanticamente absurdas.
+
+# ============================================================
+# 126. SCHEMA EVOLUTION
+# ============================================================
+
+Não tentar prever toda empresa possível.
+
+Criar taxonomia extensível.
+
+Quando surgir nova necessidade:
+
+deve ser possível adicionar:
+
+entity type
+relationship type
+attributes
+
+sem refazer todo sistema.
+
+Mas evitar modelo totalmente livre sem validação.
+
+# ============================================================
+# 127. BUSINESS MODEL SUMMARY
+# ============================================================
+
+Criar possibilidade de gerar/obter uma representação resumida do Business Model para uso interno.
+
+Exemplo:
+
+Company:
+Padaria local.
+
+Products:
+panificação, confeitaria, encomendas.
+
+Customers:
+consumidores locais.
+
+Acquisition:
+Instagram, indicação, loja física.
+
+Sales:
+Instagram → WhatsApp → order.
+
+Operation:
+kitchen production → delivery/pickup.
+
+Current constraint:
+capacity pressure above ~80 orders/day.
+
+Goal:
+increase monthly revenue.
+
+Essa representação deve ser derivada de dados estruturados.
+
+Não ser o único source of truth.
+
+# ============================================================
+# 128. BUSINESS MODEL SUMMARY CACHE
+# ============================================================
+
+Se resumo textual for utilizado:
+
+pode ser cacheado/versionado.
+
+Deve ser invalidado/atualizado quando mudanças relevantes ocorrerem.
+
+Não permitir resumo antigo contradizer estado atual por longos períodos.
+
+# ============================================================
+# 129. CONTEXT RESOLUTION EXAMPLE
+# ============================================================
+
+Pergunta:
+
+"Vale contratar mais um vendedor?"
+
+Context Resolver pode recuperar:
+
+sales team size
+
+lead volume
+
+conversion
+
+sales capacity
+
+current response time
+
+sales process
+
+cost information
+
+margin
+
+goal
+
+constraints
+
+historical hiring learning
+
+Não precisa recuperar:
+
+supplier list
+delivery address
+unrelated product descriptions
+
+se não forem relevantes.
+
+# ============================================================
+# 130. CONTEXT RESOLUTION — MISSING DATA
+# ============================================================
+
+Se pergunta exigir informação inexistente:
+
+retornar explicitamente:
+
+missingInformation.
+
+Exemplo:
+
+salary cost unknown
+
+sales capacity unknown.
+
+Strategic Reliability Layer decide:
+
+se precisa perguntar antes de recomendar.
+
+# ============================================================
+# 131. BUSINESS MODEL NÃO DECIDE SOZINHO
+# ============================================================
+
+Business Model é camada de conhecimento.
+
+Ele NÃO deve:
+
+tomar decisão;
+
+gerar estratégia sozinho;
+
+substituir SEED Brain;
+
+substituir Strategic Reliability Layer;
+
+substituir Diagnosis;
+
+substituir Execution Loop.
+
+Ele fornece contexto estruturado para essas camadas.
+
+# ============================================================
+# 132. BUSINESS MODEL + SEED BRAIN
+# ============================================================
+
+Fluxo conceitual:
+
+USER QUESTION
+↓
+INTENT
+↓
+BUSINESS CONTEXT RESOLVER
+↓
+BUSINESS MODEL SUBGRAPH
++
+MEMORY
++
+JOURNAL
++
+METRICS
++
+EXECUTION HISTORY
+↓
+STRATEGIC RELIABILITY
+↓
+SEED BRAIN
+↓
+DIAGNOSIS / RECOMMENDATION
+↓
+RESPONSE
+
+# ============================================================
+# 133. BUSINESS MODEL UPDATE LOOP
+# ============================================================
+
+Fluxo inverso:
+
+USER INFORMATION
+↓
+STRUCTURED EXTRACTION
+↓
+MEMORY/JOURNAL
+↓
+BUSINESS MODEL BUILDER
+↓
+ENTITY RESOLUTION
+↓
+RELATIONSHIP RESOLUTION
+↓
+CONSISTENCY
+↓
+CURRENT STATE
+↓
+HISTORY
+↓
+MODEL UPDATED
+
+Assim:
+
+conversa alimenta modelo
+
+e
+
+modelo melhora conversa.
+
+# ============================================================
+# 134. NÃO GERAR PERGUNTAS DESNECESSÁRIAS
+# ============================================================
+
+Business Model incompleto não significa que SEED deve entrevistar usuário.
+
+Não perguntar:
+
+"Qual é sua estrutura de custos?"
+
+se isso não for necessário naquele momento.
+
+Perguntas devem ser contextuais.
+
+# ============================================================
+# 135. PASSIVE LEARNING
+# ============================================================
+
+A maior parte do Business Model deve ser construída passivamente.
+
+Exemplo:
+
+Usuário:
+
+"Minha equipe de quatro vendedores recebe os leads pelo WhatsApp."
+
+Uma única frase pode atualizar:
+
+TEAM
+sales_team_size = 4
+
+CHANNEL
+WhatsApp
+
+RELATIONSHIP
+sales team uses WhatsApp
+
+SALES FLOW
+lead → WhatsApp → sales team
+
+Sem pedir cadastro adicional.
+
+# ============================================================
+# 136. ACTIVE CLARIFICATION
+# ============================================================
+
+Perguntar somente quando ambiguidade for material.
+
+Exemplo:
+
+"Tenho três lojas."
+
+Depois:
+
+"A unidade fatura R$80 mil."
+
+Perguntar:
+
+"Qual das três unidades?"
+
+se necessário para análise.
+
+# ============================================================
+# 137. USER TRUST
+# ============================================================
+
+Quando SEED utilizar informação antiga ou incerta em uma decisão importante:
+
+pode confirmar naturalmente.
+
+Exemplo:
+
+"A última informação que tenho é que sua equipe comercial possui quatro pessoas. Isso continua correto?"
+
+Isso é preferível a utilizar silenciosamente dado potencialmente desatualizado em decisão material.
+
+# ============================================================
+# 138. NO FALSE PRECISION
+# ============================================================
+
+Se usuário disser:
+
+"Faturamos uns R$100 mil."
+
+Guardar aproximação.
+
+Não transformar em:
+
+100000.00 exact
+# ============================================================
+# 139. APPROXIMATION
+# ============================================================
+
+Quando informação for aproximada:
+
+preservar essa característica.
+
+Exemplos:
+
+"uns R$100 mil"
+"cerca de 50 clientes"
+"mais ou menos 30%"
+"aproximadamente 80 pedidos"
+
+Não apresentar posteriormente como valor exato.
+
+Quando necessário, guardar metadata equivalente a:
+
+is_approximate = true
+
+ou estrutura compatível.
+
+# ============================================================
+# 140. RANGE
+# ============================================================
+
+Quando usuário fornecer intervalo:
+
+"Faturamos entre R$80 mil e R$100 mil."
+
+Não escolher arbitrariamente:
+
+R$90 mil
+
+como fato.
+
+Preservar:
+
+min_value
+max_value
+currency
+period
+
+ou estrutura equivalente.
+
+Cálculos que utilizarem intervalo devem reconhecer incerteza.
+
+# ============================================================
+# 141. MODEL ROUTER — MATERIALITY
+# ============================================================
+
+Seleção de modelo deve considerar importância estratégica.
+
+Exemplo:
+
+"Instagram é um canal da empresa."
+
+pode utilizar processamento econômico.
+
+"Essa limitação operacional pode impedir nossa expansão?"
+
+pode exigir processamento estratégico.
+
+Não utilizar Strategic Model para toda atualização simples do Business Model.
+
+# ============================================================
+# 142. BACKGROUND PROCESSING COST
+# ============================================================
+
+Como Business Model será atualizado silenciosamente ao longo das conversas:
+
+controlar custo.
+
+Evitar sequência desnecessária:
+
+1 chamada para entidade
++
+1 chamada para relação
++
+1 chamada para confidence
++
+1 chamada para deduplicação
+
+quando uma única chamada estruturada puder resolver com segurança.
+
+Preferir processamento agrupado quando apropriado.
+
+# ============================================================
+# 143. STRUCTURED EXTRACTION
+# ============================================================
+
+Utilizar structured output validável quando IA for necessária.
+
+Exemplo conceitual:
+
+{
+  "entities": [],
+  "relationships": [],
+  "updates": [],
+  "observations": [],
+  "hypotheses": [],
+  "conflicts": [],
+  "missing_information": []
+}
+
+Validar server-side.
+
+Não confiar cegamente no output do modelo.
+
+# ============================================================
+# 144. EXTRACTION SAFETY
+# ============================================================
+
+Se structured extraction falhar:
+
+não persistir JSON parcial inválido.
+
+Registrar erro.
+
+Permitir retry seguro.
+
+Não corromper estado atual.
+
+# ============================================================
+# 145. ENTITY MERGE
+# ============================================================
+
+Preparar operação segura para entidades duplicadas identificadas posteriormente.
+
+Exemplo:
+
+Meta Ads
+
+Facebook Ads
+
+foram criados separadamente e depois confirmados como mesma entidade.
+
+Merge deve:
+
+preservar relações;
+
+preservar histórico;
+
+preservar sources;
+
+evitar IDs órfãos;
+
+registrar audit trail.
+
+Não implementar merge destrutivo sem rastreabilidade.
+
+# ============================================================
+# 146. ENTITY SPLIT
+# ============================================================
+
+Considerar situação inversa.
+
+Exemplo:
+
+"Instagram"
+
+foi tratado como um único canal.
+
+Depois descobrimos que existem:
+
+Instagram Orgânico
+
+Instagram Ads
+
+Se distinção for estrategicamente necessária:
+
+permitir evolução sem destruir histórico.
+
+Não implementar complexidade excessiva se não necessária agora.
+
+Mas evitar arquitetura que impossibilite isso.
+
+# ============================================================
+# 147. RELATIONSHIP CONFIDENCE
+# ============================================================
+
+Relações inferidas também precisam de confiança.
+
+Exemplo:
+
+Usuário:
+
+"Quase todos os clientes que chegam pelo Instagram acabam falando com a gente pelo WhatsApp."
+
+Relação:
+
+Instagram
+→ WhatsApp
+
+pode ter boa evidência.
+
+Outro:
+
+"Talvez quem venha pelo Instagram compre mais."
+
+Isso é hipótese.
+
+Não criar relação factual:
+
+Instagram
+→ higher_purchase_rate
+
+sem evidência.
+
+# ============================================================
+# 148. RELATIONSHIP STATUS
+# ============================================================
+
+Quando útil, relação pode possuir:
+
+ACTIVE
+INACTIVE
+HISTORICAL
+PROVISIONAL
+
+Não aplicar estados desnecessários a todas as relações.
+
+# ============================================================
+# 149. STRATEGIC IMPORTANCE
+# ============================================================
+
+Entidades/relações podem possuir importância estratégica derivada.
+
+Exemplo:
+
+canal responsável pela maior parte das oportunidades
+
+é mais relevante para contexto de aquisição.
+
+Não criar score arbitrário.
+
+Pode utilizar critérios como:
+
+usage
+revenue association
+goal relevance
+diagnosis relevance
+recency
+current plan relevance.
+
+# ============================================================
+# 150. BUSINESS MODEL CHANGE EVENTS
+# ============================================================
+
+Mudanças estruturais relevantes podem gerar eventos internos.
+
+Exemplos:
+
+PRIMARY_CHANNEL_CHANGED
+
+PRODUCT_DISCONTINUED
+
+TEAM_SIZE_CHANGED
+
+CAPACITY_CHANGED
+
+NEW_LOCATION_ADDED
+
+OFFER_CHANGED
+
+CONSTRAINT_ADDED
+
+Não mostrar eventos técnicos ao usuário.
+
+Esses eventos serão úteis para:
+
+Journal
+Weekly Intelligence
+Radar futuro.
+
+# ============================================================
+# 151. NO AUTOMATIC ALERTING YET
+# ============================================================
+
+Mesmo detectando mudança:
+
+não implementar Radar nesta fase.
+
+Exemplo:
+
+margem caiu.
+
+Pode atualizar Business Model.
+
+Mas alertas proativos completos pertencem à Fase 9.7.
+
+# ============================================================
+# 152. NO DECISION SIMULATION YET
+# ============================================================
+
+Business Model pode fornecer dados necessários para cenário.
+
+Mas não implementar:
+
+"E se eu contratar?"
+
+"E se eu aumentar preço?"
+
+"E se eu abrir unidade?"
+
+como engine de simulação completa.
+
+Isso pertence à Fase 9.6.
+
+# ============================================================
+# 153. NO EXTERNAL INTELLIGENCE YET
+# ============================================================
+
+Não pesquisar automaticamente:
+
+mercado
+concorrentes
+notícias
+tendências
+
+para preencher Business Model.
+
+Isso pertence à Fase 9.8.
+
+Nesta fase:
+
+EXTERNAL source deve existir apenas como preparação arquitetural ou para dados já legitimamente existentes no sistema.
+
+# ============================================================
+# 154. TESTES UNITÁRIOS — ENTIDADES
+# ============================================================
+
+Testar pelo menos:
+
+Company reutilizada.
+
+Product criado.
+
+Product atualizado.
+
+Product descontinuado.
+
+Offer criada.
+
+Customer Segment criado.
+
+Channel criado.
+
+Channel deduplicado.
+
+Sales Process criado.
+
+Team atualizado.
+
+Capacity aproximada.
+
+Constraint criada.
+
+Revenue Stream criado.
+
+Goal relacionado.
+
+Metric relacionada.
+
+# ============================================================
+# 155. TESTES UNITÁRIOS — RELAÇÕES
+# ============================================================
+
+Testar:
+
+COMPANY → SELLS → PRODUCT
+
+PRODUCT → TARGETS → CUSTOMER_SEGMENT
+
+CHANNEL → PARTICIPATES_IN → SALES_PROCESS
+
+TEAM → OPERATES → SALES_PROCESS
+
+PRODUCT → GENERATES → REVENUE_STREAM
+
+CONSTRAINT → LIMITS → OPERATION
+
+GOAL → DEPENDS_ON → METRIC
+
+Validar relações inválidas.
+
+# ============================================================
+# 156. TESTES — ENTITY RESOLUTION
+# ============================================================
+
+Entradas:
+
+Meta Ads
+Facebook Ads
+Anúncios da Meta
+
+Quando contexto indicar mesma entidade:
+
+não gerar três canais.
+
+Também testar:
+
+entidades parecidas que NÃO devem ser mescladas.
+
+Exemplo:
+
+Instagram Orgânico
+
+Meta Ads
+
+Não são necessariamente mesma coisa.
+
+# ============================================================
+# 157. TESTES — TEMPORALIDADE
+# ============================================================
+
+Janeiro:
+4 vendedores.
+
+Abril:
+5 vendedores.
+
+Setembro:
+7 vendedores.
+
+Esperado:
+
+current = 7
+
+history:
+
+4
+→ 5
+→ 7
+
+Não manter três estados atuais.
+
+# ============================================================
+# 158. TESTES — CORREÇÃO
+# ============================================================
+
+Usuário:
+
+"Temos 7 vendedores."
+
+Depois:
+
+"Corrigindo, são 6."
+
+Esperado:
+
+current = 6.
+
+Preservar auditabilidade.
+
+Não interpretar como redução real de 7 para 6 se contexto indica correção da informação anterior.
+
+# ============================================================
+# 159. TESTES — MUDANÇA REAL
+# ============================================================
+
+Usuário:
+
+"Temos 7 vendedores."
+
+Um mês depois:
+
+"Um vendedor saiu, agora somos 6."
+
+Esperado:
+
+mudança temporal real.
+
+Histórico:
+
+7 → 6.
+
+Não tratar como simples correção.
+
+# ============================================================
+# 160. TESTES — FACT VS INFERENCE
+# ============================================================
+
+Usuário:
+
+"Tenho 4 vendedores."
+
+FACT.
+
+Dados sugerem equipe pressionada.
+
+INFERENCE.
+
+Garantir que inference não altere FACT sem evidência.
+
+# ============================================================
+# 161. TESTES — UNKNOWN
+# ============================================================
+
+Nenhuma informação sobre fornecedores.
+
+Esperado:
+
+supplier knowledge = UNKNOWN.
+
+Não:
+
+no suppliers.
+
+# ============================================================
+# 162. TESTES — APPROXIMATION
+# ============================================================
+
+Usuário:
+
+"Faturamos uns R$100 mil."
+
+Esperado:
+
+approximate = true.
+
+Não apresentar futuramente:
+
+"Seu faturamento exato é R$100.000."
+
+# ============================================================
+# 163. TESTES — RANGE
+# ============================================================
+
+Usuário:
+
+"Vendemos entre R$80 mil e R$100 mil."
+
+Esperado:
+
+range preservado.
+
+Não escolher midpoint como fato.
+
+# ============================================================
+# 164. TESTES — SCOPE
+# ============================================================
+
+Unidade A:
+
+100 leads
+20 sales.
+
+Empresa inteira:
+
+300 leads.
+
+Não calcular:
+
+20 / 300
+
+como conversão da Unidade A.
+
+# ============================================================
+# 165. TESTES — MULTI-CURRENCY
+# ============================================================
+
+Empresa Portugal:
+
+EUR.
+
+Empresa Brasil:
+
+BRL.
+
+Garantir:
+
+valores
+formatting
+storage
+context
+
+não sejam misturados.
+
+# ============================================================
+# 166. TESTES — DOCUMENT PRIORITY
+# ============================================================
+
+Documento antigo:
+
+price = 100.
+
+Usuário atual:
+
+"Agora custa 130."
+
+Current:
+
+130.
+
+Historical:
+
+100.
+
+Não deixar documento antigo sobrescrever estado atual.
+
+# ============================================================
+# 167. TESTES — MANUAL EDIT
+# ============================================================
+
+SEED inferiu:
+
+principal canal = Instagram.
+
+Usuário corrige:
+
+"Na verdade hoje é Google."
+
+Manual Edit deve possuir prioridade apropriada.
+
+# ============================================================
+# 168. TESTES — BUSINESS FLOW
+# ============================================================
+
+Simular:
+
+Instagram
+→ WhatsApp
+→ Sales Team
+→ Proposal
+→ Sale
+→ Delivery
+
+Validar:
+
+entidades
+relações
+ordem
+context retrieval.
+
+# ============================================================
+# 169. TESTES — CONTEXT RESOLVER
+# ============================================================
+
+Business Model possui 200+ informações.
+
+Pergunta:
+
+"Vale aumentar meus anúncios?"
+
+Esperado:
+
+retornar somente contexto relacionado a:
+
+acquisition
+conversion
+capacity
+margin
+goal
+constraints
+relevant history.
+
+Não retornar graph inteiro.
+
+# ============================================================
+# 170. TESTES — MISSING INFORMATION
+# ============================================================
+
+Pergunta:
+
+"Vale contratar mais um vendedor?"
+
+Conhecido:
+
+team size
+leads
+
+Desconhecido:
+
+current capacity
+cost
+margin.
+
+Context Resolver deve retornar:
+
+missingInformation.
+
+Strategic Reliability Layer decide perguntas necessárias.
+
+# ============================================================
+# 171. TESTES — EXECUTION LOOP
+# ============================================================
+
+Plano anterior gerou resultado.
+
+Learning foi criado.
+
+Nova pergunta relacionada deve recuperar Learning relevante quando apropriado.
+
+Não recuperar learnings irrelevantes.
+
+# ============================================================
+# 172. TESTES — JOURNAL
+# ============================================================
+
+Evento pontual:
+
+"Hoje fornecedor atrasou."
+
+Não necessariamente alterar estrutura permanente.
+
+Evento recorrente:
+
+"Nosso fornecedor principal está atrasando há três semanas e isso virou um problema recorrente."
+
+Pode contribuir para Constraint/Supplier context.
+
+# ============================================================
+# 173. TESTES — RLS
+# ============================================================
+
+Empresa A:
+
+Produto A
+Meta Ads
+4 vendedores.
+
+Empresa B:
+
+Produto B
+Google
+12 vendedores.
+
+Usuário A nunca pode acessar:
+
+Product B
+Google da empresa B
+team size da empresa B
+relationships da empresa B.
+
+Testar APIs e queries.
+
+# ============================================================
+# 174. TESTES — IDEMPOTÊNCIA
+# ============================================================
+
+Processar mesma mensagem duas vezes.
+
+Esperado:
+
+não duplicar entidades/relações.
+
+# ============================================================
+# 175. TESTES — CONSISTÊNCIA
+# ============================================================
+
+Input:
+
+100 leads
+20 sales
+conversion informado = 35%
+
+Esperado:
+
+conflito detectado.
+
+Derived conversion = 20%.
+
+Não substituir silenciosamente dado informado sem registrar inconsistência.
+
+# ============================================================
+# 176. TESTES — DIFERENTES NEGÓCIOS
+# ============================================================
+
+Executar cenários para:
+
+padaria
+
+restaurante
+
+clínica
+
+consultoria
+
+agência
+
+loja
+
+indústria
+
+e-commerce
+
+B2B.
+
+Business Model deve representar todos sem exigir mesma estrutura.
+
+# ============================================================
+# 177. TESTE COMPLETO — PADARIA
+# ============================================================
+
+Simular conversas ao longo do tempo.
+
+Usuário:
+
+"Tenho uma padaria."
+
+Depois:
+
+"Faturamos cerca de R$120 mil."
+
+Depois:
+
+"40% vem do salão, 35% balcão e o restante de encomendas."
+
+Depois:
+
+"A maioria das encomendas vem do Instagram e fecha pelo WhatsApp."
+
+Depois:
+
+"Quando passa de umas 80 encomendas por dia a cozinha atrasa."
+
+Depois:
+
+"Quero dobrar os anúncios de encomendas."
+
+Business Model deve conseguir representar:
+
+empresa
+
+revenue
+
+revenue streams
+
+Instagram
+
+WhatsApp
+
+sales/order flow
+
+kitchen operation
+
+capacity approximation
+
+constraint
+
+goal/intent
+
+context relevante para futura decisão.
+
+# ============================================================
+# 178. TESTE COMPLETO — CONSULTORIA
+# ============================================================
+
+Usuário:
+
+"Tenho uma consultoria."
+
+"Meus clientes chegam pelo Instagram e indicação."
+
+"Faço uma reunião de diagnóstico."
+
+"Depois mando proposta."
+
+"Fecho cerca de 30%."
+
+"Hoje somos dois consultores."
+
+"Cada um consegue atender no máximo 12 clientes ativos sem perder qualidade."
+
+"Quero dobrar as vendas."
+
+Business Model deve representar:
+
+channels
+
+sales process
+
+conversion
+
+team
+
+delivery capacity
+
+constraint
+
+growth goal.
+
+A SEED futura deve conseguir perceber que dobrar vendas pode pressionar capacidade.
+
+Não executar simulação completa nesta fase.
+
+# ============================================================
+# 179. TESTE COMPLETO — ECOMMERCE
+# ============================================================
+
+Representar:
+
+products
+traffic channels
+store
+orders
+average ticket
+fulfillment
+logistics
+returns quando disponíveis
+margin
+repeat purchase.
+
+Não exigir sales team.
+
+# ============================================================
+# 180. TESTE COMPLETO — INDÚSTRIA
+# ============================================================
+
+Representar:
+
+products
+B2B customers
+sales process
+orders
+production
+capacity
+supplier dependency
+delivery
+revenue
+margin
+goals.
+
+Não presumir funil de Meta Ads.
+
+# ============================================================
+# 181. CRITÉRIOS DE ACEITE FUNCIONAIS
+# ============================================================
+
+A Fase 9.5 somente está concluída quando:
+
+1. Business Model é incremental.
+
+2. Entidades são representáveis.
+
+3. Relações são representáveis.
+
+4. Estado atual é separado de histórico.
+
+5. Fontes são rastreáveis.
+
+6. Confiança é preservada.
+
+7. Fact é separado de inference.
+
+8. Derived Metric é separado de Metric informado.
+
+9. Approximation é preservada.
+
+10. Range é preservado.
+
+11. Unknown não vira zero.
+
+12. Unknown não vira "não existe".
+
+13. Entity Resolution funciona.
+
+14. Deduplicação funciona.
+
+15. Correções funcionam.
+
+16. Mudanças temporais funcionam.
+
+17. Manual Edit possui prioridade adequada.
+
+18. Conflitos são detectados.
+
+19. Consistency Engine funciona.
+
+20. Scope é preservado.
+
+21. Multi-currency funciona.
+
+22. Coverage funciona.
+
+23. Coverage integra Sufficiency.
+
+24. Dependency Map é representável.
+
+25. Business Flow é representável.
+
+26. Business Model integra Memory.
+
+27. Business Model integra Journal.
+
+28. Business Model integra Metrics.
+
+29. Business Model integra Goals.
+
+30. Business Model integra Execution Loop.
+
+31. Learnings podem ser recuperados.
+
+32. Context Resolver funciona.
+
+33. Subgraph retrieval funciona.
+
+34. Context budget existe.
+
+35. Minha Empresa apresenta dados em linguagem simples.
+
+36. Não existe novo item Business Model na sidebar.
+
+37. Abrir Minha Empresa não gera chamada IA desnecessária.
+
+38. RLS funciona.
+
+39. Multi-tenancy funciona.
+
+40. Idempotência funciona.
+
+41. Usage/cost logging funciona.
+
+42. i18n funciona.
+
+43. Fases anteriores continuam funcionando.
+
+# ============================================================
+# 182. CRITÉRIOS DE ACEITE ESTRATÉGICOS
+# ============================================================
+
+O sistema deve conseguir responder internamente:
+
+O que esta empresa vende?
+
+Para quem vende?
+
+Como clientes chegam?
+
+Como vendas acontecem?
+
+Como entrega o que vende?
+
+Como gera receita?
+
+Quais canais utiliza?
+
+Qual é a equipe relevante?
+
+Qual é a capacidade conhecida?
+
+Quais restrições existem?
+
+Quais objetivos existem?
+
+Quais métricas estão relacionadas às partes do negócio?
+
+Quais dependências conhecemos?
+
+Qual é o estado atual?
+
+O que mudou ao longo do tempo?
+
+De onde vieram as informações?
+
+O que é fato?
+
+O que é inferência?
+
+O que está desatualizado?
+
+O que ainda não sabemos?
+
+# ============================================================
+# 183. CRITÉRIO CENTRAL
+# ============================================================
+
+O teste principal da Fase 9.5 é:
+
+"Como esta empresa funciona?"
+
+A resposta deve poder ser construída a partir de dados estruturados e relações rastreáveis.
+
+Não apenas de um resumo textual produzido pelo modelo.
+
+# ============================================================
+# 184. CRITÉRIO PARA 9.6
+# ============================================================
+
+Antes de liberar Fase 9.6, verificar se Business Model consegue fornecer contexto para perguntas como:
+
+"E se eu aumentar o preço?"
+
+"E se eu contratar?"
+
+"E se eu dobrar mídia?"
+
+"E se eu abrir outra unidade?"
+
+"E se eu parar de vender esse produto?"
+
+Não precisa responder/simular ainda.
+
+Precisa conseguir recuperar os dados internos relevantes para que 9.6 faça a simulação.
+
+# ============================================================
+# 185. CRITÉRIO PARA 9.7
+# ============================================================
+
+Antes de liberar Fase 9.7, verificar se sistema consegue identificar mudanças estruturadas como:
+
+conversion changed
+
+capacity changed
+
+channel changed
+
+cost changed
+
+product changed
+
+team changed
+
+constraint changed
+
+goal progress changed.
+
+Não gerar Radar ainda.
+
+# ============================================================
+# 186. CRITÉRIO PARA 9.8
+# ============================================================
+
+Antes de liberar Fase 9.8, verificar se sistema distingue claramente:
+
+INTERNAL DATA
+
+de:
+
+EXTERNAL DATA.
+
+Informação externa futura não pode ser confundida com dado interno da empresa.
+
+# ============================================================
+# 187. PROTEÇÃO CONTRA OVERENGINEERING
+# ============================================================
+
+Antes de criar qualquer entidade nova, perguntar:
+
+"Precisamos raciocinar sobre isso separadamente?"
+
+Se não:
+
+não criar.
+
+Antes de criar qualquer serviço:
+
+"Existe responsabilidade real e reutilizável?"
+
+Se não:
+
+não criar abstração.
+
+Antes de adicionar infraestrutura:
+
+"PostgreSQL/Supabase atual consegue resolver?"
+
+Se sim:
+
+não adicionar tecnologia.
+
+# ============================================================
+
+# ============================================================
+# 188. NÃO CONSTRUIR ERP
+# ============================================================
+
+Não implementar:
+
+contabilidade completa
+
+folha de pagamento
+
+controle fiscal
+
+estoque completo
+
+compras
+
+ordens de produção completas
+
+gestão de fornecedores completa
+
+CRM completo
+
+RH
+
+PDV
+
+financeiro transacional completo
+
+gestão de projetos genérica
+
+O Business Model utiliza informações empresariais para raciocínio estratégico.
+
+Ele NÃO substitui sistemas operacionais especializados.
+
+# ============================================================
+# 189. NÃO CONSTRUIR CRM
+# ============================================================
+
+Sales Process existe para a SEED compreender:
+
+como a empresa vende.
+
+Não construir nesta fase:
+
+pipeline comercial completo
+
+cadastro individual de leads
+
+automação de follow-up
+
+discador
+
+gestão de vendedores
+
+funil visual
+
+CRM operacional.
+
+Futuras integrações poderão fornecer esses dados.
+
+# ============================================================
+# 190. NÃO CONSTRUIR CONTABILIDADE
+# ============================================================
+
+Cost Structure, Revenue e Margin existem para raciocínio estratégico.
+
+Não implementar:
+
+DRE contábil completa
+
+balanço patrimonial
+
+livro caixa
+
+obrigações fiscais
+
+conciliação bancária
+
+emissão fiscal
+
+contabilidade automatizada.
+
+# ============================================================
+# 191. NÃO CONSTRUIR DIGITAL TWIN COMPLETO
+# ============================================================
+
+Não utilizar "Digital Twin" como requisito técnico desta fase.
+
+O objetivo é:
+
+MODELO VIVO DA EMPRESA
+
+suficiente para raciocínio estratégico.
+
+Não tentar representar absolutamente todos os processos e ativos do negócio.
+
+# ============================================================
+# 192. NÃO IMPLEMENTAR FASES FUTURAS
+# ============================================================
+
+NÃO implementar:
+
+Fase 9.6
+Decision Simulator
+
+Fase 9.7
+SEED Radar
+
+Fase 9.8
+External Intelligence
+
+Fase 10
+
+Collective Intelligence
+
+Benchmarks coletivos
+
+Cross-company learning
+
+Agentes autônomos
+
+Execução externa automática
+
+Novas integrações não necessárias para 9.5.
+
+# ============================================================
+# 193. NÃO CRIAR SCORE ARBITRÁRIO
+# ============================================================
+
+Não criar:
+
+Business Score
+
+Company Score
+
+Model Score 0–100
+
+Maturity Score
+
+com números produzidos livremente pela IA.
+
+Coverage deve utilizar estados definidos:
+
+UNKNOWN
+LIMITED
+PARTIAL
+SUFFICIENT
+STRONG
+
+com critérios documentados.
+
+# ============================================================
+# 194. NÃO CRIAR VERDADE A PARTIR DE SILÊNCIO
+# ============================================================
+
+Se usuário nunca falou sobre determinado assunto:
+
+não inferir automaticamente.
+
+Exemplo:
+
+nenhuma informação sobre fornecedores.
+
+Não concluir:
+
+"Não possui fornecedores críticos."
+
+Estado:
+
+UNKNOWN.
+
+# ============================================================
+# 195. NÃO PREENCHER MODELO ARTIFICIALMENTE
+# ============================================================
+
+Não criar entidades apenas para deixar Business Model "completo".
+
+Modelo parcial e correto é melhor que modelo completo e inventado.
+
+Princípio:
+
+ACCURACY > COMPLETENESS.
+
+# ============================================================
+# 196. NÃO INTERROGAR O USUÁRIO
+# ============================================================
+
+Business Model incompleto não deve disparar questionário.
+
+Não perguntar automaticamente:
+
+Quantos funcionários?
+Qual faturamento?
+Qual margem?
+Qual ticket?
+Qual CAC?
+Qual capacidade?
+Quem são fornecedores?
+
+Perguntar somente quando a informação for relevante para resolver o problema atual.
+
+# ============================================================
+# 197. NÃO POLUIR O CHAT
+# ============================================================
+
+Não mostrar:
+
+"Business Model atualizado."
+
+"Nova entidade criada."
+
+"Relacionamento identificado."
+
+"Graph atualizado."
+
+"Coverage atualizado."
+
+Essas operações são silenciosas.
+
+O usuário conversa normalmente.
+
+# ============================================================
+# 198. NÃO POLUIR SIDEBAR
+# ============================================================
+
+Sidebar continua:
+
++ Nova conversa
+
+Conversas
+
+Minha Empresa
+
+Diagnóstico
+
+Meu Plano Estratégico
+
+Configurações
+
+Não adicionar módulos internos.
+
+# ============================================================
+# 199. UX PRINCIPLE FINAL
+# ============================================================
+
+O empresário deve sentir:
+
+"A SEED entende cada vez melhor como minha empresa funciona."
+
+Ele NÃO deve sentir:
+
+"Estou alimentando um banco de dados."
+
+# ============================================================
+# 200. DOCUMENTAÇÃO TÉCNICA
+# ============================================================
+
+Criar documentação contendo:
+
+1. visão geral do Business Model;
+
+2. diferença entre:
+   Memory
+   Journal
+   Execution Loop
+   Business Model;
+
+3. entity taxonomy;
+
+4. relationship taxonomy;
+
+5. source rules;
+
+6. confidence rules;
+
+7. current state;
+
+8. historical state;
+
+9. temporal model;
+
+10. entity resolution;
+
+11. deduplication;
+
+12. conflict resolution;
+
+13. approximation;
+
+14. ranges;
+
+15. coverage;
+
+16. dependency map;
+
+17. Business Flow;
+
+18. BusinessModelBuilder;
+
+19. BusinessContextResolver;
+
+20. Consistency Engine;
+
+21. Context Engine integration;
+
+22. Strategic Reliability integration;
+
+23. Execution Loop integration;
+
+24. RLS;
+
+25. APIs;
+
+26. Model Router;
+
+27. usage/cost;
+
+28. future readiness para 9.6;
+
+29. future readiness para 9.7;
+
+30. future readiness para 9.8.
+
+# ============================================================
+# 201. MIGRATION REPORT
+# ============================================================
+
+No relatório final, listar cada migration criada.
+
+Para cada migration informar:
+
+nome
+
+objetivo
+
+tabelas afetadas
+
+campos adicionados
+
+indexes adicionados
+
+RLS/policies adicionadas
+
+compatibilidade
+
+rollback quando aplicável.
+
+# ============================================================
+# 202. DATA MODEL REPORT
+# ============================================================
+
+Apresentar mapa do modelo implementado.
+
+Exemplo conceitual:
+
+COMPANY
+├── PRODUCTS
+├── OFFERS
+├── CUSTOMER SEGMENTS
+├── CHANNELS
+├── SALES PROCESS
+├── TEAM
+├── OPERATIONS
+├── CAPACITY
+├── COST STRUCTURE
+├── REVENUE STREAMS
+├── GOALS
+├── CONSTRAINTS
+└── METRICS
+
+E principais relações.
+
+Não precisa gerar diagrama gráfico externo.
+
+Representação textual é suficiente.
+
+# ============================================================
+# 203. SOURCE OF TRUTH REPORT
+# ============================================================
+
+Documentar explicitamente:
+
+qual tabela/estrutura é source of truth para:
+
+Company
+
+Products
+
+Offers
+
+Metrics
+
+Goals
+
+Plans
+
+Decisions
+
+Experiments
+
+Results
+
+Learnings
+
+Business Relationships
+
+Current State
+
+History.
+
+Isso é obrigatório para evitar inconsistência futura.
+
+# ============================================================
+# 204. CONTEXT ENGINE REPORT
+# ============================================================
+
+Demonstrar:
+
+como pergunta é interpretada;
+
+como entidades relevantes são identificadas;
+
+como subgrafo é recuperado;
+
+como contexto é limitado;
+
+como missing information é retornado;
+
+como Strategic Reliability utiliza esse contexto.
+
+# ============================================================
+# 205. EXEMPLO DE CONTEXT RESOLUTION
+# ============================================================
+
+Incluir no relatório uma simulação:
+
+Pergunta:
+
+"Vale aumentar meu investimento em anúncios?"
+
+Mostrar internamente, sem chain-of-thought:
+
+Relevant context:
+
+Goal:
+increase revenue
+
+Channel:
+Meta Ads
+
+Current spend:
+X
+
+Leads:
+Y
+
+Conversion:
+Z
+
+Sales capacity:
+known/unknown
+
+Operational capacity:
+known/unknown
+
+Margin:
+known/unknown
+
+Constraints:
+[...]
+
+Missing information:
+[...]
+
+Não mostrar raciocínio privado do modelo.
+
+# ============================================================
+# 206. EXEMPLO DE BUSINESS MODEL
+# ============================================================
+
+Apresentar no relatório pelo menos um Business Model fictício completo.
+
+Exemplo:
+
+Empresa:
+Padaria fictícia
+
+Produtos:
+[...]
+
+Clientes:
+[...]
+
+Canais:
+[...]
+
+Sales Process:
+[...]
+
+Operation:
+[...]
+
+Capacity:
+[...]
+
+Revenue Streams:
+[...]
+
+Constraints:
+[...]
+
+Goals:
+[...]
+
+Relationships:
+[...]
+
+Sources:
+[...]
+
+Coverage:
+[...]
+
+Usar apenas dados de teste.
+
+# ============================================================
+# 207. VALIDAR REGRESSÕES
+# ============================================================
+
+Antes de concluir, confirmar que continuam funcionando:
+
+Chat
+
+Memory
+
+Minha Empresa
+
+Diagnóstico
+
+Meu Plano Estratégico
+
+Business Journal invisível
+
+Weekly Intelligence
+
+Execution Loop
+
+Recommendations
+
+Actions
+
+Decisions internas
+
+Experiments internos
+
+Results
+
+Learnings
+
+Market configuration
+
+FREE/PRO
+
+usage/cost
+
+i18n.
+
+# ============================================================
+# 208. TESTE DE EXPERIÊNCIA
+# ============================================================
+
+Executar fluxo manual:
+
+Usuário novo entra.
+
+Pergunta:
+
+"Quero vender mais."
+
+A SEED conversa normalmente.
+
+Durante conversa:
+
+Business Model é enriquecido silenciosamente.
+
+Usuário NÃO precisa:
+
+cadastrar entidade
+
+classificar canal
+
+criar processo
+
+definir relação.
+
+Depois abre:
+
+Minha Empresa.
+
+Encontra representação simples e compreensível do negócio.
+
+# ============================================================
+# 209. TESTE DE INTELIGÊNCIA
+# ============================================================
+
+Depois de Business Model possuir contexto suficiente:
+
+usuário pergunta:
+
+"Devo investir mais em anúncios?"
+
+A SEED deve conseguir recuperar contexto relevante da empresa.
+
+Se faltar informação essencial:
+
+perguntar.
+
+Se houver informação suficiente:
+
+utilizar Strategic Reliability Layer.
+
+Não produzir resposta genérica.
+
+# ============================================================
+# 210. TESTE DE EVOLUÇÃO
+# ============================================================
+
+Simular empresa ao longo de meses.
+
+Mês 1:
+
+4 vendedores.
+
+Mês 3:
+
+5 vendedores.
+
+Mês 6:
+
+novo canal Google.
+
+Mês 8:
+
+produto descontinuado.
+
+Mês 10:
+
+nova unidade.
+
+Business Model deve refletir:
+
+estado atual
+
+e
+
+histórico.
+
+# ============================================================
+# 211. TESTE DE CONFIABILIDADE
+# ============================================================
+
+Inserir propositalmente:
+
+dados aproximados
+
+dados conflitantes
+
+documento antigo
+
+correção manual
+
+inferência
+
+hipótese
+
+dados ausentes.
+
+Validar que sistema não transforma tudo em fato.
+
+# ============================================================
+# 212. TESTE DE CUSTO
+# ============================================================
+
+Medir quantidade de chamadas IA necessárias para atualização do Business Model.
+
+Identificar:
+
+chamadas redundantes
+
+processamento duplicado
+
+uso desnecessário de Strategic Model
+
+contextos excessivos.
+
+Otimizar sem degradar confiabilidade.
+
+# ============================================================
+# 213. TESTE DE PERFORMANCE
+# ============================================================
+
+Criar empresa fictícia com volume significativo de:
+
+entities
+
+relationships
+
+history
+
+metrics
+
+journal entries
+
+learnings.
+
+Validar que:
+
+Minha Empresa continua rápida.
+
+Context Resolver não carrega tudo.
+
+Queries não apresentam N+1 crítico.
+
+# ============================================================
+# 214. TESTE DE SEGURANÇA
+# ============================================================
+
+Validar:
+
+RLS
+
+cross-company isolation
+
+API authorization
+
+manual edit authorization
+
+relationship access
+
+history access.
+
+Empresa A nunca acessa Empresa B.
+
+# ============================================================
+# 215. TESTE DE INTERNACIONALIZAÇÃO
+# ============================================================
+
+Simular:
+
+Brasil
+BRL
+pt-BR
+
+Portugal
+EUR
+pt-PT
+
+Espanha
+EUR
+es-ES
+
+Estados Unidos
+USD
+en-US
+
+Business Model deve funcionar sem alteração estrutural.
+
+# ============================================================
+# 216. CRITÉRIOS DE ACEITE TÉCNICOS
+# ============================================================
+
+A Fase 9.5 somente pode ser considerada concluída quando:
+
+1. migrations aplicam corretamente;
+
+2. banco não foi resetado;
+
+3. dados anteriores foram preservados;
+
+4. entity resolution funciona;
+
+5. relationships funcionam;
+
+6. current state funciona;
+
+7. history funciona;
+
+8. source funciona;
+
+9. confidence funciona;
+
+10. approximation funciona;
+
+11. ranges funcionam;
+
+12. conflict detection funciona;
+
+13. Consistency Engine funciona;
+
+14. coverage funciona;
+
+15. BusinessModelBuilder funciona;
+
+16. BusinessContextResolver funciona;
+
+17. Context Engine utiliza Business Model;
+
+18. Memory integra corretamente;
+
+19. Journal integra corretamente;
+
+20. Execution Loop integra corretamente;
+
+21. Metrics integram corretamente;
+
+22. Goals integram corretamente;
+
+23. RLS funciona;
+
+24. APIs possuem authorization;
+
+25. idempotência funciona;
+
+26. AI usage é medido;
+
+27. lint passa;
+
+28. typecheck passa;
+
+29. testes passam;
+
+30. build passa.
+
+# ============================================================
+# 217. CRITÉRIOS DE ACEITE DE PRODUTO
+# ============================================================
+
+O produto deve passar pelos seguintes testes:
+
+A SEED sabe o que a empresa vende?
+
+A SEED sabe para quem vende?
+
+A SEED sabe como clientes chegam?
+
+A SEED sabe como vendas acontecem?
+
+A SEED sabe como a empresa entrega?
+
+A SEED conhece fontes de receita relevantes?
+
+A SEED conhece capacidade quando informada?
+
+A SEED conhece restrições quando informadas?
+
+A SEED conhece objetivos?
+
+A SEED entende relações entre esses elementos?
+
+A SEED distingue atual de histórico?
+
+A SEED sabe de onde veio uma informação?
+
+A SEED sabe quando está inferindo?
+
+A SEED sabe quando não sabe?
+
+A SEED consegue recuperar apenas o contexto relevante?
+
+# ============================================================
+# 218. CRITÉRIO CENTRAL DE ACEITE
+# ============================================================
+
+Pergunta:
+
+"Como esta empresa funciona?"
+
+O sistema deve conseguir produzir uma representação coerente a partir de:
+
+entidades estruturadas
+
+relações
+
+estado atual
+
+histórico
+
+métricas
+
+fontes
+
+confiança
+
+restrições
+
+objetivos.
+
+Não depender exclusivamente de:
+
+histórico bruto de chat
+
+ou
+
+um resumo textual gerado por IA.
+
+# ============================================================
+# 219. CRITÉRIO DE SIMPLICIDADE
+# ============================================================
+
+Pergunta:
+
+"O usuário precisou aprender como o Business Model funciona?"
+
+Resposta esperada:
+
+NÃO.
+
+Pergunta:
+
+"O usuário precisou alimentar manualmente um grafo?"
+
+Resposta:
+
+NÃO.
+
+Pergunta:
+
+"O usuário percebe que a SEED entende melhor a empresa?"
+
+Resposta esperada:
+
+SIM.
+
+# ============================================================
+# 220. CRITÉRIO DE DIFERENCIAÇÃO
+# ============================================================
+
+Após a Fase 9.5, a SEED não deve apenas possuir:
+
+"memória sobre a empresa."
+
+Ela deve possuir uma representação estruturada de:
+
+como o negócio funciona.
+
+Isso deve melhorar:
+
+diagnóstico
+
+recomendação
+
+contextualização
+
+execução
+
+e preparar:
+
+Decision Simulator
+
+Radar
+
+External Intelligence.
+
+# ============================================================
+# 221. NÃO INICIAR 9.6 AUTOMATICAMENTE
+# ============================================================
+
+Mesmo que todos os testes passem:
+
+NÃO iniciar Decision Simulator.
+
+Primeiro apresentar relatório da Fase 9.5.
+
+Aguardar aprovação explícita.
+
+# ============================================================
+# 222. RELATÓRIO FINAL OBRIGATÓRIO
+# ============================================================
+
+Ao concluir, apresentar:
+
+## RESUMO
+
+O que foi implementado.
+
+## ARQUITETURA ENCONTRADA
+
+Como o projeto estava antes da 9.5.
+
+## DECISÕES ARQUITETURAIS
+
+Principais escolhas e justificativas.
+
+## MIGRATIONS
+
+Lista completa.
+
+## DATA MODEL
+
+Entidades e tabelas.
+
+## ENTITIES
+
+Quais entidades foram implementadas/reutilizadas.
+
+## RELATIONSHIPS
+
+Como relações funcionam.
+
+## CURRENT STATE
+
+Como estado atual é determinado.
+
+## HISTORY
+
+Como histórico é preservado.
+
+## SOURCES
+
+Como proveniência funciona.
+
+## CONFIDENCE
+
+Como confiança é tratada.
+
+## APPROXIMATION / RANGE
+
+Como incerteza numérica é preservada.
+
+## ENTITY RESOLUTION
+
+Como duplicação é evitada.
+
+## CONFLICT RESOLUTION
+
+Como conflitos são tratados.
+
+## CONSISTENCY ENGINE
+
+Como inconsistências são detectadas.
+
+## COVERAGE
+
+Como cobertura é calculada.
+
+## DEPENDENCY MAP
+
+Como dependências são representadas.
+
+## BUSINESS FLOW
+
+Como fluxo da empresa é representado.
+
+## BUSINESS MODEL BUILDER
+
+Como atualização funciona.
+
+## BUSINESS CONTEXT RESOLVER
+
+Como contexto relevante é recuperado.
+
+## CONTEXT ENGINE
+
+Integração.
+
+## MEMORY
+
+Integração.
+
+## BUSINESS JOURNAL
+
+Integração.
+
+## EXECUTION LOOP
+
+Integração.
+
+## METRICS
+
+Integração.
+
+## GOALS
+
+Integração.
+
+## MINHA EMPRESA
+
+Mudanças visíveis realizadas.
+
+## APIs / SERVICES
+
+Endpoints/actions/services criados ou alterados.
+
+## RLS / SECURITY
+
+Proteções implementadas.
+
+## INTERNATIONALIZATION
+
+Como funciona por locale/currency/timezone.
+
+## MODEL ROUTER
+
+Uso de Economy/Strategic.
+
+## AI USAGE / COST
+
+Impacto estimado/medido.
+
+## TESTS
+
+Testes executados.
+
+## LINT
+
+Resultado.
+
+## TYPECHECK
+
+Resultado.
+
+## BUILD
+
+Resultado.
+
+## PERFORMANCE
+
+Observações.
+
+## LIMITAÇÕES
+
+O que ainda não é suportado.
+
+## TECHNICAL DEBT
+
+Dívida técnica encontrada/criada.
+
+## 9.6 READINESS
+
+A arquitetura está pronta para Decision Simulator?
+
+Explicar.
+
+## 9.7 READINESS
+
+Está pronta para Radar?
+
+Explicar.
+
+## 9.8 READINESS
+
+Está pronta para External Intelligence?
+
+Explicar.
+
+## MANUAL VALIDATION
+
+Passo a passo para eu testar a Fase 9.5.
+
+# ============================================================
+# 223. TABELA FINAL OBRIGATÓRIA
+# ============================================================
+
+Apresentar tabela equivalente:
+
+Capability | Status | Source of Truth | Tested | Notes
+
+Company
+
+Products/Services
+
+Offers
+
+Customer Segments
+
+Channels
+
+Sales Process
+
+Team
+
+Operations
+
+Capacity
+
+Costs
+
+Revenue Streams
+
+Goals
+
+Constraints
+
+Metrics
+
+Relationships
+
+Current State
+
+History
+
+Sources
+
+Confidence
+
+Coverage
+
+Context Resolver
+
+RLS
+
+Internationalization
+
+# ============================================================
+# 224. RISCOS
+# ============================================================
+
+Listar explicitamente:
+
+riscos técnicos
+
+riscos de inconsistência
+
+riscos de duplicação
+
+riscos de custo de IA
+
+riscos de performance
+
+riscos de privacidade
+
+riscos de overengineering.
+
+Não esconder limitações.
+
+# ============================================================
+# 225. STOP CONDITION
+# ============================================================
+
+Depois de:
+
+migrations
+
+lint
+
+typecheck
+
+tests
+
+build
+
+validação
+
+relatório
+
+PARAR.
+
+NÃO iniciar Fase 9.6.
+
+NÃO iniciar Fase 9.7.
+
+NÃO iniciar Fase 9.8.
+
+NÃO iniciar Fase 10.
+
+Aguardar minha autorização explícita.
+
+# ============================================================
+# FIM DA FASE 9.5
+# ============================================================

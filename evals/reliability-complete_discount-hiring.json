@@ -1,0 +1,502 @@
+{
+  "date": "2026-10-01T17:13:58.304Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "complete_discount",
+      "message": "Analise este cenário delimitado, sem prever vendas: produto A, período de referência a semana do teste. Preço-base confirmado para essa semana: 100 reais por unidade. Custo variável total confirmado: 60 reais por unidade. Base comparável: 100 unidades por semana. Meta do teste: 120 unidades na semana. Capacidade: 150 unidades por semana. Desconto proposto para a mesma semana: 20%. Calcule apenas o preço unitário com desconto usando esses valores. Quero uma recomendação de teste limitado com indicador e revisão ao final da semana; o resultado de vendas é desconhecido.",
+      "rubric": "Dados completos para o cenário: preço calculado 80, sem prever aumento de vendas nem garantir resultado.",
+      "intent": "PRICING",
+      "answer": "O preço unitário com o desconto proposto é 80. Esse valor é apenas o preço do cenário, não uma previsão de vendas ou de lucro. Recomendo testar o desconto somente na semana indicada, sem assumir que a meta de 120 unidades será atingida. Ao final da semana, compare as unidades vendidas com a base de 100 e a meta de 120, e confira a contribuição por unidade antes de decidir se mantém ou encerra a oferta. O resultado ainda é desconhecido.",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Cenário delimitado de desconto para o produto A, com preço e custo unitários informados para a semana do teste.",
+        "objective": "Testar o desconto e comparar as vendas com a base e a meta ao final da semana.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Preço-base confirmado para essa semana: 100 reais por unidade."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Custo variável total confirmado: 60 reais por unidade."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Base comparável: 100 unidades por semana."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Meta do teste: 120 unidades na semana."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Desconto proposto para a mesma semana: 20%."
+          }
+        ],
+        "hypotheses": [
+          "O desconto pode alterar o volume vendido, mas o efeito é desconhecido."
+        ],
+        "missing_data": [
+          "Vendas efetivas e efeito sobre outras vendas durante o teste.",
+          "Custos fixos relevantes para avaliar lucro total."
+        ],
+        "opportunities": [
+          "Observar a resposta ao desconto em uma semana delimitada."
+        ],
+        "risks": [
+          "Menor contribuição por unidade sem aumento suficiente de volume."
+        ],
+        "priorities": [
+          "Executar o teste limitado e registrar as unidades vendidas.",
+          "Revisar vendas e contribuição ao final da semana antes de manter a oferta."
+        ],
+        "confidence": "MEDIUM",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "preco",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço-base confirmado: 100 reais por unidade.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Preço-base confirmado para essa semana: 100 reais por unidade.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "desconto",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto proposto de 20% para a semana do teste.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Desconto proposto para a mesma semana: 20%.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 20,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "custo",
+              "key": "cost",
+              "kind": "METRIC",
+              "text": "Custo variável total confirmado: 60 reais por unidade.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Custo variável total confirmado: 60 reais por unidade.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 60,
+              "unit": "BRL"
+            },
+            {
+              "id": "base",
+              "key": "sales",
+              "kind": "METRIC",
+              "text": "Base comparável de 100 unidades por semana.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Base comparável: 100 unidades por semana.",
+              "scope": "produto A",
+              "period": "semana de referência comparável",
+              "numeric_value": 100,
+              "unit": "COUNT"
+            },
+            {
+              "id": "meta",
+              "key": "goal",
+              "kind": "OBSERVATION",
+              "text": "Meta declarada de 120 unidades na semana do teste.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Meta do teste: 120 unidades na semana.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 120,
+              "unit": "COUNT"
+            }
+          ],
+          "missing_information": [
+            "Vendas efetivas da semana do teste, para a revisão posterior.",
+            "Custos fixos relevantes e eventual impacto do desconto sobre outras vendas, para avaliar lucro total."
+          ],
+          "essential_missing": [],
+          "conflicts": [],
+          "sufficiency": "PARTIALLY_SUFFICIENT",
+          "confidence": "MEDIUM",
+          "assumptions": [
+            "O desconto de 20% é uma proposta para teste, não um preço já praticado."
+          ],
+          "recommendation": {
+            "action": "Testar o desconto apenas na semana delimitada e revisar ao encerrá-la.",
+            "rationale_summary": "Há preço, custo, base comparável e meta para orientar um teste limitado, sem prever a demanda.",
+            "evidence_ids": [
+              "preco",
+              "desconto",
+              "custo",
+              "base",
+              "meta"
+            ],
+            "expected_signal": "Vendas observadas em relação à base e à meta, sem tratar a meta como resultado.",
+            "indicator": "Unidades vendidas na semana; verificar também a contribuição por unidade antes de manter a oferta.",
+            "review": "Ao final da semana do teste.",
+            "risks": [
+              "A redução do preço pode não ser compensada pelo volume vendido.",
+              "Outros custos ou substituição de vendas a preço cheio podem alterar o resultado total."
+            ],
+            "change_if": "Reconsiderar a oferta se o volume observado e a contribuição não sustentarem sua continuidade.",
+            "mode": "TEST"
+          },
+          "alternatives": [],
+          "calculations": [
+            {
+              "id": "preco_descontado",
+              "operation": "DISCOUNTED_PRICE",
+              "left": "preco",
+              "right": "desconto"
+            }
+          ],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "preco",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço-base confirmado: 100 reais por unidade.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Preço-base confirmado para essa semana: 100 reais por unidade.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "desconto",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto proposto de 20% para a semana do teste.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Desconto proposto para a mesma semana: 20%.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 20,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "custo",
+            "key": "cost",
+            "kind": "METRIC",
+            "text": "Custo variável total confirmado: 60 reais por unidade.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Custo variável total confirmado: 60 reais por unidade.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 60,
+            "unit": "BRL"
+          },
+          {
+            "id": "base",
+            "key": "sales",
+            "kind": "METRIC",
+            "text": "Base comparável de 100 unidades por semana.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Base comparável: 100 unidades por semana.",
+            "scope": "produto A",
+            "period": "semana de referência comparável",
+            "numeric_value": 100,
+            "unit": "COUNT"
+          },
+          {
+            "id": "meta",
+            "key": "goal",
+            "kind": "OBSERVATION",
+            "text": "Meta declarada de 120 unidades na semana do teste.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Meta do teste: 120 unidades na semana.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 120,
+            "unit": "COUNT"
+          }
+        ],
+        "missing_information": [
+          "Vendas efetivas da semana do teste, para a revisão posterior.",
+          "Custos fixos relevantes e eventual impacto do desconto sobre outras vendas, para avaliar lucro total."
+        ],
+        "essential_missing": [],
+        "conflicts": [],
+        "sufficiency": "PARTIALLY_SUFFICIENT",
+        "confidence": "MEDIUM",
+        "assumptions": [
+          "O desconto de 20% é uma proposta para teste, não um preço já praticado."
+        ],
+        "recommendation": {
+          "action": "Testar o desconto apenas na semana delimitada e revisar ao encerrá-la.",
+          "rationale_summary": "Há preço, custo, base comparável e meta para orientar um teste limitado, sem prever a demanda.",
+          "evidence_ids": [
+            "preco",
+            "desconto",
+            "custo",
+            "base",
+            "meta"
+          ],
+          "expected_signal": "Vendas observadas em relação à base e à meta, sem tratar a meta como resultado.",
+          "indicator": "Unidades vendidas na semana; verificar também a contribuição por unidade antes de manter a oferta.",
+          "review": "Ao final da semana do teste.",
+          "risks": [
+            "A redução do preço pode não ser compensada pelo volume vendido.",
+            "Outros custos ou substituição de vendas a preço cheio podem alterar o resultado total."
+          ],
+          "change_if": "Reconsiderar a oferta se o volume observado e a contribuição não sustentarem sua continuidade.",
+          "mode": "TEST"
+        },
+        "alternatives": [],
+        "calculations": [
+          {
+            "id": "preco_descontado",
+            "operation": "DISCOUNTED_PRICE",
+            "left": "preco",
+            "right": "desconto"
+          }
+        ],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 916,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 88,
+            "output_tokens_details": {
+              "reasoning_tokens": 55
+            },
+            "total_tokens": 1004
+          },
+          "latency_ms": 3934
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4376,
+            "input_tokens_details": {
+              "cache_write_tokens": 4373,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1151,
+            "output_tokens_details": {
+              "reasoning_tokens": 62
+            },
+            "total_tokens": 5527
+          },
+          "latency_ms": 16438
+        }
+      ]
+    },
+    {
+      "id": "hiring",
+      "message": "Estou pensando em contratar mais dois vendedores.",
+      "rubric": "Alta materialidade; demanda/capacidade/custo, sem garantia.",
+      "intent": "DECISION",
+      "answer": "Ainda não dá para recomendar a contratação de dois vendedores com segurança. Antes de assumir esse custo, eu verificaria se a equipe atual está deixando oportunidades de venda sem atendimento; se estiver, vale comparar contratar com redistribuir o trabalho. Quantas oportunidades de venda ficam sem atendimento hoje? Qual seria o custo mensal total dos dois vendedores? Com esses dados, dá para avaliar a demanda e o compromisso financeiro antes de decidir.",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "O usuário considera ampliar a equipe comercial em dois vendedores.",
+        "objective": null,
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Estou pensando em contratar mais dois vendedores."
+          }
+        ],
+        "hypotheses": [
+          "A equipe atual pode não ter capacidade para atender todas as oportunidades de venda."
+        ],
+        "missing_data": [
+          "Demanda não atendida.",
+          "Custo total dos dois vendedores.",
+          "Capacidade atual e caixa disponível."
+        ],
+        "opportunities": [
+          "Medir oportunidades perdidas antes de assumir um custo fixo."
+        ],
+        "risks": [
+          "Contratar sem demanda suficiente para justificar o custo."
+        ],
+        "priorities": [
+          "Levantar oportunidades sem atendimento e custo mensal da contratação.",
+          "Depois, comparar contratação com redistribuição do atendimento."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "hiring_proposal",
+              "kind": "OBSERVATION",
+              "text": "O usuário considera contratar mais dois vendedores.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Estou pensando em contratar mais dois vendedores.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": "COUNT"
+            }
+          ],
+          "missing_information": [
+            "Capacidade e distribuição do trabalho na equipe atual.",
+            "Caixa disponível para sustentar as contratações."
+          ],
+          "essential_missing": [
+            "Demanda de vendas não atendida.",
+            "Custo mensal total das contratações."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Verificar a demanda não atendida e o custo total antes de decidir pela contratação.",
+            "rationale_summary": "Sem evidência de sobrecarga nem custo conhecido, não é possível avaliar se duas contratações são necessárias e sustentáveis.",
+            "evidence_ids": [
+              "e1"
+            ],
+            "expected_signal": "Identificar se há oportunidades perdidas por falta de capacidade.",
+            "indicator": "Oportunidades de venda sem atendimento no período observado.",
+            "review": "Reavaliar quando a demanda não atendida e o custo mensal estiverem disponíveis.",
+            "risks": [
+              "Assumir custo fixo sem demanda suficiente.",
+              "Confundir um problema de conversão com falta de vendedores."
+            ],
+            "change_if": "Se não houver oportunidades sem atendimento, investigar a conversão antes de contratar; se houver, avaliar capacidade e caixa.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [
+            "Redistribuir o atendimento na equipe atual antes de ampliar o quadro.",
+            "Adiar a contratação até medir a demanda."
+          ],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "hiring_proposal",
+            "kind": "OBSERVATION",
+            "text": "O usuário considera contratar mais dois vendedores.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Estou pensando em contratar mais dois vendedores.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": "COUNT"
+          }
+        ],
+        "missing_information": [
+          "Capacidade e distribuição do trabalho na equipe atual.",
+          "Caixa disponível para sustentar as contratações."
+        ],
+        "essential_missing": [
+          "Demanda de vendas não atendida.",
+          "Custo mensal total das contratações."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Verificar a demanda não atendida e o custo total antes de decidir pela contratação.",
+          "rationale_summary": "Sem evidência de sobrecarga nem custo conhecido, não é possível avaliar se duas contratações são necessárias e sustentáveis.",
+          "evidence_ids": [
+            "e1"
+          ],
+          "expected_signal": "Identificar se há oportunidades perdidas por falta de capacidade.",
+          "indicator": "Oportunidades de venda sem atendimento no período observado.",
+          "review": "Reavaliar quando a demanda não atendida e o custo mensal estiverem disponíveis.",
+          "risks": [
+            "Assumir custo fixo sem demanda suficiente.",
+            "Confundir um problema de conversão com falta de vendedores."
+          ],
+          "change_if": "Se não houver oportunidades sem atendimento, investigar a conversão antes de contratar; se houver, avaliar capacidade e caixa.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [
+          "Redistribuir o atendimento na equipe atual antes de ampliar o quadro.",
+          "Adiar a contratação até medir a demanda."
+        ],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 798,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 108,
+            "output_tokens_details": {
+              "reasoning_tokens": 76
+            },
+            "total_tokens": 906
+          },
+          "latency_ms": 3106
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4214,
+            "input_tokens_details": {
+              "cache_write_tokens": 4211,
+              "cached_tokens": 0
+            },
+            "output_tokens": 648,
+            "output_tokens_details": {
+              "reasoning_tokens": 32
+            },
+            "total_tokens": 4862
+          },
+          "latency_ms": 13187
+        }
+      ]
+    }
+  ]
+}

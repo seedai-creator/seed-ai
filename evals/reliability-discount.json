@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-01T13:21:19.388Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "discount",
+      "message": "Posso dar 30% de desconto? Meu preço atual é 100 reais, mas não sei meu custo nem margem.",
+      "rubric": "Insuficiente; pedir custo/margem, não aprovar.",
+      "error": "INVALID_AI_RESPONSE",
+      "lastOutput": "{\n  \"intent\": \"PRICING\",\n  \"answer\": \"Ainda não dá para recomendar 30% de desconto com segurança. Você informou que o preço atual é 100 reais, mas, sem conhecer o custo por venda, não sabemos se o preço com desconto cobriria os gastos. Antes de oferecer a promoção, levante o custo do produto ou serviço e os gastos que variam a cada venda, como taxas e frete, se houver. Qual é o custo por venda? E o que você quer alcançar com o desconto?\",\n  \"facts_detected\": [],\n  \"reliability\": {\n    \"evidence\": [\n      {\n        \"id\": \"e1\",\n        \"key\": \"price\",\n        \"kind\": \"METRIC\",\n        \"text\": \"Preço atual informado: 100 reais.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Meu preço atual é 100 reais\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": 100,\n        \"unit\": \"BRL\"\n      },\n      {\n        \"id\": \"e2\",\n        \"key\": \"discount\",\n        \"kind\": \"FACT\",\n        \"text\": \"O usuário considera um desconto de 30%, ainda não decidido.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"Posso dar 30% de desconto?\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": 30,\n        \"unit\": \"%\"\n      },\n      {\n        \"id\": \"e3\",\n        \"key\": \"cost\",\n        \"kind\": \"OBSERVATION\",\n        \"text\": \"O usuário relata não conhecer seu custo nem sua margem.\",\n        \"source\": \"USER_MESSAGE\",\n        \"reference\": \"0\",\n        \"quote\": \"não sei meu custo nem margem\",\n        \"scope\": null,\n        \"period\": null,\n        \"numeric_value\": null,\n        \"unit\": null\n      }\n    ],\n    \"missing_information\": [\n      \"Volume de vendas e efeito esperado do desconto sobre esse volume.\",\n      \"Custos fixos relevantes e capacidade de atender a mais vendas.\"\n    ],\n    \"essential_missing\": [\n      \"Custo variável por venda.\",\n      \"Objetivo do desconto.\",\n      \"Volume de vendas para avaliar o resultado total da promoção.\"\n    ],\n    \"conflicts\": [],\n    \"sufficiency\": \"INSUFFICIENT\",\n    \"confidence\": \"LOW\",\n    \"assumptions\": [],\n    \"recommendation\": {\n      \"action\": \"Levantar o custo variável por venda antes de decidir sobre o desconto.\",\n      \"rationale_summary\": \"Sem esse custo, não é possível avaliar quanto cada venda com desconto deixaria para cobrir os demais gastos.\",\n      \"evidence_ids\": [\"e1\", \"e2\", \"e3\"],\n      \"expected_signal\": \"Saber se a venda com desconto ainda contribui para cobrir os demais gastos.\",\n      \"indicator\": \"Valor recebido por venda menos os custos variáveis dessa venda.\",\n      \"review\": \"Reavaliar a proposta quando o custo por venda e o objetivo do desconto estiverem claros; considerar também o volume antes de aprovar a promoção.\",\n      \"risks\": [\n        \"O desconto pode reduzir demais o valor que sobra por venda ou fazer com que ela não cubra seus custos variáveis.\"\n      ],\n      \"change_if\": \"O custo apurado, o objetivo ou o volume esperado indicarem que outro preço ou uma promoção mais limitada deve ser avaliada.\",\n      \"mode\": \"INVESTIGATE\"\n    },\n    \"alternatives\": [],\n    \"calculations\": [],\n    \"revision\": null\n  },\n  \"memory_detected\": [\n    {\n      \"key\": \"current_price\",\n      \"kind\": \"METRIC\",\n      \"value\": \"Preço atual informado: 100 reais.\",\n      \"evidence\": \"Meu preço atual é 100 reais\",\n      \"certainty\": \"EXPLICIT\",\n      \"scope\": \"CURRENT_COMPANY\",\n      \"observed_at\": null,\n      \"replaces_current\": true\n    }\n  ],\n  \"diagnosis\": {\n    \"situation\": \"O usuário considera oferecer 30% de desconto sobre um preço atual informado de 100 reais, mas não conhece o custo nem a margem.\",\n    \"objective\": null,\n    \"main_bottleneck\": \"Falta conhecer o custo por venda para avaliar o efeito do desconto.\",\n    \"secondary_bottlenecks\": [],\n    \"evidence\": [\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Posso dar 30% de desconto?\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"Meu preço atual é 100 reais\"\n      },\n      {\n        \"source\": \"USER_MESSAGE\",\n        \"quote\": \"não sei meu custo nem margem\"\n      }\n    ],\n    \"hypotheses\": [],\n    \"missing_data\": [\n      \"Custo variável por venda.\",\n      \"Objetivo do desconto.\",\n      \"Volume de vendas.\"\n    ],\n    \"opportunities\": [\n      \"Avaliar o desconto com base no valor que sobra por venda após os custos variáveis.\"\n    ],\n    \"risks\": [\n      \"Oferecer um preço que não cubra os custos variáveis ou prejudique o resultado total.\"\n    ],\n    \"priorities\": [\n      \"Levantar o custo variável por venda antes de decidir.\",\n      \"Esclarecer o objetivo do desconto e avaliar o volume necessário para atingi-lo.\"\n    ],\n    \"confidence\": \"LOW\"\n  }\n}",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 815,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 66,
+            "output_tokens_details": {
+              "reasoning_tokens": 33
+            },
+            "total_tokens": 881
+          },
+          "latency_ms": 1822
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4006,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 4003
+            },
+            "output_tokens": 2085,
+            "output_tokens_details": {
+              "reasoning_tokens": 909
+            },
+            "total_tokens": 6091
+          },
+          "latency_ms": 29706
+        }
+      ]
+    }
+  ]
+}

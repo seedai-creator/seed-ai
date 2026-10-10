@@ -1,0 +1,59 @@
+{
+  "date": "2026-09-26T19:59:00.593Z",
+  "model": "gpt-6-astra",
+  "review": "Revisado: quatro respostas no idioma esperado (pt-BR, pt-PT, en-US, es-ES), mantendo contexto US/USD e investigação antes da recomendação. Amostra sintética; não garante todas as respostas.",
+  "results": [
+    {
+      "locale": "pt-BR",
+      "market": {
+        "user_language": "pt-BR",
+        "company_country": "US",
+        "company_currency": "USD",
+        "company_locale": "en-US",
+        "company_preferred_language": "en-US",
+        "company_timezone": "America/New_York"
+      },
+      "answer": "Na sua padaria, eu começaria identificando onde as vendas estão limitadas: quantidade de clientes, conversão em compras, valor por compra ou frequência de retorno. Não partiria direto para mais publicidade.\n\nO primeiro passo é levantar uma base dos últimos 30 dias:\n- Número de vendas e faturamento do período, para calcular o ticket médio.\n- Quantidade de contatos ou visitas que poderiam virar compras, se houver esse registro, para avaliar a conversão.\n\nSe já chegam clientes, mas poucos compram, vale investigar disponibilidade dos produtos, atendimento, tempo de resposta e motivos de desistência antes de atrair mais pessoas. Se compram, mas raramente voltam, a prioridade pode estar na recompra — ainda é uma hipótese.\n\nQual canal concentra mais vendas hoje: balcão, delivery ou encomendas? Quantas vendas vocês concluíram nos últimos 30 dias?",
+      "intent": "SALES"
+    },
+    {
+      "locale": "pt-PT",
+      "market": {
+        "user_language": "pt-PT",
+        "company_country": "US",
+        "company_currency": "USD",
+        "company_locale": "en-US",
+        "company_preferred_language": "en-US",
+        "company_timezone": "America/New_York"
+      },
+      "answer": "Na vossa padaria, começaria por perceber onde se perdem vendas: entram poucos potenciais clientes ou há pessoas interessadas que acabam por não comprar? Só depois faz sentido escolher entre atrair mais clientes, melhorar a conversão ou incentivar a recompra.\n\nPara começar, olhemos para os últimos 30 dias:\n1. Qual foi o principal canal de venda: loja física, encomendas ou outro?\n2. Nesse canal, têm registo de quantas visitas ou pedidos de informação resultaram em compras?\n\nSe não houver registos, o primeiro passo é fazer uma contagem simples durante uma semana: oportunidades de venda, compras concluídas e motivos de não compra. Isso ajuda a localizar o gargalo antes de investir mais em divulgação.",
+      "intent": "SALES"
+    },
+    {
+      "locale": "en-US",
+      "market": {
+        "user_language": "en-US",
+        "company_country": "US",
+        "company_currency": "USD",
+        "company_locale": "en-US",
+        "company_preferred_language": "en-US",
+        "company_timezone": "America/New_York"
+      },
+      "answer": "For your bakery, first investigate where sales opportunities are being lost—not automatically how to attract more customers.\n\nStart with two numbers for the last four weeks:\n1. How many customer visits or inquiries did you receive?\n2. How many resulted in a purchase?\n\nCompare those within the same sales channel so the conversion rate is meaningful. If you don’t track them yet, start with a simple tally for one week in your main channel.\n\nThis helps distinguish too few opportunities from difficulty turning interest into purchases. If many people leave without buying, investigate availability, wait times and their stated reasons before spending more on promotion. If conversion isn’t the main constraint, we can next examine purchase size and repeat visits.",
+      "intent": "SALES"
+    },
+    {
+      "locale": "es-ES",
+      "market": {
+        "user_language": "es-ES",
+        "company_country": "US",
+        "company_currency": "USD",
+        "company_locale": "en-US",
+        "company_preferred_language": "en-US",
+        "company_timezone": "America/New_York"
+      },
+      "answer": "Primero investigaría dónde se frena la venta en vuestra panadería, antes de invertir más en publicidad o hacer descuentos.\n\nLa primera comparación es entre oportunidades de compra y ventas realizadas, en el mismo canal y periodo:\n- Si llegan pocos clientes potenciales, habría que investigar la captación.\n- Si llegan, pero pocos compran, conviene revisar disponibilidad de productos, atención, objeciones y motivos de abandono.\n- Si la conversión no parece ser el problema, pasaríamos al importe por compra y la frecuencia de repetición.\n\nPara empezar por un punto concreto:\n1. En las últimas cuatro semanas, ¿cuántas visitas o consultas de posibles clientes habéis tenido en vuestro principal canal de venta?\n2. ¿Cuántas de esas oportunidades terminaron en compra?\n\nSi no tenéis esos datos, el primer paso sería contar oportunidades y compras durante una semana en ese canal. Nos dará una referencia inicial para investigar, sin asumir todavía cuál es el problema.",
+      "intent": "SALES"
+    }
+  ]
+}

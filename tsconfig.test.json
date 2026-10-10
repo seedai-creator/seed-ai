@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false,
+    "incremental": false,
+    "outDir": ".test-build",
+    "rootDir": ".",
+    "ignoreDeprecations": "6.0",
+    "types": [
+      "node"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "tests/**/*.ts",
+    "src/lib/chat/**/*.ts",
+    "src/lib/cockpit/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".test-build"
+  ]
+}

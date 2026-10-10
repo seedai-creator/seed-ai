@@ -1,0 +1,2693 @@
+{
+  "date": "2026-10-01T13:37:23.442Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "sell",
+      "message": "Preciso vender mais.",
+      "rubric": "Investigar antes de sugerir aquisição.",
+      "intent": "SALES",
+      "answer": "Entendo que você quer vender mais. Ainda não dá para recomendar uma ação comercial com segurança: primeiro precisamos descobrir se o limite está na chegada de interessados ou na conversão em vendas. Como próximo passo, compare contatos e vendas no mesmo período. Quantas pessoas interessadas procuraram sua empresa no último mês? Quantas dessas pessoas compraram? Com esses números, podemos escolher um teste pequeno e acompanhar se ele melhora as vendas.",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "business_objective",
+          "kind": "GOAL",
+          "value": "Vender mais.",
+          "evidence": "Preciso vender mais.",
+          "certainty": "EXPLICIT",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        }
+      ],
+      "diagnosis": {
+        "situation": "O usuário relata que precisa vender mais, sem informar dados do processo comercial.",
+        "objective": "Aumentar as vendas.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Preciso vender mais."
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Quantidade de interessados no período.",
+          "Vendas originadas desses interessados no mesmo período."
+        ],
+        "opportunities": [
+          "Medir interessados e vendas para localizar onde investigar primeiro."
+        ],
+        "risks": [
+          "Escolher uma ação antes de identificar o gargalo pode desperdiçar recursos."
+        ],
+        "priorities": [
+          "Comparar interessados e vendas do mesmo período antes de propor um teste."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "business_objective",
+              "kind": "OBSERVATION",
+              "text": "O usuário relata que precisa vender mais.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Preciso vender mais.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Processo comercial e motivos de perda."
+          ],
+          "essential_missing": [
+            "Quantidade de interessados em um período definido.",
+            "Quantidade de vendas originadas desses interessados no mesmo período."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Medir interessados e vendas do mesmo período antes de escolher uma ação comercial.",
+            "rationale_summary": "O objetivo foi informado, mas ainda não há dados para localizar o gargalo.",
+            "evidence_ids": [
+              "e1"
+            ],
+            "expected_signal": "Identificar se há poucos interessados ou se poucos interessados compram.",
+            "indicator": "Interessados e vendas correspondentes no mesmo período.",
+            "review": "Revisar após reunir os números do último mês.",
+            "risks": [
+              "Os números podem não corresponder ao mesmo grupo de interessados."
+            ],
+            "change_if": "Se os registros não permitirem ligar interessados a vendas, definir primeiro uma forma simples de acompanhá-los.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "business_objective",
+            "kind": "OBSERVATION",
+            "text": "O usuário relata que precisa vender mais.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Preciso vender mais.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Processo comercial e motivos de perda."
+        ],
+        "essential_missing": [
+          "Quantidade de interessados em um período definido.",
+          "Quantidade de vendas originadas desses interessados no mesmo período."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Medir interessados e vendas do mesmo período antes de escolher uma ação comercial.",
+          "rationale_summary": "O objetivo foi informado, mas ainda não há dados para localizar o gargalo.",
+          "evidence_ids": [
+            "e1"
+          ],
+          "expected_signal": "Identificar se há poucos interessados ou se poucos interessados compram.",
+          "indicator": "Interessados e vendas correspondentes no mesmo período.",
+          "review": "Revisar após reunir os números do último mês.",
+          "risks": [
+            "Os números podem não corresponder ao mesmo grupo de interessados."
+          ],
+          "change_if": "Se os registros não permitirem ligar interessados a vendas, definir primeiro uma forma simples de acompanhá-los.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 795,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 57,
+            "output_tokens_details": {
+              "reasoning_tokens": 26
+            },
+            "total_tokens": 852
+          },
+          "latency_ms": 2372
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4259,
+            "input_tokens_details": {
+              "cache_write_tokens": 4256,
+              "cached_tokens": 0
+            },
+            "output_tokens": 631,
+            "output_tokens_details": {
+              "reasoning_tokens": 50
+            },
+            "total_tokens": 4890
+          },
+          "latency_ms": 12442
+        }
+      ]
+    },
+    {
+      "id": "discount",
+      "message": "Posso dar 30% de desconto? Meu preço atual é 100 reais, mas não sei meu custo nem margem.",
+      "rubric": "Insuficiente; pedir custo/margem, não aprovar.",
+      "intent": "PRICING",
+      "answer": "Ainda não dá para recomendar 30% de desconto com segurança. Você informou que cobra R$ 100, mas, sem conhecer o custo e a margem, não sabemos se a venda com desconto continuaria vantajosa. Antes de oferecer a promoção, levante o custo por venda. Qual é esse custo? O que você pretende alcançar com o desconto? Depois, vale verificar o volume de vendas e a capacidade de atender mais pedidos antes de decidir.",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "current_price",
+          "kind": "METRIC",
+          "value": "Preço atual informado: 100 reais.",
+          "evidence": "Meu preço atual é 100 reais",
+          "certainty": "EXPLICIT",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": true
+        }
+      ],
+      "diagnosis": {
+        "situation": "O usuário informa preço atual de 100 reais e considera oferecer 30% de desconto.",
+        "objective": null,
+        "main_bottleneck": "Faltam custos e margem para avaliar o efeito do desconto por venda.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Meu preço atual é 100 reais"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Posso dar 30% de desconto?"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "não sei meu custo nem margem"
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Custo por venda ou margem atual.",
+          "Objetivo do desconto.",
+          "Volume de vendas e capacidade."
+        ],
+        "opportunities": [
+          "Avaliar um teste limitado após conhecer os custos e o objetivo."
+        ],
+        "risks": [
+          "Reduzir o ganho por venda sem compensação suficiente."
+        ],
+        "priorities": [
+          "Levantar o custo por venda e esclarecer o objetivo do desconto."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço atual informado: 100 reais.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Meu preço atual é 100 reais",
+              "scope": null,
+              "period": null,
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "e2",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto de 30% proposto, ainda não decidido.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Posso dar 30% de desconto?",
+              "scope": null,
+              "period": null,
+              "numeric_value": 30,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "e3",
+              "key": "cost",
+              "kind": "OBSERVATION",
+              "text": "Usuário relata desconhecer custo e margem.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "não sei meu custo nem margem",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Volume de vendas e capacidade para atender mais pedidos."
+          ],
+          "essential_missing": [
+            "Custo por venda ou margem atual.",
+            "Objetivo do desconto."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [
+            "Os 30% são uma possibilidade em avaliação, não uma promoção já adotada."
+          ],
+          "recommendation": {
+            "action": "Levantar o custo por venda e definir o objetivo antes de decidir sobre o desconto.",
+            "rationale_summary": "Sem esses dados, não é possível avaliar se o desconto preserva uma contribuição adequada por venda.",
+            "evidence_ids": [
+              "e1",
+              "e2",
+              "e3"
+            ],
+            "expected_signal": "Custo por venda conhecido e objetivo definido.",
+            "indicator": "Custo por venda em reais.",
+            "review": "Reavaliar quando custo e objetivo estiverem disponíveis; depois verificar volume e capacidade.",
+            "risks": [
+              "O desconto pode reduzir ou eliminar o ganho por venda.",
+              "Mais pedidos podem pressionar a capacidade de atendimento."
+            ],
+            "change_if": "Com custos, objetivo e volume conhecidos, avaliar um teste limitado em vez de aprovar o desconto de imediato.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço atual informado: 100 reais.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Meu preço atual é 100 reais",
+            "scope": null,
+            "period": null,
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "e2",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto de 30% proposto, ainda não decidido.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Posso dar 30% de desconto?",
+            "scope": null,
+            "period": null,
+            "numeric_value": 30,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "e3",
+            "key": "cost",
+            "kind": "OBSERVATION",
+            "text": "Usuário relata desconhecer custo e margem.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "não sei meu custo nem margem",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Volume de vendas e capacidade para atender mais pedidos."
+        ],
+        "essential_missing": [
+          "Custo por venda ou margem atual.",
+          "Objetivo do desconto."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [
+          "Os 30% são uma possibilidade em avaliação, não uma promoção já adotada."
+        ],
+        "recommendation": {
+          "action": "Levantar o custo por venda e definir o objetivo antes de decidir sobre o desconto.",
+          "rationale_summary": "Sem esses dados, não é possível avaliar se o desconto preserva uma contribuição adequada por venda.",
+          "evidence_ids": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "expected_signal": "Custo por venda conhecido e objetivo definido.",
+          "indicator": "Custo por venda em reais.",
+          "review": "Reavaliar quando custo e objetivo estiverem disponíveis; depois verificar volume e capacidade.",
+          "risks": [
+            "O desconto pode reduzir ou eliminar o ganho por venda.",
+            "Mais pedidos podem pressionar a capacidade de atendimento."
+          ],
+          "change_if": "Com custos, objetivo e volume conhecidos, avaliar um teste limitado em vez de aprovar o desconto de imediato.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 815,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 60,
+            "output_tokens_details": {
+              "reasoning_tokens": 27
+            },
+            "total_tokens": 875
+          },
+          "latency_ms": 2083
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4173,
+            "input_tokens_details": {
+              "cache_write_tokens": 29,
+              "cached_tokens": 4141
+            },
+            "output_tokens": 885,
+            "output_tokens_details": {
+              "reasoning_tokens": 82
+            },
+            "total_tokens": 5058
+          },
+          "latency_ms": 14756
+        }
+      ]
+    },
+    {
+      "id": "hiring",
+      "message": "Estou pensando em contratar mais dois vendedores.",
+      "rubric": "Alta materialidade; demanda/capacidade/custo, sem garantia.",
+      "error": "INVALID_AI_RESPONSE",
+      "error_name": "Error",
+      "elapsed_ms": 12908,
+      "lastOutput": "{\"intent\":\"DECISION\",\"answer\":\"Eu não contrataria os dois vendedores ainda com base apenas nessa informação. Primeiro, vale verificar se há oportunidades de venda que a equipe atual não consegue atender; se o gargalo estiver em outra etapa, contratar pode aumentar o custo sem resolver o problema. Um próximo passo é medir as oportunidades perdidas por falta de atendimento e comparar esse volume com a capacidade atual. Quantas oportunidades deixam de ser atendidas por mês? Qual seria o custo mensal total das duas contratações, e o caixa comporta esse custo? Com esses dados, podemos avaliar se faz sentido contratar, testar uma vaga primeiro ou adiar.\",\"facts_detected\":[],\"reliability\":{\"evidence\":[{\"id\":\"e1\",\"key\":\"hiring_proposal\",\"kind\":\"OBSERVATION\",\"text\":\"Considera contratar mais dois vendedores.\",\"source\":\"USER_MESSAGE\",\"reference\":\"0\",\"quote\":\"Estou pensando em contratar mais dois vendedores.\",\"scope\":null,\"period\":null,\"numeric_value\":2,\"unit\":\"COUNT\"}],\"missing_information\":[\"Capacidade atual da equipe de vendas.\"],\"essential_missing\":[\"Demanda não atendida por falta de vendedores.\",\"Custo mensal das contratações e disponibilidade de caixa.\"],\"conflicts\":[],\"sufficiency\":\"INSUFFICIENT\",\"confidence\":\"LOW\",\"assumptions\":[],\"recommendation\":{\"action\":\"Medir oportunidades não atendidas antes de decidir sobre as contratações.\",\"rationale_summary\":\"Ainda não há evidência de que a capacidade da equipe seja o gargalo.\",\"evidence_ids\":[\"e1\"],\"expected_signal\":\"Identificar se oportunidades são perdidas por falta de atendimento.\",\"indicator\":\"Oportunidades não atendidas por falta de capacidade, por mês.\",\"review\":\"Reavaliar após reunir o volume mensal e o custo das vagas.\",\"risks\":[\"A medição pode não distinguir falta de capacidade de problemas de conversão.\"],\"change_if\":\"Se houver demanda recorrente não atendida e custo compatível com o caixa, avaliar uma contratação inicial.\",\"mode\":\"INVESTIGATE\"},\"alternatives\":[\"Testar uma vaga antes de contratar duas, se a demanda e o caixa sustentarem o teste.\",\"Adiar a contratação se a capacidade não for o gargalo.\"],\"calculations\":[],\"revision\":null},\"memory_detected\":[],\"diagnosis\":{\"situation\":\"O usuário considera ampliar a equipe comercial em duas pessoas; não há dados sobre demanda, capacidade ou custo.\",\"objective\":null,\"main_bottleneck\":null,\"secondary_bottlenecks\":[],\"evidence\":[{\"source\":\"USER_MESSAGE\",\"quote\":\"Estou pensando em contratar mais dois vendedores.\"}],\"hypotheses\":[\"A equipe atual pode não conseguir atender toda a demanda.\"],\"missing_data\":[\"Oportunidades mensais não atendidas por falta de capacidade.\",\"Custo das vagas e disponibilidade de caixa.\",\"Capacidade atual da equipe.\"],\"opportunities\":[\"Medir a demanda antes de assumir um custo recorrente.\"],\"risks\":[\"Contratar sem demanda suficiente ou sem caixa para sustentar as vagas.\"],\"priorities\":[\"Medir oportunidades não atendidas por falta de capacidade e, então, reavaliar a contratação.\"],\"confidence\":\"LOW\"}}",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 798,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 115,
+            "output_tokens_details": {
+              "reasoning_tokens": 83
+            },
+            "total_tokens": 913
+          },
+          "latency_ms": 2488
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4112,
+            "input_tokens_details": {
+              "cache_write_tokens": 4109,
+              "cached_tokens": 0
+            },
+            "output_tokens": 704,
+            "output_tokens_details": {
+              "reasoning_tokens": 55
+            },
+            "total_tokens": 4816
+          },
+          "latency_ms": 12904
+        }
+      ]
+    },
+    {
+      "id": "ads",
+      "message": "Em setembro tivemos 300 leads e 21 vendas. A operação já está no limite. Quero dobrar os anúncios.",
+      "rubric": "Capacidade antes de escalar; sem causalidade ou benchmark inventado.",
+      "intent": "MARKETING",
+      "answer": "Em setembro, você relata 300 leads e 21 vendas, mas a operação já está no limite. Por isso, ainda não é seguro recomendar dobrar os anúncios: mais procura pode aumentar atrasos sem gerar vendas que a equipe consiga atender.\n\nMinha prioridade seria identificar onde está o limite antes de ampliar a campanha. Quantas vendas adicionais a operação consegue entregar por mês, sem comprometer o atendimento? E, dos 300 leads de setembro, quantos receberam atendimento? Com essas respostas, dá para avaliar se o próximo passo é melhorar o atendimento, ampliar a capacidade ou testar mais anúncios em pequena escala.",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "leads_september",
+          "kind": "METRIC",
+          "value": "300 leads em setembro (ano não informado).",
+          "evidence": "Em setembro tivemos 300 leads",
+          "certainty": "AMBIGUOUS",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        },
+        {
+          "key": "sales_september",
+          "kind": "METRIC",
+          "value": "21 vendas em setembro (ano não informado).",
+          "evidence": "21 vendas",
+          "certainty": "AMBIGUOUS",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        },
+        {
+          "key": "operational_capacity",
+          "kind": "CONSTRAINT",
+          "value": "A operação já está no limite.",
+          "evidence": "A operação já está no limite.",
+          "certainty": "EXPLICIT",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": true
+        }
+      ],
+      "diagnosis": {
+        "situation": "Foram relatados 300 leads e 21 vendas em setembro, além de uma operação no limite e intenção de dobrar os anúncios.",
+        "objective": "Ampliar anúncios; resultado empresarial pretendido não especificado.",
+        "main_bottleneck": "Capacidade operacional possivelmente insuficiente para absorver mais demanda.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Em setembro tivemos 300 leads e 21 vendas."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "A operação já está no limite."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Quero dobrar os anúncios."
+          }
+        ],
+        "hypotheses": [
+          "Parte dos leads pode não estar recebendo atendimento; ainda não foi verificado."
+        ],
+        "missing_data": [
+          "Capacidade mensal para entregar vendas adicionais.",
+          "Quantidade de leads de setembro que receberam atendimento."
+        ],
+        "opportunities": [
+          "Verificar se há demanda já captada que pode ser melhor atendida antes de ampliar anúncios."
+        ],
+        "risks": [
+          "Mais anúncios podem gerar demanda acima da capacidade operacional."
+        ],
+        "priorities": [
+          "Medir capacidade disponível e atendimento dos leads antes de decidir sobre ampliação."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "leads",
+              "kind": "METRIC",
+              "text": "300 leads em setembro.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Em setembro tivemos 300 leads",
+              "scope": "empresa ativa",
+              "period": "setembro (ano não informado)",
+              "numeric_value": 300,
+              "unit": "COUNT"
+            },
+            {
+              "id": "e2",
+              "key": "sales",
+              "kind": "METRIC",
+              "text": "21 vendas em setembro.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "21 vendas",
+              "scope": "empresa ativa",
+              "period": "setembro (ano não informado)",
+              "numeric_value": 21,
+              "unit": "COUNT"
+            },
+            {
+              "id": "e3",
+              "key": "capacity",
+              "kind": "OBSERVATION",
+              "text": "Operação relatada como no limite.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "A operação já está no limite.",
+              "scope": "empresa ativa",
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e4",
+              "key": "goal",
+              "kind": "OBSERVATION",
+              "text": "Deseja dobrar os anúncios.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Quero dobrar os anúncios.",
+              "scope": "empresa ativa",
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Quantidade de leads atendidos em setembro."
+          ],
+          "essential_missing": [
+            "Capacidade para atender e entregar vendas adicionais."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Medir a capacidade disponível e verificar o atendimento dos leads antes de ampliar anúncios.",
+            "rationale_summary": "A operação foi relatada como no limite; aumentar a procura pode agravar esse limite.",
+            "evidence_ids": [
+              "e1",
+              "e2",
+              "e3",
+              "e4"
+            ],
+            "expected_signal": "Identificação de capacidade livre ou de acúmulo de demanda não atendida.",
+            "indicator": "Vendas adicionais que podem ser entregues por mês sem comprometer o atendimento.",
+            "review": "Reavaliar quando houver capacidade mensurada e levantamento dos leads atendidos em setembro.",
+            "risks": [
+              "Atrasos e piora no atendimento se a demanda aumentar sem capacidade."
+            ],
+            "change_if": "Se houver capacidade livre comprovada e atendimento adequado dos leads, considerar teste limitado de anúncios.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "leads",
+            "kind": "METRIC",
+            "text": "300 leads em setembro.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Em setembro tivemos 300 leads",
+            "scope": "empresa ativa",
+            "period": "setembro (ano não informado)",
+            "numeric_value": 300,
+            "unit": "COUNT"
+          },
+          {
+            "id": "e2",
+            "key": "sales",
+            "kind": "METRIC",
+            "text": "21 vendas em setembro.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "21 vendas",
+            "scope": "empresa ativa",
+            "period": "setembro (ano não informado)",
+            "numeric_value": 21,
+            "unit": "COUNT"
+          },
+          {
+            "id": "e3",
+            "key": "capacity",
+            "kind": "OBSERVATION",
+            "text": "Operação relatada como no limite.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "A operação já está no limite.",
+            "scope": "empresa ativa",
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e4",
+            "key": "goal",
+            "kind": "OBSERVATION",
+            "text": "Deseja dobrar os anúncios.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Quero dobrar os anúncios.",
+            "scope": "empresa ativa",
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Quantidade de leads atendidos em setembro."
+        ],
+        "essential_missing": [
+          "Capacidade para atender e entregar vendas adicionais."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Medir a capacidade disponível e verificar o atendimento dos leads antes de ampliar anúncios.",
+          "rationale_summary": "A operação foi relatada como no limite; aumentar a procura pode agravar esse limite.",
+          "evidence_ids": [
+            "e1",
+            "e2",
+            "e3",
+            "e4"
+          ],
+          "expected_signal": "Identificação de capacidade livre ou de acúmulo de demanda não atendida.",
+          "indicator": "Vendas adicionais que podem ser entregues por mês sem comprometer o atendimento.",
+          "review": "Reavaliar quando houver capacidade mensurada e levantamento dos leads atendidos em setembro.",
+          "risks": [
+            "Atrasos e piora no atendimento se a demanda aumentar sem capacidade."
+          ],
+          "change_if": "Se houver capacidade livre comprovada e atendimento adequado dos leads, considerar teste limitado de anúncios.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 814,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 212,
+            "output_tokens_details": {
+              "reasoning_tokens": 181
+            },
+            "total_tokens": 1026
+          },
+          "latency_ms": 3895
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4273,
+            "input_tokens_details": {
+              "cache_write_tokens": 4270,
+              "cached_tokens": 0
+            },
+            "output_tokens": 1092,
+            "output_tokens_details": {
+              "reasoning_tokens": 63
+            },
+            "total_tokens": 5365
+          },
+          "latency_ms": 18549
+        }
+      ]
+    },
+    {
+      "id": "expansion",
+      "message": "Devo abrir outra unidade?",
+      "rubric": "Alta materialidade, sem sim/não imediato.",
+      "intent": "EXPANSION",
+      "answer": "Ainda não dá para recomendar a abertura com segurança. Antes de comprometer capital, eu compararia a nova unidade com melhorar a operação atual ou testar a demanda em menor escala. O primeiro passo é verificar se há demanda suficiente e se a unidade atual gera caixa para sustentar a expansão sem comprometer a operação.\n\nHá sinais concretos de demanda na região onde você pensa em abrir? Quanto capital estaria disponível para investir?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "A abertura de outra unidade está em avaliação, sem dados sobre a operação atual ou a região pretendida.",
+        "objective": "Decidir se deve abrir outra unidade.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [],
+        "hypotheses": [],
+        "missing_data": [
+          "Demanda na região pretendida",
+          "Capital disponível",
+          "Margem, caixa, custos e capacidade operacional"
+        ],
+        "opportunities": [
+          "Comparar a abertura com um teste de demanda em menor escala."
+        ],
+        "risks": [
+          "Comprometer capital antes de validar demanda e viabilidade operacional."
+        ],
+        "priorities": [
+          "Investigar demanda e capital disponível antes de decidir."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [],
+          "missing_information": [
+            "Margem, caixa e desempenho da unidade atual",
+            "Custos previstos da nova unidade",
+            "Capacidade da equipe e dependência do dono"
+          ],
+          "essential_missing": [
+            "Evidência de demanda na região pretendida",
+            "Capital disponível para a expansão"
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Levantar evidências de demanda e capital disponível antes de avaliar a abertura.",
+            "rationale_summary": "Sem esses dados, não é possível comparar a expansão com alternativas de menor compromisso.",
+            "evidence_ids": [],
+            "expected_signal": "Demanda documentada e recursos disponíveis para avaliar a viabilidade.",
+            "indicator": "Demanda observada na região pretendida e capital disponível.",
+            "review": "Reavaliar após obter esses dados e os custos previstos.",
+            "risks": [
+              "Comprometer o caixa sem demanda suficiente.",
+              "Replicar eventuais problemas da operação atual."
+            ],
+            "change_if": "A recomendação pode mudar se demanda, custos, caixa e capacidade operacional sustentarem a nova unidade.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [
+            "Melhorar a unidade atual",
+            "Testar a demanda em menor escala"
+          ],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [],
+        "missing_information": [
+          "Margem, caixa e desempenho da unidade atual",
+          "Custos previstos da nova unidade",
+          "Capacidade da equipe e dependência do dono"
+        ],
+        "essential_missing": [
+          "Evidência de demanda na região pretendida",
+          "Capital disponível para a expansão"
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Levantar evidências de demanda e capital disponível antes de avaliar a abertura.",
+          "rationale_summary": "Sem esses dados, não é possível comparar a expansão com alternativas de menor compromisso.",
+          "evidence_ids": [],
+          "expected_signal": "Demanda documentada e recursos disponíveis para avaliar a viabilidade.",
+          "indicator": "Demanda observada na região pretendida e capital disponível.",
+          "review": "Reavaliar após obter esses dados e os custos previstos.",
+          "risks": [
+            "Comprometer o caixa sem demanda suficiente.",
+            "Replicar eventuais problemas da operação atual."
+          ],
+          "change_if": "A recomendação pode mudar se demanda, custos, caixa e capacidade operacional sustentarem a nova unidade.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [
+          "Melhorar a unidade atual",
+          "Testar a demanda em menor escala"
+        ],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 796,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 56,
+            "output_tokens_details": {
+              "reasoning_tokens": 22
+            },
+            "total_tokens": 852
+          },
+          "latency_ms": 1732
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4236,
+            "input_tokens_details": {
+              "cache_write_tokens": 4233,
+              "cached_tokens": 0
+            },
+            "output_tokens": 526,
+            "output_tokens_details": {
+              "reasoning_tokens": 27
+            },
+            "total_tokens": 4762
+          },
+          "latency_ms": 9575
+        }
+      ]
+    },
+    {
+      "id": "emotional",
+      "message": "Estou trabalhando igual louco e a empresa não sai do lugar.",
+      "rubric": "Acolher, linguagem simples, poucas perguntas; emoção não é fato empresarial.",
+      "intent": "DIAGNOSIS",
+      "answer": "Parece desgastante trabalhar tanto sem perceber avanço. Pelo seu relato, há muito esforço e uma sensação de estagnação, mas ainda não dá para identificar o gargalo nem recomendar uma mudança com segurança. O primeiro passo é escolher uma medida de avanço e comparar períodos iguais. O que você gostaria que estivesse melhorando agora: vendas, lucro ou outra coisa? Qual foi o resultado dessa medida nos dois últimos meses?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "O usuário relata esforço intenso e percebe a empresa estagnada; não informou resultados mensuráveis.",
+        "objective": null,
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Estou trabalhando igual louco"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a empresa não sai do lugar"
+          }
+        ],
+        "hypotheses": [
+          "O avanço esperado pode não estar definido ou medido.",
+          "A sobrecarga pode estar ligada à operação, mas faltam dados para avaliar."
+        ],
+        "missing_data": [
+          "O que significa avançar para o usuário.",
+          "Resultados comparáveis do indicador escolhido."
+        ],
+        "opportunities": [
+          "Medir o avanço antes de escolher uma intervenção."
+        ],
+        "risks": [
+          "Mudar vendas ou operação sem saber onde está a dificuldade."
+        ],
+        "priorities": [
+          "Definir o indicador de avanço e comparar dois períodos."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "workload",
+              "kind": "OBSERVATION",
+              "text": "Relato de esforço intenso, sem medida de carga de trabalho.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Estou trabalhando igual louco",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e2",
+              "key": "perceived_stagnation",
+              "kind": "OBSERVATION",
+              "text": "Percepção de que a empresa não avança, sem indicador definido.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a empresa não sai do lugar",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Capacidade operacional e distribuição do tempo de trabalho."
+          ],
+          "essential_missing": [
+            "Indicador que representa avanço para o usuário.",
+            "Resultados desse indicador em períodos comparáveis."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Definir um indicador de avanço e comparar seus resultados nos dois últimos meses.",
+            "rationale_summary": "O relato não distingue queda de resultados, falta de lucro ou sobrecarga operacional.",
+            "evidence_ids": [
+              "e1",
+              "e2"
+            ],
+            "expected_signal": "Ficar mais claro o que não está avançando e desde quando.",
+            "indicator": "Indicador de avanço escolhido pelo usuário.",
+            "review": "Após comparar os dois meses.",
+            "risks": [
+              "Escolher um indicador que não represente o objetivo real."
+            ],
+            "change_if": "Se os resultados mostrarem avanço, investigar por que ele não se traduz na percepção ou na rotina de trabalho.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "workload",
+            "kind": "OBSERVATION",
+            "text": "Relato de esforço intenso, sem medida de carga de trabalho.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Estou trabalhando igual louco",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e2",
+            "key": "perceived_stagnation",
+            "kind": "OBSERVATION",
+            "text": "Percepção de que a empresa não avança, sem indicador definido.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a empresa não sai do lugar",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Capacidade operacional e distribuição do tempo de trabalho."
+        ],
+        "essential_missing": [
+          "Indicador que representa avanço para o usuário.",
+          "Resultados desse indicador em períodos comparáveis."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Definir um indicador de avanço e comparar seus resultados nos dois últimos meses.",
+          "rationale_summary": "O relato não distingue queda de resultados, falta de lucro ou sobrecarga operacional.",
+          "evidence_ids": [
+            "e1",
+            "e2"
+          ],
+          "expected_signal": "Ficar mais claro o que não está avançando e desde quando.",
+          "indicator": "Indicador de avanço escolhido pelo usuário.",
+          "review": "Após comparar os dois meses.",
+          "risks": [
+            "Escolher um indicador que não represente o objetivo real."
+          ],
+          "change_if": "Se os resultados mostrarem avanço, investigar por que ele não se traduz na percepção ou na rotina de trabalho.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 803,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 88,
+            "output_tokens_details": {
+              "reasoning_tokens": 55
+            },
+            "total_tokens": 891
+          },
+          "latency_ms": 2902
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4151,
+            "input_tokens_details": {
+              "cache_write_tokens": 4148,
+              "cached_tokens": 0
+            },
+            "output_tokens": 689,
+            "output_tokens_details": {
+              "reasoning_tokens": 46
+            },
+            "total_tokens": 4840
+          },
+          "latency_ms": 14488
+        }
+      ]
+    },
+    {
+      "id": "conflict",
+      "message": "Minha margem talvez seja 18%, mas a planilha diz 35%. Posso baixar preços?",
+      "rubric": "Conflito explícito, pedir esclarecimento.",
+      "intent": "PRICING",
+      "answer": "Ainda não dá para recomendar uma redução de preço com segurança: você estima margem de 18%, mas a planilha mostra 35%. Antes de decidir, vale conferir se os dois números usam a mesma base e incluem os mesmos custos. Se a margem real for menor, um desconto pode comprometer o ganho por venda. Como a planilha calcula os 35%? De onde vem a estimativa de 18%? Depois de conciliar os números, podemos avaliar o preço e os custos por venda.",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Há dois relatos divergentes sobre a margem, sem base de cálculo ou período informados.",
+        "objective": "Avaliar se pode baixar preços.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Minha margem talvez seja 18%"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a planilha diz 35%"
+          }
+        ],
+        "hypotheses": [
+          "Os cálculos podem incluir custos diferentes ou usar bases distintas."
+        ],
+        "missing_data": [
+          "Base e componentes de cada cálculo de margem.",
+          "Preço atual e custos por venda.",
+          "Volume e objetivo da redução de preço."
+        ],
+        "opportunities": [
+          "Conciliar as margens antes de testar qualquer desconto."
+        ],
+        "risks": [
+          "Um desconto pode comprometer o ganho por venda se a margem estiver superestimada."
+        ],
+        "priorities": [
+          "Conferir a origem e o cálculo das duas margens."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "margin",
+              "kind": "OBSERVATION",
+              "text": "Estimativa incerta de margem de 18%.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Minha margem talvez seja 18%",
+              "scope": null,
+              "period": null,
+              "numeric_value": 18,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "e2",
+              "key": "margin",
+              "kind": "OBSERVATION",
+              "text": "A planilha indica margem de 35%.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a planilha diz 35%",
+              "scope": null,
+              "period": null,
+              "numeric_value": 35,
+              "unit": "PERCENT"
+            }
+          ],
+          "missing_information": [
+            "Preço atual e custos por venda.",
+            "Volume de vendas e objetivo da redução."
+          ],
+          "essential_missing": [
+            "Conciliação das duas margens e da base de cálculo.",
+            "Preço e custos necessários para avaliar um desconto."
+          ],
+          "conflicts": [
+            "Margem estimada em 18% versus 35% indicado pela planilha; bases e períodos desconhecidos."
+          ],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Conferir o cálculo e a base das duas margens antes de considerar uma redução de preço.",
+            "rationale_summary": "As margens relatadas divergem; não é seguro avaliar o efeito de um desconto sem resolver essa diferença.",
+            "evidence_ids": [
+              "e1",
+              "e2"
+            ],
+            "expected_signal": "Identificar se a diferença decorre dos custos incluídos ou da base de cálculo.",
+            "indicator": "Margem por venda calculada com a mesma base e os mesmos custos.",
+            "review": "Reavaliar quando as margens forem conciliadas e houver preço e custos por venda.",
+            "risks": [
+              "Reduzir o ganho por venda com base em uma margem incorreta."
+            ],
+            "change_if": "Se os números forem conciliados e o ganho por venda permanecer adequado no preço proposto, avaliar um teste limitado.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "margin",
+            "kind": "OBSERVATION",
+            "text": "Estimativa incerta de margem de 18%.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Minha margem talvez seja 18%",
+            "scope": null,
+            "period": null,
+            "numeric_value": 18,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "e2",
+            "key": "margin",
+            "kind": "OBSERVATION",
+            "text": "A planilha indica margem de 35%.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a planilha diz 35%",
+            "scope": null,
+            "period": null,
+            "numeric_value": 35,
+            "unit": "PERCENT"
+          }
+        ],
+        "missing_information": [
+          "Preço atual e custos por venda.",
+          "Volume de vendas e objetivo da redução."
+        ],
+        "essential_missing": [
+          "Conciliação das duas margens e da base de cálculo.",
+          "Preço e custos necessários para avaliar um desconto."
+        ],
+        "conflicts": [
+          "Margem estimada em 18% versus 35% indicado pela planilha; bases e períodos desconhecidos."
+        ],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Conferir o cálculo e a base das duas margens antes de considerar uma redução de preço.",
+          "rationale_summary": "As margens relatadas divergem; não é seguro avaliar o efeito de um desconto sem resolver essa diferença.",
+          "evidence_ids": [
+            "e1",
+            "e2"
+          ],
+          "expected_signal": "Identificar se a diferença decorre dos custos incluídos ou da base de cálculo.",
+          "indicator": "Margem por venda calculada com a mesma base e os mesmos custos.",
+          "review": "Reavaliar quando as margens forem conciliadas e houver preço e custos por venda.",
+          "risks": [
+            "Reduzir o ganho por venda com base em uma margem incorreta."
+          ],
+          "change_if": "Se os números forem conciliados e o ganho por venda permanecer adequado no preço proposto, avaliar um teste limitado.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 810,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 106,
+            "output_tokens_details": {
+              "reasoning_tokens": 73
+            },
+            "total_tokens": 916
+          },
+          "latency_ms": 2457
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4168,
+            "input_tokens_details": {
+              "cache_write_tokens": 4165,
+              "cached_tokens": 0
+            },
+            "output_tokens": 885,
+            "output_tokens_details": {
+              "reasoning_tokens": 158
+            },
+            "total_tokens": 5053
+          },
+          "latency_ms": 15889
+        }
+      ]
+    },
+    {
+      "id": "hypothesis",
+      "message": "Acho que meu preço está alto.",
+      "rubric": "Hipótese/observação, nunca fato confirmado.",
+      "intent": "PRICING",
+      "answer": "Pode ser, mas ainda não dá para concluir que o preço está alto nem recomendar uma redução com segurança. Antes de mudar, vale verificar se a dificuldade está no preço ou na forma como os clientes percebem a oferta. Qual é o preço atual do produto ou serviço que preocupa você? O que fez você suspeitar do preço: comentários de clientes ou queda nas vendas?",
+      "facts_detected": [],
+      "memory_detected": [
+        {
+          "key": "preco_alto",
+          "kind": "HYPOTHESIS",
+          "value": "Suspeita que seu preço esteja alto.",
+          "evidence": "Acho que meu preço está alto.",
+          "certainty": "EXPLICIT",
+          "scope": "CURRENT_COMPANY",
+          "observed_at": null,
+          "replaces_current": false
+        }
+      ],
+      "diagnosis": {
+        "situation": "O usuário suspeita que seu preço esteja alto; não há dados sobre a oferta ou as vendas.",
+        "objective": null,
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [],
+        "hypotheses": [
+          "O preço pode estar dificultando as vendas, mas isso ainda não foi verificado."
+        ],
+        "missing_data": [
+          "Preço atual e oferta a que se refere.",
+          "Motivo da suspeita.",
+          "Custos e volume de vendas para avaliar uma eventual mudança."
+        ],
+        "opportunities": [
+          "Investigar objeções antes de testar uma mudança de preço."
+        ],
+        "risks": [
+          "Uma redução sem conhecer os custos pode prejudicar a margem."
+        ],
+        "priorities": [
+          "Esclarecer o preço atual e a origem da suspeita."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "price_concern",
+              "kind": "HYPOTHESIS",
+              "text": "O usuário suspeita que seu preço esteja alto.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Acho que meu preço está alto.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Custos e volume de vendas."
+          ],
+          "essential_missing": [
+            "Preço atual do produto ou serviço em questão.",
+            "Motivo da suspeita de preço alto."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Investigar o motivo da suspeita antes de alterar o preço.",
+            "rationale_summary": "A percepção relatada não basta para identificar o problema ou definir um preço seguro.",
+            "evidence_ids": [
+              "e1"
+            ],
+            "expected_signal": "Identificar se há objeções ao preço ou mudança nas vendas.",
+            "indicator": "Objeções de clientes e vendas do produto ou serviço em questão.",
+            "review": "Reavaliar após reunir o preço atual e o motivo da suspeita.",
+            "risks": [
+              "Reduzir o preço sem conhecer os custos pode prejudicar a margem."
+            ],
+            "change_if": "Se os dados apontarem outro obstáculo à venda, investigar esse obstáculo antes de testar um novo preço.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "price_concern",
+            "kind": "HYPOTHESIS",
+            "text": "O usuário suspeita que seu preço esteja alto.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Acho que meu preço está alto.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Custos e volume de vendas."
+        ],
+        "essential_missing": [
+          "Preço atual do produto ou serviço em questão.",
+          "Motivo da suspeita de preço alto."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Investigar o motivo da suspeita antes de alterar o preço.",
+          "rationale_summary": "A percepção relatada não basta para identificar o problema ou definir um preço seguro.",
+          "evidence_ids": [
+            "e1"
+          ],
+          "expected_signal": "Identificar se há objeções ao preço ou mudança nas vendas.",
+          "indicator": "Objeções de clientes e vendas do produto ou serviço em questão.",
+          "review": "Reavaliar após reunir o preço atual e o motivo da suspeita.",
+          "risks": [
+            "Reduzir o preço sem conhecer os custos pode prejudicar a margem."
+          ],
+          "change_if": "Se os dados apontarem outro obstáculo à venda, investigar esse obstáculo antes de testar um novo preço.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 798,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 109,
+            "output_tokens_details": {
+              "reasoning_tokens": 77
+            },
+            "total_tokens": 907
+          },
+          "latency_ms": 2302
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4155,
+            "input_tokens_details": {
+              "cache_write_tokens": 4152,
+              "cached_tokens": 0
+            },
+            "output_tokens": 723,
+            "output_tokens_details": {
+              "reasoning_tokens": 116
+            },
+            "total_tokens": 4878
+          },
+          "latency_ms": 15052
+        }
+      ]
+    },
+    {
+      "id": "negative",
+      "message": "Testamos baixar o preço. As objeções de preço sumiram, mas a conversão segue baixa e o tempo de resposta piorou. A hipótese anterior era preço alto.",
+      "rubric": "Revisar hipótese, não defender preço como causa certa.",
+      "intent": "SALES",
+      "answer": "O teste enfraquece a hipótese de que o preço era o principal obstáculo: segundo seu relato, as objeções de preço sumiram, mas a conversão continua baixa e o tempo de resposta piorou. Isso não prova que a demora causou a baixa conversão. Ainda não dá para recomendar manter o preço reduzido com segurança, especialmente sem conhecer a margem.\n\nO próximo passo é comparar os contatos do período anterior e do teste: tempo até a primeira resposta e proporção que virou venda. Se a demora aparecer junto das perdas, vale testar uma resposta inicial mais rápida, sem ampliar o desconto, e revisar a conversão após o teste.\n\nVocês têm esses tempos e as quantidades de contatos e vendas nos dois períodos?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Após testar um preço menor, a empresa relata o fim das objeções de preço, conversão ainda baixa e piora no tempo de resposta.",
+        "objective": null,
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Testamos baixar o preço."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "As objeções de preço sumiram"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a conversão segue baixa e o tempo de resposta piorou"
+          }
+        ],
+        "hypotheses": [
+          "Preço alto parece menos provável como principal entrave.",
+          "A demora na resposta pode estar contribuindo para as perdas, mas não há demonstração causal."
+        ],
+        "missing_data": [
+          "Tempos de resposta e quantidades de contatos e vendas em períodos comparáveis.",
+          "Margem com o preço reduzido."
+        ],
+        "opportunities": [
+          "Comparar as etapas do atendimento antes e durante o teste."
+        ],
+        "risks": [
+          "Manter preço menor sem ganho de conversão ou margem conhecida."
+        ],
+        "priorities": [
+          "Medir tempo de resposta e conversão em períodos comparáveis antes de decidir sobre preço ou aquisição."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "price_test",
+              "kind": "ACTION",
+              "text": "Foi testada uma redução de preço.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Testamos baixar o preço.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e2",
+              "key": "price_objections",
+              "kind": "RESULT",
+              "text": "Objeções de preço sumiram, segundo o relato.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "As objeções de preço sumiram",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e3",
+              "key": "conversion_response",
+              "kind": "OBSERVATION",
+              "text": "Conversão segue baixa e tempo de resposta piorou.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a conversão segue baixa e o tempo de resposta piorou",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e4",
+              "key": "previous_price_hypothesis",
+              "kind": "HYPOTHESIS",
+              "text": "Hipótese anterior: preço alto.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "A hipótese anterior era preço alto.",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Margem com o preço reduzido.",
+            "Períodos e comparabilidade dos contatos antes e durante o teste."
+          ],
+          "essential_missing": [
+            "Tempos de resposta e quantidades de contatos e vendas nos dois períodos."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar tempo até a primeira resposta e conversão antes e durante o teste; se houver demora associada às perdas, testar resposta inicial mais rápida.",
+            "rationale_summary": "A objeção de preço deixou de ser relatada, mas a conversão não melhorou e a resposta ficou mais lenta; a causa ainda é incerta.",
+            "evidence_ids": [
+              "e1",
+              "e2",
+              "e3"
+            ],
+            "expected_signal": "Menor demora na resposta e melhora da conversão entre contatos comparáveis.",
+            "indicator": "Tempo até a primeira resposta e proporção de contatos que viram vendas.",
+            "review": "Após reunir os dados comparáveis e, se cabível, ao fim de um teste limitado de resposta mais rápida.",
+            "risks": [
+              "A demora pode não explicar as perdas.",
+              "O preço reduzido pode comprometer a margem."
+            ],
+            "change_if": "Se a demora não estiver associada às perdas, investigar outras etapas e objeções; se a margem não sustentar o preço, reavaliar o teste.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": "O relato do teste enfraquece a hipótese anterior de preço alto como principal obstáculo; a piora na resposta é uma hipótese alternativa a verificar, não uma causa demonstrada."
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "price_test",
+            "kind": "ACTION",
+            "text": "Foi testada uma redução de preço.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Testamos baixar o preço.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e2",
+            "key": "price_objections",
+            "kind": "RESULT",
+            "text": "Objeções de preço sumiram, segundo o relato.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "As objeções de preço sumiram",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e3",
+            "key": "conversion_response",
+            "kind": "OBSERVATION",
+            "text": "Conversão segue baixa e tempo de resposta piorou.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a conversão segue baixa e o tempo de resposta piorou",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e4",
+            "key": "previous_price_hypothesis",
+            "kind": "HYPOTHESIS",
+            "text": "Hipótese anterior: preço alto.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "A hipótese anterior era preço alto.",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Margem com o preço reduzido.",
+          "Períodos e comparabilidade dos contatos antes e durante o teste."
+        ],
+        "essential_missing": [
+          "Tempos de resposta e quantidades de contatos e vendas nos dois períodos."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar tempo até a primeira resposta e conversão antes e durante o teste; se houver demora associada às perdas, testar resposta inicial mais rápida.",
+          "rationale_summary": "A objeção de preço deixou de ser relatada, mas a conversão não melhorou e a resposta ficou mais lenta; a causa ainda é incerta.",
+          "evidence_ids": [
+            "e1",
+            "e2",
+            "e3"
+          ],
+          "expected_signal": "Menor demora na resposta e melhora da conversão entre contatos comparáveis.",
+          "indicator": "Tempo até a primeira resposta e proporção de contatos que viram vendas.",
+          "review": "Após reunir os dados comparáveis e, se cabível, ao fim de um teste limitado de resposta mais rápida.",
+          "risks": [
+            "A demora pode não explicar as perdas.",
+            "O preço reduzido pode comprometer a margem."
+          ],
+          "change_if": "Se a demora não estiver associada às perdas, investigar outras etapas e objeções; se a margem não sustentar o preço, reavaliar o teste.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": "O relato do teste enfraquece a hipótese anterior de preço alto como principal obstáculo; a piora na resposta é uma hipótese alternativa a verificar, não uma causa demonstrada."
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 825,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 162,
+            "output_tokens_details": {
+              "reasoning_tokens": 131
+            },
+            "total_tokens": 987
+          },
+          "latency_ms": 3012
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4289,
+            "input_tokens_details": {
+              "cache_write_tokens": 39,
+              "cached_tokens": 4247
+            },
+            "output_tokens": 1265,
+            "output_tokens_details": {
+              "reasoning_tokens": 74
+            },
+            "total_tokens": 5554
+          },
+          "latency_ms": 19718
+        }
+      ]
+    },
+    {
+      "id": "simple",
+      "message": "Minha loja está ruim.",
+      "rubric": "Linguagem simples, sem jargão.",
+      "intent": "DIAGNOSIS",
+      "answer": "Sinto que a loja esteja passando por um momento difícil. Por enquanto, não há dados suficientes para identificar o problema nem recomendar uma mudança com segurança. O primeiro passo é comparar as vendas dos dois últimos meses, usando períodos equivalentes. Quanto a loja vendeu em cada mês? E o que você percebeu mudar: o movimento de clientes ou a quantidade de compras?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "A pessoa relata que a loja está ruim, sem detalhar o que piorou.",
+        "objective": null,
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Minha loja está ruim."
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Vendas de dois meses comparáveis.",
+          "Movimento de clientes e quantidade de compras."
+        ],
+        "opportunities": [
+          "Localizar o problema antes de escolher uma ação."
+        ],
+        "risks": [
+          "Tratar como problema de vendas algo que pode ser de custos ou operação."
+        ],
+        "priorities": [
+          "Comparar as vendas dos dois últimos meses em períodos equivalentes."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "store_performance",
+              "kind": "OBSERVATION",
+              "text": "Relata que a loja está ruim, sem indicar uma medida.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Minha loja está ruim.",
+              "scope": "loja",
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Movimento de clientes e quantidade de compras em períodos comparáveis."
+          ],
+          "essential_missing": [
+            "Vendas em dois meses comparáveis."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar as vendas de dois meses equivalentes antes de escolher uma intervenção.",
+            "rationale_summary": "O relato não permite distinguir queda de vendas de outros problemas da loja.",
+            "evidence_ids": [
+              "e1"
+            ],
+            "expected_signal": "Identificar se houve queda nas vendas e em qual período.",
+            "indicator": "Vendas mensais em períodos comparáveis.",
+            "review": "Após reunir os valores dos dois meses.",
+            "risks": [
+              "Vendas isoladas não mostram lucro nem explicam a causa de uma queda."
+            ],
+            "change_if": "Se o problema principal for custo, margem ou operação, investigar essa área antes de agir sobre vendas.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "store_performance",
+            "kind": "OBSERVATION",
+            "text": "Relata que a loja está ruim, sem indicar uma medida.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Minha loja está ruim.",
+            "scope": "loja",
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Movimento de clientes e quantidade de compras em períodos comparáveis."
+        ],
+        "essential_missing": [
+          "Vendas em dois meses comparáveis."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar as vendas de dois meses equivalentes antes de escolher uma intervenção.",
+          "rationale_summary": "O relato não permite distinguir queda de vendas de outros problemas da loja.",
+          "evidence_ids": [
+            "e1"
+          ],
+          "expected_signal": "Identificar se houve queda nas vendas e em qual período.",
+          "indicator": "Vendas mensais em períodos comparáveis.",
+          "review": "Após reunir os valores dos dois meses.",
+          "risks": [
+            "Vendas isoladas não mostram lucro nem explicam a causa de uma queda."
+          ],
+          "change_if": "Se o problema principal for custo, margem ou operação, investigar essa área antes de agir sobre vendas.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 795,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 101,
+            "output_tokens_details": {
+              "reasoning_tokens": 68
+            },
+            "total_tokens": 896
+          },
+          "latency_ms": 2521
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4143,
+            "input_tokens_details": {
+              "cache_write_tokens": 9,
+              "cached_tokens": 4131
+            },
+            "output_tokens": 566,
+            "output_tokens_details": {
+              "reasoning_tokens": 51
+            },
+            "total_tokens": 4709
+          },
+          "latency_ms": 11096
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "message": "Nosso CAC subiu 18%, LTV está estável e a conversão comercial caiu. O que investigar?",
+      "rubric": "Profundidade adaptada, sem inventar números absolutos.",
+      "intent": "DIAGNOSIS",
+      "answer": "O CAC subiu 18%, o LTV está estável e a conversão comercial caiu, segundo seu relato. Isso sugere investigar primeiro a conversão antes de aumentar a aquisição, mas ainda não dá para apontar a causa com segurança.\n\nCompare a taxa de conversão por canal e etapa do funil nos dois períodos. O sinal a observar é onde a queda se concentra; depois, verifique se houve mudança na qualidade dos leads ou no processo comercial. Quais períodos você está comparando? Em qual etapa da conversão ocorreu a queda?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Há relato de CAC 18% maior, LTV estável e conversão comercial menor; faltam períodos e recortes comparáveis.",
+        "objective": null,
+        "main_bottleneck": "A conversão comercial é o primeiro ponto a investigar, mas não há base para confirmar que causou a alta do CAC.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Nosso CAC subiu 18%"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "LTV está estável"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "a conversão comercial caiu"
+          }
+        ],
+        "hypotheses": [
+          "A queda de conversão pode estar concentrada em um canal ou etapa.",
+          "A composição dos leads ou o processo comercial pode ter mudado."
+        ],
+        "missing_data": [
+          "Períodos comparados.",
+          "Taxas de conversão por canal e etapa."
+        ],
+        "opportunities": [
+          "Localizar a queda antes de decidir onde intervir."
+        ],
+        "risks": [
+          "Atribuir a alta do CAC à conversão sem comparar períodos e critérios equivalentes."
+        ],
+        "priorities": [
+          "Comparar a conversão por canal e etapa nos mesmos períodos."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "cac",
+              "kind": "OBSERVATION",
+              "text": "CAC relatado em alta de 18%, sem períodos informados.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Nosso CAC subiu 18%",
+              "scope": null,
+              "period": null,
+              "numeric_value": 18,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "e2",
+              "key": "ltv",
+              "kind": "OBSERVATION",
+              "text": "LTV relatado como estável, sem períodos informados.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "LTV está estável",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e3",
+              "key": "conversion",
+              "kind": "OBSERVATION",
+              "text": "Conversão comercial relatada em queda, sem etapa definida.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "a conversão comercial caiu",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Taxas de conversão por etapa e canal nos períodos comparados."
+          ],
+          "essential_missing": [
+            "Períodos usados na comparação.",
+            "Etapa e dimensão da queda na conversão comercial."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar a conversão por canal e etapa nos períodos informados.",
+            "rationale_summary": "Localizar onde a queda ocorreu antes de atribuir a alta do CAC à aquisição.",
+            "evidence_ids": [
+              "e1",
+              "e3"
+            ],
+            "expected_signal": "Identificação da etapa ou do canal em que a conversão mais mudou.",
+            "indicator": "Taxa de conversão por canal e etapa.",
+            "review": "Após comparar os mesmos períodos e critérios.",
+            "risks": [
+              "Períodos ou definições diferentes podem produzir uma comparação enganosa."
+            ],
+            "change_if": "Se a conversão não tiver caído em bases comparáveis, investigar primeiro custos e composição da aquisição.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "cac",
+            "kind": "OBSERVATION",
+            "text": "CAC relatado em alta de 18%, sem períodos informados.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Nosso CAC subiu 18%",
+            "scope": null,
+            "period": null,
+            "numeric_value": 18,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "e2",
+            "key": "ltv",
+            "kind": "OBSERVATION",
+            "text": "LTV relatado como estável, sem períodos informados.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "LTV está estável",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e3",
+            "key": "conversion",
+            "kind": "OBSERVATION",
+            "text": "Conversão comercial relatada em queda, sem etapa definida.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "a conversão comercial caiu",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Taxas de conversão por etapa e canal nos períodos comparados."
+        ],
+        "essential_missing": [
+          "Períodos usados na comparação.",
+          "Etapa e dimensão da queda na conversão comercial."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar a conversão por canal e etapa nos períodos informados.",
+          "rationale_summary": "Localizar onde a queda ocorreu antes de atribuir a alta do CAC à aquisição.",
+          "evidence_ids": [
+            "e1",
+            "e3"
+          ],
+          "expected_signal": "Identificação da etapa ou do canal em que a conversão mais mudou.",
+          "indicator": "Taxa de conversão por canal e etapa.",
+          "review": "Após comparar os mesmos períodos e critérios.",
+          "risks": [
+            "Períodos ou definições diferentes podem produzir uma comparação enganosa."
+          ],
+          "change_if": "Se a conversão não tiver caído em bases comparáveis, investigar primeiro custos e composição da aquisição.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 814,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 219,
+            "output_tokens_details": {
+              "reasoning_tokens": 186
+            },
+            "total_tokens": 1033
+          },
+          "latency_ms": 3879
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4162,
+            "input_tokens_details": {
+              "cache_write_tokens": 28,
+              "cached_tokens": 4131
+            },
+            "output_tokens": 852,
+            "output_tokens_details": {
+              "reasoning_tokens": 51
+            },
+            "total_tokens": 5014
+          },
+          "latency_ms": 15498
+        }
+      ]
+    },
+    {
+      "id": "causality",
+      "message": "Comecei uma campanha e as vendas subiram na mesma semana. Posso afirmar que a campanha causou o aumento?",
+      "rubric": "Correlação não prova causalidade.",
+      "intent": "MARKETING",
+      "answer": "Ainda não. Você relatou que as vendas subiram na mesma semana em que começou a campanha, mas essa coincidência não mostra, por si só, que a campanha causou o aumento. Outros fatores podem ter influenciado as vendas.\n\nAntes de atribuir o resultado à campanha, compare as vendas com um período anterior equivalente e verifique quantas vendas vieram de clientes alcançados por ela. Isso ajuda a avaliar a contribuição da campanha, sem tratar a comparação como prova definitiva. Você consegue identificar quais vendas vieram da campanha?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "O usuário relata início de campanha e aumento das vendas na mesma semana.",
+        "objective": "Avaliar se a campanha causou o aumento das vendas.",
+        "main_bottleneck": "Não há dados suficientes para atribuir o aumento à campanha.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Comecei uma campanha"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "as vendas subiram na mesma semana"
+          }
+        ],
+        "hypotheses": [
+          "A campanha pode ter contribuído para o aumento, mas outros fatores também podem explicá-lo."
+        ],
+        "missing_data": [
+          "Vendas em períodos equivalentes antes e durante a campanha.",
+          "Origem das vendas no período da campanha."
+        ],
+        "opportunities": [
+          "Acompanhar a origem das vendas para avaliar melhor a contribuição da campanha."
+        ],
+        "risks": [
+          "Atribuir causalidade sem dados pode levar a decisões equivocadas de investimento."
+        ],
+        "priorities": [
+          "Comparar períodos equivalentes e identificar a origem das vendas."
+        ],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "e1",
+              "key": "campaign",
+              "kind": "OBSERVATION",
+              "text": "Campanha iniciada; período exato não informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Comecei uma campanha",
+              "scope": null,
+              "period": null,
+              "numeric_value": null,
+              "unit": null
+            },
+            {
+              "id": "e2",
+              "key": "sales",
+              "kind": "OBSERVATION",
+              "text": "Vendas subiram na mesma semana; magnitude não informada.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "as vendas subiram na mesma semana",
+              "scope": null,
+              "period": "mesma semana em que começou a campanha",
+              "numeric_value": null,
+              "unit": null
+            }
+          ],
+          "missing_information": [
+            "Volume de vendas antes e durante a campanha em períodos comparáveis."
+          ],
+          "essential_missing": [
+            "Identificação das vendas originadas pela campanha."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [],
+          "recommendation": {
+            "action": "Comparar períodos equivalentes e identificar vendas atribuíveis à campanha.",
+            "rationale_summary": "A simultaneidade não estabelece causa.",
+            "evidence_ids": [
+              "e1",
+              "e2"
+            ],
+            "expected_signal": "Vendas atribuíveis à campanha identificadas e tendência comparada com o período anterior.",
+            "indicator": "Vendas atribuíveis à campanha e vendas totais por período.",
+            "review": "Após reunir os dados dos períodos comparados.",
+            "risks": [
+              "Outras mudanças simultâneas podem explicar parte do aumento."
+            ],
+            "change_if": "Se não for possível identificar a origem das vendas, evitar atribuição causal e planejar um teste mais controlado.",
+            "mode": "INVESTIGATE"
+          },
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "e1",
+            "key": "campaign",
+            "kind": "OBSERVATION",
+            "text": "Campanha iniciada; período exato não informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Comecei uma campanha",
+            "scope": null,
+            "period": null,
+            "numeric_value": null,
+            "unit": null
+          },
+          {
+            "id": "e2",
+            "key": "sales",
+            "kind": "OBSERVATION",
+            "text": "Vendas subiram na mesma semana; magnitude não informada.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "as vendas subiram na mesma semana",
+            "scope": null,
+            "period": "mesma semana em que começou a campanha",
+            "numeric_value": null,
+            "unit": null
+          }
+        ],
+        "missing_information": [
+          "Volume de vendas antes e durante a campanha em períodos comparáveis."
+        ],
+        "essential_missing": [
+          "Identificação das vendas originadas pela campanha."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [],
+        "recommendation": {
+          "action": "Comparar períodos equivalentes e identificar vendas atribuíveis à campanha.",
+          "rationale_summary": "A simultaneidade não estabelece causa.",
+          "evidence_ids": [
+            "e1",
+            "e2"
+          ],
+          "expected_signal": "Vendas atribuíveis à campanha identificadas e tendência comparada com o período anterior.",
+          "indicator": "Vendas atribuíveis à campanha e vendas totais por período.",
+          "review": "Após reunir os dados dos períodos comparados.",
+          "risks": [
+            "Outras mudanças simultâneas podem explicar parte do aumento."
+          ],
+          "change_if": "Se não for possível identificar a origem das vendas, evitar atribuição causal e planejar um teste mais controlado.",
+          "mode": "INVESTIGATE"
+        },
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 814,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 160,
+            "output_tokens_details": {
+              "reasoning_tokens": 129
+            },
+            "total_tokens": 974
+          },
+          "latency_ms": 3257
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4273,
+            "input_tokens_details": {
+              "cache_write_tokens": 4270,
+              "cached_tokens": 0
+            },
+            "output_tokens": 870,
+            "output_tokens_details": {
+              "reasoning_tokens": 63
+            },
+            "total_tokens": 5143
+          },
+          "latency_ms": 15653
+        }
+      ]
+    },
+    {
+      "id": "sufficient",
+      "message": "Para o produto A, em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades. Objetivo vender 120 unidades. Proponho desconto de 20% no mesmo produto por sete dias. Capacidade 150 unidades. Analise o preço após desconto e a hipótese; não garanta resultado.",
+      "rubric": "Análise contextual e cálculo determinístico se solicitado, sem previsão garantida.",
+      "intent": "PRICING",
+      "answer": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+        "objective": "Vender 120 unidades; período da meta não especificado.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "em setembro de 2026, preço unitário 100 reais, custo unitário 60 reais, vendemos 100 unidades"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Objetivo vender 120 unidades"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Proponho desconto de 20% no mesmo produto por sete dias"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Capacidade 150 unidades"
+          }
+        ],
+        "hypotheses": [
+          "O desconto pode elevar o volume, mas também reduzir a contribuição por unidade; o efeito líquido depende das vendas adicionais e dos custos completos."
+        ],
+        "missing_data": [
+          "Vendas em sete dias comparáveis.",
+          "Outros custos variáveis por unidade.",
+          "Período da meta e da capacidade."
+        ],
+        "opportunities": [],
+        "risks": [
+          "Reduzir o preço sem volume adicional suficiente.",
+          "Comparar capacidade e meta de períodos diferentes."
+        ],
+        "priorities": [],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "preco",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço unitário de R$ 100 do produto A em setembro de 2026.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "preço unitário 100 reais",
+              "scope": "produto A",
+              "period": "setembro de 2026; referência mantida no cenário de sete dias",
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "custo",
+              "key": "cost",
+              "kind": "METRIC",
+              "text": "Custo unitário relatado de R$ 60 para o produto A.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "custo unitário 60 reais",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 60,
+              "unit": "BRL"
+            },
+            {
+              "id": "vendas",
+              "key": "sales",
+              "kind": "METRIC",
+              "text": "100 unidades vendidas em setembro de 2026.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "vendemos 100 unidades",
+              "scope": "produto A",
+              "period": "setembro de 2026",
+              "numeric_value": 100,
+              "unit": "COUNT"
+            },
+            {
+              "id": "meta",
+              "key": "goal",
+              "kind": "OBSERVATION",
+              "text": "Objetivo declarado de vender 120 unidades.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Objetivo vender 120 unidades",
+              "scope": "produto A",
+              "period": null,
+              "numeric_value": 120,
+              "unit": "COUNT"
+            },
+            {
+              "id": "desconto",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto proposto de 20% por sete dias; não aplicado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Proponho desconto de 20% no mesmo produto por sete dias",
+              "scope": "produto A",
+              "period": "setembro de 2026; cenário de sete dias",
+              "numeric_value": 20,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "capacidade",
+              "key": "capacity",
+              "kind": "OBSERVATION",
+              "text": "Capacidade relatada de 150 unidades; período não informado.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Capacidade 150 unidades",
+              "scope": "produto A",
+              "period": null,
+              "numeric_value": 150,
+              "unit": "COUNT"
+            }
+          ],
+          "missing_information": [
+            "Período a que se referem a meta de 120 unidades e a capacidade de 150 unidades."
+          ],
+          "essential_missing": [
+            "Vendas de referência do produto A em sete dias comparáveis.",
+            "Outros custos variáveis por unidade, se houver."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [
+            "Para o cenário de preço, o preço de R$ 100 observado em setembro permanece válido nos sete dias propostos; o desconto ainda não foi aplicado."
+          ],
+          "recommendation": null,
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "preco",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço unitário de R$ 100 do produto A em setembro de 2026.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "preço unitário 100 reais",
+            "scope": "produto A",
+            "period": "setembro de 2026; referência mantida no cenário de sete dias",
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "custo",
+            "key": "cost",
+            "kind": "METRIC",
+            "text": "Custo unitário relatado de R$ 60 para o produto A.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "custo unitário 60 reais",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 60,
+            "unit": "BRL"
+          },
+          {
+            "id": "vendas",
+            "key": "sales",
+            "kind": "METRIC",
+            "text": "100 unidades vendidas em setembro de 2026.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "vendemos 100 unidades",
+            "scope": "produto A",
+            "period": "setembro de 2026",
+            "numeric_value": 100,
+            "unit": "COUNT"
+          },
+          {
+            "id": "meta",
+            "key": "goal",
+            "kind": "OBSERVATION",
+            "text": "Objetivo declarado de vender 120 unidades.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Objetivo vender 120 unidades",
+            "scope": "produto A",
+            "period": null,
+            "numeric_value": 120,
+            "unit": "COUNT"
+          },
+          {
+            "id": "desconto",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto proposto de 20% por sete dias; não aplicado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Proponho desconto de 20% no mesmo produto por sete dias",
+            "scope": "produto A",
+            "period": "setembro de 2026; cenário de sete dias",
+            "numeric_value": 20,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "capacidade",
+            "key": "capacity",
+            "kind": "OBSERVATION",
+            "text": "Capacidade relatada de 150 unidades; período não informado.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Capacidade 150 unidades",
+            "scope": "produto A",
+            "period": null,
+            "numeric_value": 150,
+            "unit": "COUNT"
+          }
+        ],
+        "missing_information": [
+          "Período a que se referem a meta de 120 unidades e a capacidade de 150 unidades."
+        ],
+        "essential_missing": [
+          "Vendas de referência do produto A em sete dias comparáveis.",
+          "Outros custos variáveis por unidade, se houver."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [
+          "Para o cenário de preço, o preço de R$ 100 observado em setembro permanece válido nos sete dias propostos; o desconto ainda não foi aplicado."
+        ],
+        "recommendation": null,
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "WITHHELD",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 865,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 74,
+            "output_tokens_details": {
+              "reasoning_tokens": 41
+            },
+            "total_tokens": 939
+          },
+          "latency_ms": 2646
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4223,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 4220
+            },
+            "output_tokens": 1760,
+            "output_tokens_details": {
+              "reasoning_tokens": 277
+            },
+            "total_tokens": 5983
+          },
+          "latency_ms": 24771
+        }
+      ]
+    },
+    {
+      "id": "thanks",
+      "message": "Obrigado!",
+      "rubric": "Rota social econômica sem diagnóstico.",
+      "intent": "GENERAL",
+      "answer": "Por nada!",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": null,
+      "reliability": null,
+      "validation": "PASSED",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 792,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 48,
+            "output_tokens_details": {
+              "reasoning_tokens": 19
+            },
+            "total_tokens": 840
+          },
+          "latency_ms": 3074
+        },
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 3983,
+            "input_tokens_details": {
+              "cache_write_tokens": 3980,
+              "cached_tokens": 0
+            },
+            "output_tokens": 62,
+            "output_tokens_details": {
+              "reasoning_tokens": 20
+            },
+            "total_tokens": 4045
+          },
+          "latency_ms": 5323
+        }
+      ]
+    }
+  ]
+}

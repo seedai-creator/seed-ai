@@ -1,0 +1,293 @@
+{
+  "date": "2026-10-01T13:34:47.114Z",
+  "synthetic": true,
+  "cost": "Tokens recorded; evaluation is separate from customer metering. No price assumed.",
+  "results": [
+    {
+      "id": "complete_discount",
+      "message": "Analise este cenário delimitado, sem prever vendas: produto A, período de referência a semana do teste. Preço-base confirmado para essa semana: 100 reais por unidade. Custo variável total confirmado: 60 reais por unidade. Base comparável: 100 unidades por semana. Meta do teste: 120 unidades na semana. Capacidade: 150 unidades por semana. Desconto proposto para a mesma semana: 20%. Calcule apenas o preço unitário com desconto usando esses valores. Quero uma recomendação de teste limitado com indicador e revisão ao final da semana; o resultado de vendas é desconhecido.",
+      "rubric": "Dados completos para o cenário: preço calculado 80, sem prever aumento de vendas nem garantir resultado.",
+      "intent": "PRICING",
+      "answer": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+      "facts_detected": [],
+      "memory_detected": [],
+      "diagnosis": {
+        "situation": "Antes de recomendar o desconto, preciso confirmar o preço atual e quanto custa cada venda. Qual é o objetivo da promoção e quantas unidades você vende hoje?",
+        "objective": "Testar o desconto com meta de 120 unidades na semana, sem prever vendas.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Preço-base confirmado para essa semana: 100 reais por unidade."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Custo variável total confirmado: 60 reais por unidade."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Base comparável: 100 unidades por semana."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Desconto proposto para a mesma semana: 20%."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "o resultado de vendas é desconhecido."
+          }
+        ],
+        "hypotheses": [
+          "O desconto pode alterar o volume vendido; o efeito precisa ser observado no teste."
+        ],
+        "missing_data": [
+          "Vendas efetivas e resultado após custo variável na semana do teste."
+        ],
+        "opportunities": [],
+        "risks": [
+          "O desconto pode reduzir o resultado apesar de um eventual aumento de volume."
+        ],
+        "priorities": [],
+        "confidence": "LOW",
+        "reliability": {
+          "evidence": [
+            {
+              "id": "preco",
+              "key": "price",
+              "kind": "METRIC",
+              "text": "Preço-base de 100 reais por unidade.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Preço-base confirmado para essa semana: 100 reais por unidade.",
+              "scope": "produto A, por unidade",
+              "period": "semana do teste",
+              "numeric_value": 100,
+              "unit": "BRL"
+            },
+            {
+              "id": "desconto",
+              "key": "discount",
+              "kind": "ASSUMPTION",
+              "text": "Desconto proposto de 20% para o teste.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Desconto proposto para a mesma semana: 20%.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 20,
+              "unit": "PERCENT"
+            },
+            {
+              "id": "custo",
+              "key": "cost",
+              "kind": "METRIC",
+              "text": "Custo variável total de 60 reais por unidade.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Custo variável total confirmado: 60 reais por unidade.",
+              "scope": "produto A, por unidade",
+              "period": "semana do teste",
+              "numeric_value": 60,
+              "unit": "BRL"
+            },
+            {
+              "id": "base",
+              "key": "sales",
+              "kind": "METRIC",
+              "text": "Base comparável de 100 unidades por semana.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Base comparável: 100 unidades por semana.",
+              "scope": "produto A",
+              "period": "semana de referência",
+              "numeric_value": 100,
+              "unit": "COUNT"
+            },
+            {
+              "id": "meta",
+              "key": "goal",
+              "kind": "OBSERVATION",
+              "text": "Meta do teste de 120 unidades na semana.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Meta do teste: 120 unidades na semana.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 120,
+              "unit": "COUNT"
+            },
+            {
+              "id": "capacidade",
+              "key": "capacity",
+              "kind": "METRIC",
+              "text": "Capacidade de 150 unidades por semana.",
+              "source": "USER_MESSAGE",
+              "reference": "0",
+              "quote": "Capacidade: 150 unidades por semana.",
+              "scope": "produto A",
+              "period": "semana do teste",
+              "numeric_value": 150,
+              "unit": "COUNT"
+            }
+          ],
+          "missing_information": [
+            "Vendas efetivas na semana do teste.",
+            "Custos fixos relevantes, caso a decisão seja manter o desconto."
+          ],
+          "essential_missing": [
+            "Vendas efetivas para decidir se o desconto deve continuar."
+          ],
+          "conflicts": [],
+          "sufficiency": "INSUFFICIENT",
+          "confidence": "LOW",
+          "assumptions": [
+            "O desconto proposto é aplicado ao preço-base informado, apenas no cenário do teste."
+          ],
+          "recommendation": null,
+          "alternatives": [],
+          "calculations": [],
+          "revision": null
+        }
+      },
+      "reliability": {
+        "evidence": [
+          {
+            "id": "preco",
+            "key": "price",
+            "kind": "METRIC",
+            "text": "Preço-base de 100 reais por unidade.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Preço-base confirmado para essa semana: 100 reais por unidade.",
+            "scope": "produto A, por unidade",
+            "period": "semana do teste",
+            "numeric_value": 100,
+            "unit": "BRL"
+          },
+          {
+            "id": "desconto",
+            "key": "discount",
+            "kind": "ASSUMPTION",
+            "text": "Desconto proposto de 20% para o teste.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Desconto proposto para a mesma semana: 20%.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 20,
+            "unit": "PERCENT"
+          },
+          {
+            "id": "custo",
+            "key": "cost",
+            "kind": "METRIC",
+            "text": "Custo variável total de 60 reais por unidade.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Custo variável total confirmado: 60 reais por unidade.",
+            "scope": "produto A, por unidade",
+            "period": "semana do teste",
+            "numeric_value": 60,
+            "unit": "BRL"
+          },
+          {
+            "id": "base",
+            "key": "sales",
+            "kind": "METRIC",
+            "text": "Base comparável de 100 unidades por semana.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Base comparável: 100 unidades por semana.",
+            "scope": "produto A",
+            "period": "semana de referência",
+            "numeric_value": 100,
+            "unit": "COUNT"
+          },
+          {
+            "id": "meta",
+            "key": "goal",
+            "kind": "OBSERVATION",
+            "text": "Meta do teste de 120 unidades na semana.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Meta do teste: 120 unidades na semana.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 120,
+            "unit": "COUNT"
+          },
+          {
+            "id": "capacidade",
+            "key": "capacity",
+            "kind": "METRIC",
+            "text": "Capacidade de 150 unidades por semana.",
+            "source": "USER_MESSAGE",
+            "reference": "0",
+            "quote": "Capacidade: 150 unidades por semana.",
+            "scope": "produto A",
+            "period": "semana do teste",
+            "numeric_value": 150,
+            "unit": "COUNT"
+          }
+        ],
+        "missing_information": [
+          "Vendas efetivas na semana do teste.",
+          "Custos fixos relevantes, caso a decisão seja manter o desconto."
+        ],
+        "essential_missing": [
+          "Vendas efetivas para decidir se o desconto deve continuar."
+        ],
+        "conflicts": [],
+        "sufficiency": "INSUFFICIENT",
+        "confidence": "LOW",
+        "assumptions": [
+          "O desconto proposto é aplicado ao preço-base informado, apenas no cenário do teste."
+        ],
+        "recommendation": null,
+        "alternatives": [],
+        "calculations": [],
+        "revision": null
+      },
+      "validation": "WITHHELD",
+      "calls": [
+        {
+          "model": "gpt-6-luna",
+          "tier": "economy",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 916,
+            "input_tokens_details": {
+              "cache_write_tokens": 0,
+              "cached_tokens": 0
+            },
+            "output_tokens": 155,
+            "output_tokens_details": {
+              "reasoning_tokens": 122
+            },
+            "total_tokens": 1071
+          },
+          "latency_ms": 3929
+        },
+        {
+          "model": "gpt-6-sol",
+          "tier": "strategic",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 4274,
+            "input_tokens_details": {
+              "cache_write_tokens": 130,
+              "cached_tokens": 4141
+            },
+            "output_tokens": 1200,
+            "output_tokens_details": {
+              "reasoning_tokens": 55
+            },
+            "total_tokens": 5474
+          },
+          "latency_ms": 19259
+        }
+      ]
+    }
+  ]
+}

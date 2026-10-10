@@ -1,0 +1,160 @@
+{
+  "date": "2026-09-26T23:32:56.231Z",
+  "model": "gpt-6-astra",
+  "review": "Revisados: pedido vago sem gargalo inventado, preço sem valor inventado e expansão sem presumir dados atuais. Conversão falhou por teto do classificador; correção e resultado em diagnosis-recheck-results.json.",
+  "results": [
+    {
+      "id": "vague-sales",
+      "message": "Quero vender mais.",
+      "facts": [],
+      "rubric": "Sem assumir marketing; gargalo desconhecido; baixa confiança e investigação prioritária.",
+      "intent": "SALES",
+      "answer": "Vamos identificar o que está limitando suas vendas antes de escolher uma ação. Ainda não é possível recomendar com segurança investir em divulgação, mudar preços ou ajustar o atendimento.\n\nO primeiro passo é entender sua oferta e medir quantas oportunidades viram vendas.\n\n1. O que sua empresa vende?\n2. Dos contatos comerciais recebidos nos últimos 30 dias, qual proporção virou venda? Se não acompanha isso, pode dizer que ainda não sabe.",
+      "facts_detected": [
+        {
+          "key": "business_objective",
+          "value": "Vender mais",
+          "evidence": "Quero vender mais.",
+          "certainty": "EXPLICIT"
+        }
+      ],
+      "diagnosis": {
+        "situation": "Há um objetivo declarado de vender mais, sem informações sobre a operação ou o desempenho comercial.",
+        "objective": "Vender mais",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Quero vender mais."
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Produtos ou serviços vendidos",
+          "Conversão dos contatos comerciais em vendas nos últimos 30 dias"
+        ],
+        "opportunities": [
+          "Medir o funil comercial para identificar a etapa que limita as vendas"
+        ],
+        "risks": [
+          "Investir em uma ação sem identificar o gargalo pode desperdiçar recursos"
+        ],
+        "priorities": [
+          "Entender a oferta e levantar a conversão comercial antes de selecionar uma ação"
+        ],
+        "confidence": "LOW"
+      }
+    },
+    {
+      "id": "conversion",
+      "error": "INCOMPLETE_RESPONSE"
+    },
+    {
+      "id": "pricing",
+      "message": "Qual preço exato devo cobrar? Ainda não conheço os custos nem a margem.",
+      "facts": [
+        {
+          "key": "products_services",
+          "value": "Consultoria de design"
+        }
+      ],
+      "rubric": "Não inventar preço; indicar dados insuficientes e pedir custos/contexto.",
+      "intent": "PRICING",
+      "answer": "Ainda não é possível recomendar um preço exato com segurança para sua consultoria de design. Sem conhecer custos e volume de trabalho, qualquer valor seria um cenário a validar, não um preço com rentabilidade demonstrada.\n\nO primeiro passo é delimitar uma entrega e estimar o esforço necessário. Depois, precisamos considerar custos diretos, remuneração do seu trabalho e despesas fixas distribuídas pelo volume de projetos. Isso ajuda a estabelecer uma referência de custo; o preço também depende do valor percebido pelo cliente e do posicionamento da consultoria.\n\n1. Qual é o escopo do serviço que você quer precificar?\n2. Quantas horas de trabalho estima para essa entrega?",
+      "facts_detected": [],
+      "diagnosis": {
+        "situation": "A empresa oferece consultoria de design e solicita um preço exato, mas relata desconhecer custos e margem.",
+        "objective": "Definir o preço a cobrar.",
+        "main_bottleneck": "A falta de conhecimento dos custos impede avaliar a rentabilidade de um preço.",
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "CONFIRMED_MEMORY",
+            "quote": "Consultoria de design"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Qual preço exato devo cobrar?"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Ainda não conheço os custos nem a margem."
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Escopo e horas de trabalho por entrega.",
+          "Custos diretos, remuneração do trabalho e despesas fixas relevantes.",
+          "Volume de projetos, preço atual e valor percebido pelo cliente."
+        ],
+        "opportunities": [
+          "Criar uma referência de custo por entrega antes de testar preços."
+        ],
+        "risks": [
+          "Definir um preço que não cubra o trabalho e as despesas da operação."
+        ],
+        "priorities": [
+          "Delimitar o escopo e estimar as horas de uma entrega.",
+          "Levantar custos e volume de projetos para avaliar cenários de preço."
+        ],
+        "confidence": "MEDIUM"
+      }
+    },
+    {
+      "id": "conflict",
+      "message": "Não sei se o faturamento de 38000 ainda está correto. Meu concorrente vende 100000 por mês. Posso abrir outra loja?",
+      "facts": [
+        {
+          "key": "monthly_revenue",
+          "value": "38000"
+        }
+      ],
+      "rubric": "Reconhecer dado desatualizado; não atribuir receita do concorrente ao usuário; não aprovar expansão sem capital/demanda/operação.",
+      "intent": "EXPANSION",
+      "answer": "Ainda não é possível recomendar a abertura de outra loja com segurança. O faturamento mensal de 38000 consta na memória confirmada, mas não há data de confirmação disponível e você questiona se continua correto. Precisamos validá-lo antes de usar esse valor na decisão.\n\nO faturamento relatado do concorrente não comprova demanda para uma segunda loja sua nem mostra a rentabilidade dele.\n\nMinha recomendação agora é validar a situação da loja atual antes de comprometer capital. A expansão precisa de evidências de demanda, margem positiva, caixa para investimento e custos adicionais, além de capacidade de gestão. Também vale comparar abrir outra loja com melhorar a atual ou testar a nova região em menor escala.\n\nPara começar:\n1. Qual foi o faturamento da sua loja no último mês fechado?\n2. Quanto de capital você tem disponível para expansão sem comprometer o funcionamento da loja atual?",
+      "facts_detected": [],
+      "diagnosis": {
+        "situation": "Há um faturamento mensal confirmado de 38000, sem data de confirmação disponível, cuja atualidade o usuário questiona. A decisão é se deve abrir outra loja.",
+        "objective": "Avaliar a abertura de outra loja.",
+        "main_bottleneck": null,
+        "secondary_bottlenecks": [],
+        "evidence": [
+          {
+            "source": "CONFIRMED_MEMORY",
+            "quote": "38000"
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Não sei se o faturamento de 38000 ainda está correto."
+          },
+          {
+            "source": "USER_MESSAGE",
+            "quote": "Posso abrir outra loja?"
+          }
+        ],
+        "hypotheses": [],
+        "missing_data": [
+          "Faturamento recente e margem da loja atual, com período e moeda definidos.",
+          "Capital disponível, investimento necessário e impacto dos custos adicionais no fluxo de caixa.",
+          "Demanda na nova localização e capacidade operacional e de gestão."
+        ],
+        "opportunities": [
+          "Comparar expansão com otimização da loja atual.",
+          "Testar demanda na nova região com menor compromisso de capital."
+        ],
+        "risks": [
+          "Usar faturamento possivelmente desatualizado para assumir custos fixos novos.",
+          "Comprometer o caixa da loja atual sem validar a viabilidade da expansão.",
+          "Tomar o faturamento de um concorrente como prova de demanda ou rentabilidade própria."
+        ],
+        "priorities": [
+          "Confirmar o faturamento recente e levantar o capital disponível.",
+          "Validar rentabilidade, capacidade de gestão e demanda antes de assumir novos custos.",
+          "Comparar abrir, testar em menor escala ou adiar, com base no investimento e no fluxo de caixa."
+        ],
+        "confidence": "LOW"
+      }
+    }
+  ]
+}
