@@ -32,7 +32,10 @@ export function trustedOrigin(request:Request, configuredSite?:string) {
 export function securityHeaders(nonce:string,development:boolean,https:boolean) {
   const csp=["default-src 'self'",`script-src 'self' 'nonce-${nonce}' 'strict-dynamic'${development?" 'unsafe-eval'":''}`,"style-src 'self' 'unsafe-inline'","img-src 'self' data: blob:","font-src 'self'","connect-src 'self'"+(development?' ws:':''),"object-src 'none'","base-uri 'none'","form-action 'self' https://checkout.stripe.com https://billing.stripe.com","frame-ancestors 'none'",...(https?['upgrade-insecure-requests']:[])].join('; ');
   return {
-    'Content-Security-Policy':csp,'X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer',
+    // no-referrer makes Chromium native POST navigations send Origin: null,
+    // which Server Actions must reject. strict-origin preserves origin checks
+    // while withholding paths, query strings and callback codes from referrers.
+    'Content-Security-Policy':csp,'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin',
     'Permissions-Policy':'camera=(), microphone=(), geolocation=(), payment=()', 'X-Frame-Options':'DENY',
     ...(https?{'Strict-Transport-Security':'max-age=31536000'}:{}),
   };

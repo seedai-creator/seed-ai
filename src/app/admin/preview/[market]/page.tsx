@@ -1,13 +1,13 @@
 import Link from "next/link";
 import {notFound} from "next/navigation";
-import {requireAdmin} from "@/lib/commercial/server";
+import {adminPageAccess} from '@/lib/auth/admin-page';
 import {translator} from "@/lib/i18n/messages";
 import {resolveLocale} from "@/lib/i18n/config";
 import {validateMarketReadiness} from "@/lib/commercial/markets";
 import type {Market} from "@/lib/commercial/contracts";
 export const dynamic="force-dynamic";
 export default async function PreviewPage({params}:{params:Promise<{market:string}>}){
- const c=await requireAdmin().catch(()=>null);if(!c)notFound();const code=(await params).market;
+ const c=await adminPageAccess();const code=(await params).market;
  if(!["BR","PT","ES","US"].includes(code))notFound();
  const [m,p,ai]=await Promise.all([c.db.from("commercial_markets").select("*").eq("code",code).single(),c.db.from("commercial_prices").select("*").eq("market_code",code).eq("plan_code","PRO").is("effective_to",null).single(),c.db.from("ai_model_pricing").select("id").is("effective_to",null).limit(1)]);
  if(m.error||!m.data)notFound();const market=m.data as Market,t=translator(resolveLocale(market.locale));

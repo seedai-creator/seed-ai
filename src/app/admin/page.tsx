@@ -1,14 +1,13 @@
 import {ExternalOperations} from './external-operations';
 import { EconomicsReport } from "./economics-report";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Brand } from "@/components/brand";
-import { requireAdmin } from "@/lib/commercial/server";
+import {adminPageAccess} from '@/lib/auth/admin-page';
 import { updateConfiguration } from "./actions";
 import { READINESS_CATEGORIES } from "@/lib/commercial/markets";
 export const dynamic="force-dynamic";
 export default async function AdminPage({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
- const c=await requireAdmin().catch(()=>null);if(!c)notFound();
+ const c=await adminPageAccess();
  const q=await searchParams;
  const results=await Promise.all(["commercial_markets","commercial_plans","commercial_prices","subscriptions","usage_logs","admin_audit_log","commercial_accounts"].map(table=>c.db.from(table).select("*",{count:"exact"}).limit(200)));
  if(results.some(r=>r.error))throw new Error("ADMIN_DATA_UNAVAILABLE");

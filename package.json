@@ -20,7 +20,11 @@
     "build:verify": "node scripts/verify-build.mjs",
     "staging:prepare": "node scripts/prepare-staging.mjs",
     "staging:check": "node scripts/check-staging.mjs",
-    "staging:test": "node scripts/test-staging.mjs --run"
+    "staging:test": "node scripts/test-staging.mjs --run",
+    "staging:dev": "node scripts/run-staging.mjs dev",
+    "staging:build": "node scripts/run-staging.mjs build",
+    "staging:start": "node scripts/run-staging.mjs start",
+    "staging:browser": "node scripts/test-staging-browser.mjs --run"
   },
   "engines": {
     "node": ">=22.0.0"
@@ -37,6 +41,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",
+    "@playwright/test": "1.64.0",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "26.6.2",
     "@types/react": "19.3.0",

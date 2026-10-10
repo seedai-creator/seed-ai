@@ -2,7 +2,12 @@ export function environmentIssues(env) {
   const issues=[];
   const environment=env.SEED_ENV;
   if(!['development','staging','production'].includes(environment))issues.push('SEED_ENV must be development, staging or production');
-  const required=['NEXT_PUBLIC_SUPABASE_URL','NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY','SUPABASE_SECRET_KEY','NEXT_PUBLIC_SITE_URL','OPENAI_API_KEY','OPENAI_MODEL','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','CRON_SECRET'];
+  const coreOnly=env.SEED_STAGING_CORE_ONLY==='true';
+  if(env.SEED_STAGING_CORE_ONLY&&!['true','false'].includes(env.SEED_STAGING_CORE_ONLY))issues.push('SEED_STAGING_CORE_ONLY must be true or false');
+  if(coreOnly&&environment==='production')issues.push('Staging core mode is forbidden in production');
+  if(coreOnly&&Object.entries(env).some(([key,value])=>/^(OPENAI_|STRIPE_)/.test(key)&&value?.trim()))issues.push('Staging core mode must not receive AI or billing configuration');
+  if(coreOnly&&env.SEED_OPERATIONS_ENABLED!=='true')issues.push('Staging core mode requires operations controls');
+  const required=['NEXT_PUBLIC_SUPABASE_URL','NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY','SUPABASE_SECRET_KEY','NEXT_PUBLIC_SITE_URL','CRON_SECRET',...(!coreOnly?['OPENAI_API_KEY','OPENAI_MODEL','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET']:[])];
   for(const key of required)if(!env[key]?.trim())issues.push(key+' is required');
   const urls={};
   for(const key of ['NEXT_PUBLIC_SUPABASE_URL','NEXT_PUBLIC_SITE_URL']){

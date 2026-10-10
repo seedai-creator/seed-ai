@@ -1,12 +1,11 @@
 import Link from "next/link";
-import {notFound} from "next/navigation";
-import {requireAdmin} from "@/lib/commercial/server";
+import {adminPageAccess} from '@/lib/auth/admin-page';
 import {changeCatalog} from "../catalog-actions";
 import {READINESS_CATEGORIES} from "@/lib/commercial/markets";
 function Confirm(){return <><label>Motivo <input name="reason" required minLength={5} maxLength={1000}/></label><label className="commercial-check"><input type="checkbox" name="confirmed" required/>Confirmo esta alteração auditada no ambiente de teste.</label><button className="primary-button">Salvar</button></>;}
 function MarketSelect(){return <label>Mercado <select name="market_code">{["BR","PT","ES","US"].map(m=><option key={m}>{m}</option>)}</select></label>;}
 export default async function CatalogPage({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
- const c=await requireAdmin("SUPER_ADMIN").catch(()=>null);if(!c)notFound();const q=await searchParams;
+ await adminPageAccess("SUPER_ADMIN");const q=await searchParams;
  return <main className="account-shell strategies-shell"><Link href="/admin">Admin</Link><section className="account-card"><h1>Configuração comercial</h1>{q.error&&<p role="alert">Configuração recusada. Verifique os campos e o ambiente de teste.</p>}{q.saved&&<p role="status">Configuração salva com histórico de auditoria.</p>}
  <h2>Versão de preço PRO</h2><p>Crie o preço mensal no Stripe de teste. O valor e a moeda serão conferidos no provedor. A versão anterior permanece no histórico.</p><form className="strategy-draft" action={changeCatalog}><input type="hidden" name="operation" value="PRICE_CHANGED"/><MarketSelect/><label>Identificador do preço Stripe <input name="provider_price_id" required placeholder="price_…"/></label><Confirm/></form>
  <h2>Tarifas de IA</h2><p>USD por milhão de tokens. Use a fonte vigente verificada; estas tarifas produzem estimativas, não substituem a fatura. Processamento padrão e contexto padrão.</p><form className="strategy-draft" action={changeCatalog}><input type="hidden" name="operation" value="AI_PRICE_CHANGED"/>{["model","input_per_million","cached_per_million","cache_write_per_million","output_per_million","source"].map(k=><label className="commercial-check" key={k}>{k}<input name={k} required/></label>)}<Confirm/></form>

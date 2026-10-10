@@ -31,7 +31,7 @@ test('production headers forbid framing and inline scripts without nonce',()=>{
   assert.match(h['Content-Security-Policy'],/nonce-randomNonce/);
   assert.doesNotMatch(h['Content-Security-Policy'],/script-src[^;]*unsafe-inline|unsafe-eval/);
   assert.match(h['Content-Security-Policy'],/frame-ancestors 'none'/);
-  assert.equal(h['Referrer-Policy'],'no-referrer');
+  assert.equal(h['Referrer-Policy'],'strict-origin');
   assert.ok(h['Strict-Transport-Security']);
   assert.equal(securityHeaders('randomNonce',true,false)['Strict-Transport-Security'],undefined);
 });

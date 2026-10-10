@@ -1,6 +1,5 @@
 import Link from 'next/link';
-import {notFound} from 'next/navigation';
-import {requireAdmin} from '@/lib/commercial/server';
+import {adminPageAccess} from '@/lib/auth/admin-page';
 import {operationControls,operationsEnabled} from '@/lib/operations/server';
 import {changeOperations,resolveSupport} from './actions';
 export const dynamic='force-dynamic';
@@ -8,7 +7,7 @@ const switches={closed_beta:'Restringir acesso a convidados',disable_ai:'Pausar 
 async function eventWindowStart(){return new Date(Date.now()-86400000).toISOString();}
 function Confirmation(){return <><label>Motivo <input name="reason" required minLength={5} maxLength={1000}/></label><label className="commercial-check"><input type="checkbox" name="confirmed" required/>Confirmo esta alteração operacional.</label><button className="primary-button">Salvar</button></>;}
 export default async function OperationsPage({searchParams}:{searchParams:Promise<{error?:string;updated?:string}>}){
- const c=await requireAdmin().catch(()=>null);if(!c)notFound();
+ const c=await adminPageAccess();
  if(!operationsEnabled())return <main className="account-shell"><h1>Operação do beta</h1><p>Aguardando migração e ativação no ambiente de testes.</p><Link href="/admin">Voltar</Link></main>;
  const controls=await operationControls(c.db),q=await searchParams,since=await eventWindowStart();
  const [events,support,access,jobs]=await Promise.all([

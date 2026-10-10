@@ -4,13 +4,20 @@ import {PGlite} from '@electric-sql/pglite';
 import {readFile,readdir} from 'node:fs/promises';
 test('operations migration preserves tenant isolation and controls beta, support and consent',async t=>{
  const db=new PGlite(),user=crypto.randomUUID(),other=crypto.randomUUID(),admin=crypto.randomUUID();
- async function asUser(sql,params=[],who=user){await db.exec('begin');try{await db.exec('set local role authenticated');await db.query("select set_config('request.jwt.claim.sub',$1,true)",[who]);const r=await db.query(sql,params);await db.exec('commit');return r.rows;}catch(e){await db.exec('rollback');throw e;}}
+ async function asUser(sql,params=[],who=user,claims={aal:'aal1',amr:[{method:'password',timestamp:Math.floor(Date.now()/1000)}]}){await db.exec('begin');try{await db.exec('set local role authenticated');await db.query("select set_config('request.jwt.claim.sub',$1,true),set_config('request.jwt.claims',$2,true)",[who,JSON.stringify(claims)]);const r=await db.query(sql,params);await db.exec('commit');return r.rows;}catch(e){await db.exec('rollback');throw e;}}
  try{
   await db.exec("create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create table auth.users(id uuid primary key,email text,raw_user_meta_data jsonb default '{}');create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;grant usage on schema auth,public to anon,authenticated,service_role;grant execute on function auth.uid() to anon,authenticated,service_role;");
   const dir=new URL('../supabase/migrations/',import.meta.url);for(const file of (await readdir(dir)).filter(f=>f.endsWith('.sql')).sort())await db.exec(await readFile(new URL(file,dir),'utf8'));
   await db.query("insert into auth.users(id,email) values($1,'owner@example.invalid'),($2,'other@example.invalid'),($3,'admin@example.invalid')",[user,other,admin]);
   await db.query("insert into admin_roles(user_id,role) values($1,'SUPER_ADMIN')",[admin]);
   const company=(await db.query('select company_id from company_members where user_id=$1',[user])).rows[0].company_id;
+  await t.test('admin reads require a verified second factor, and AAL2 alone never grants a role',async()=>{
+   assert.equal((await asUser('select * from commercial_accounts',[],admin)).length,1);
+   assert.equal((await asUser('select * from commercial_accounts',[],admin,{aal:'aal2'})).length,3);
+   assert.equal((await asUser('select * from commercial_accounts',[],other,{aal:'aal2'})).length,1);
+   assert.equal((await asUser('select seed_admin_role() role',[],admin))[0].role,null);
+   assert.equal((await asUser('select seed_admin_role() role',[],admin,{aal:'aal2'}))[0].role,'SUPER_ADMIN');
+  });
   await t.test('every public table has RLS and beta restrictions never grant cross-tenant access',async()=>{
    assert.deepEqual((await db.query("select relname from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and relkind='r' and not relrowsecurity")).rows,[]);
    assert.equal((await asUser('select * from companies where id=$1',[company],other)).length,0);
@@ -80,6 +87,27 @@ test('operations migration preserves tenant isolation and controls beta, support
    await db.exec("update operations_controls set paused_features='{}',blocked_models=array['fixture-model']");assert.equal(await allowed(),false);
    await db.exec("update operations_controls set blocked_models='{}',disable_ai=true");assert.equal(await allowed(),false);
    await db.exec("update operations_controls set disable_ai=false");assert.equal(await allowed(),true);
+  });
+  await t.test('privacy export checks owner, fresh authentication, personal scope and rate limits even after revocation',async()=>{
+   const otherCompany=(await db.query('select company_id from company_members where user_id=$1',[other])).rows[0].company_id;
+   const conversation=crypto.randomUUID();
+   await db.query("insert into conversations(id,company_id,user_id,title) values($1,$2,$3,'Private fixture')",[conversation,otherCompany,other]);
+   await db.query("insert into messages(conversation_id,request_id,role,content) values($1,$2,'user','OTHER_TENANT_CANARY')",[conversation,crypto.randomUUID()]);
+   await assert.rejects(asUser('select export_private_data($1)',[otherCompany]),/owner required/);
+   await assert.rejects(asUser('select export_private_data(null)',[],user,{}),/Recent authentication/);
+   await assert.rejects(asUser('select export_private_data(null)',[],user,{amr:[{method:'password',timestamp:1}]}),/Recent authentication/);
+   const personal=(await asUser('select export_private_data(null) value'))[0].value;
+   assert.equal(personal.scope,'PERSONAL_ACCOUNT');assert.deepEqual(personal.business_data,{});
+   assert.equal(personal.account.id,user);assert.ok(personal.support_requests.every(r=>r.user_id===user));
+   const full=(await asUser('select export_private_data($1) value',[company]))[0].value;
+   assert.equal(full.business_data.company.id,company);
+   assert.ok(!JSON.stringify(full).includes('OTHER_TENANT_CANARY'));
+   assert.equal(full.business_data.journal_jobs,undefined);assert.equal(full.admin_audit_log,undefined);
+   await db.query('insert into company_members(company_id,user_id,role) values($1,$2,\'member\')',[company,other]);
+   await assert.rejects(asUser('select export_private_data($1)',[company],other),/owner required/);
+   await asUser('select export_private_data(null)');
+   await assert.rejects(asUser('select export_private_data(null)'),/Export limit/);
+   assert.equal((await db.query("select count(*)::int n from operational_events where user_id=$1 and code='DATA_EXPORTED'",[user])).rows[0].n,3);
   });
  }finally{await db.close();}
 });
