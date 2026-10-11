@@ -604,3 +604,13 @@ A Home mantém o Composer como elemento principal e seleciona até três blocos 
 - Leitura remota sem IA/gravações: após compilar testes, `node --conditions=react-server scripts/verify-cockpit-readonly.mjs`. Usa somente a empresa fictícia retida da validação anterior e impõe uma guarda GET/HEAD.
 - Execução local: `npm run dev -- --port 3001`; acesso em http://127.0.0.1:3001. Clique no logo para voltar à Home.
 - [Relatório, capacidades, riscos e validação manual](docs/PHASE_12_DELIVERY.md). Fase 12 concluída e publicada em [seed-ai-ashy.vercel.app](https://seed-ai-ashy.vercel.app/) em 10/10/2026, após aprovação visual local e autorização explícita do titular. Build Vercel, onze verificações HTTP e treze arquivos estáticos aprovados; Cockpit habilitado em Production. A matriz completa de dispositivos, teclado e leitor de tela e a interação autenticada em produção não foram automatizadas devido à indisponibilidade da ferramenta de navegador.
+
+## Fase 13 — Recuperação de acesso em validação
+
+O fluxo inclui `/forgot-password`, confirmação explícita do link em `/auth/recovery`, definição da senha em `/reset-password` e retorno ao login. Abrir a página do link não consome o token. A confirmação usa POST com verificação de origem; erros não expõem tokens nem identificam se um e-mail está cadastrado.
+
+- Configuração: `NEXT_PUBLIC_SITE_URL` deve corresponder ao endereço da aplicação e o Supabase Auth deve usar SMTP e o template `supabase/templates/password-recovery.html`. Publicar as rotas antes de ativar o template.
+- Validação isolada: `npm run staging:build` e depois `npm run staging:recovery`, com a porta 3002 livre e o `.env.staging.local` configurado conforme [o procedimento operacional](docs/PHASE_13_OPERATIONS.md). O teste cria e remove uma conta fictícia no banco de testes; não envia e-mails nem chama IA.
+- Após publicação autorizada, testar pelo botão **Esqueceu a senha?**. O titular define a própria senha no navegador; nunca enviá-la em mensagens ou relatórios.
+- O teste de integração verifica a troca real de senha, rejeição da senha anterior, reutilização do link e revogação das sessões de renovação. JWTs de acesso já emitidos podem permanecer válidos até expirar. A entrega e a interação final no ambiente publicado exigem validação própria.
+- A Fase 13 continua em andamento. Esta correção não autoriza publicação automática, abertura do beta nem início da Fase 14.

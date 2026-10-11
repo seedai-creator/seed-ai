@@ -24,7 +24,8 @@
     "staging:dev": "node scripts/run-staging.mjs dev",
     "staging:build": "node scripts/run-staging.mjs build",
     "staging:start": "node scripts/run-staging.mjs start",
-    "staging:browser": "node scripts/test-staging-browser.mjs --run"
+    "staging:browser": "node scripts/test-staging-browser.mjs --run",
+    "staging:recovery": "tsc -p tsconfig.test.json && node scripts/test-staging-recovery.mjs --run --production-build"
   },
   "engines": {
     "node": ">=22.0.0"

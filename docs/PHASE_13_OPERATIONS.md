@@ -16,6 +16,15 @@ Estado: implementação local; beta fechado ainda não liberado. Este documento 
 
 O build `npm run build:verify` usa fixtures e não comprova conexão com staging, SMTP, Stripe ou OpenAI. Não deve ser publicado nem usado para atender usuários.
 
+### Recuperação de senha
+
+- O callback PKCE `/auth/callback?recovery=1` continua compatível com mensagens padrão solicitadas pela aplicação no mesmo navegador.
+- Para o fluxo recomendado, inclusive links gerados pelo painel e abertos em outro navegador, o template `supabase/templates/password-recovery.html` aponta para `{{ .SiteURL }}/auth/recovery?token_hash={{ .TokenHash }}&type=recovery`. A tela GET não consome o token; o botão confirma via POST, valida origem e usa exclusivamente `verifyOtp` com tipo `recovery`. A senha é alterada apenas depois de uma sessão validada pelo Supabase.
+- Publicar as rotas antes de ativar o template no ambiente correspondente. Nunca alterar o template de produção enquanto a aplicação publicada não possuir essas rotas. Definir Site URL para o endereço correto de cada ambiente. O template incluído está em português; as telas da aplicação cobrem os quatro locales.
+- Links inválidos, expirados ou reutilizados oferecem nova solicitação. Após a troca, o login informa a atualização e a aplicação solicita revogação global das sessões de refresh. JWTs de acesso previamente emitidos podem permanecer válidos até expirarem; não prometer invalidação instantânea de todo JWT.
+- Para validar sem e-mails ou IA: executar `npm run staging:build` e depois `npm run staging:recovery`. O teste cria somente uma conta fictícia no staging validado, usa o Auth real e as rotas HTTP locais, testa acesso anônimo/origem/reutilização, executa a mesma função usada pela ação de senha e verifica senha antiga/nova e refresh revogado. Apaga somente suas fixtures e preserva controles. A porta 3002 deve estar livre. O relatório privado fica em `.test-build/staging-recovery-report.json`.
+- Esse teste de integração não substitui o teste manual do formulário, uma entrega real no ambiente publicado nem a expiração por tempo decorrido. Nenhuma credencial, hash de token ou link ativo deve ser anexado a evidências. Um status SMTP `delivered` comprova entrega ao servidor, não conclusão da recuperação.
+
 ### Configuração inicial recebida
 
 O titular informou o projeto de staging `dgqvcvebydjxxkuvrgkl`, distinto da produção `gqumxaapjyujrpqggnon`. As chaves devem permanecer somente em `.env.staging.local`, ignorado pelo Git. Esse arquivo é lido explicitamente pelos scripts abaixo e **não é carregado automaticamente pelo Next.js**. A configuração da aplicação e dos demais provedores ainda precisa ser concluída antes de executar o app contra staging.
