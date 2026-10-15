@@ -2,7 +2,9 @@
 .test-build/
 .git/
 .vercel/
+supabase/.temp/
 .next/
+.next-staging/
 node_modules/
 *.tsbuildinfo
 npm-debug.log*

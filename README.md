@@ -17,7 +17,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; staging separado instalado e nove verificações reais de Auth/RLS aprovadas. Aplicação, integrações e operação do beta ainda em preparação. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: em implementação; staging hospedado e protegido, MFA, exportação, recuperação, backup restaurado e troca da chave OpenAI verificados. Em 15/10, exclusão fictícia com empresa compartilhada, carga limitada, correção de conflitos e reversão do endereço Preview também passaram. A liberação do beta continua condicionada às pendências operacionais e jurídicas. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
 
 ## Executar localmente
@@ -614,3 +614,19 @@ O fluxo inclui `/forgot-password`, confirmação explícita do link em `/auth/re
 - Após publicação autorizada, testar pelo botão **Esqueceu a senha?**. O titular define a própria senha no navegador; nunca enviá-la em mensagens ou relatórios.
 - O teste de integração verifica a troca real de senha, rejeição da senha anterior, reutilização do link e revogação das sessões de renovação. JWTs de acesso já emitidos podem permanecer válidos até expirar. A entrega e a interação final no ambiente publicado exigem validação própria.
 - A Fase 13 continua em andamento. Esta correção não autoriza publicação automática, abertura do beta nem início da Fase 14.
+
+O ensaio de backup pode preparar duas empresas fictícias com `node scripts/prepare-backup-drill.mjs prepare --run`, usando somente o staging isolado e vazio de contas/empresas. O manifesto privado permanece em `.test-build/backup-drill/`; `verify --run` compara a referência sem restaurar o banco. É necessário aguardar um backup contendo as fixtures e realizar a restauração antes de considerar esse requisito concluído. Consulte os cuidados, retenção temporária e limpeza no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+
+## Fase 13 — alertas internos
+
+Fila e entrega via Resend validadas no staging, com um teste fictício autorizado em 14/10/2026. Configuração, limites de cobertura e procedimento de teste em [Operação da Fase 13](docs/PHASE_13_OPERATIONS.md#alertas-operacionais--implementação-de-14102026). Envio permanece desativado por padrão; nenhuma publicação automática foi feita.
+
+## Fase 13 — privacidade, custos e concorrência
+
+- `node scripts/prepare-privacy-review.mjs <id>` prepara um inventário privado, somente leitura, para uma solicitação de exclusão aberta no staging. Não autoriza nem executa exclusão.
+- `node scripts/test-staging-privacy.mjs --run` ensaia a exclusão de duas contas fictícias criadas pelo próprio roteiro, preserva a empresa compartilhada durante o teste e limpa suas fixtures. Não usar como procedimento de exclusão em produção.
+- `npm run staging:test -- --load` acrescenta uma carga fixa de 96 consultas autenticadas, até quatro simultâneas, com 1.000 mensagens e 200 eventos fictícios. Verifica isolamento e conflitos entre duas abas; não certifica capacidade de produção.
+- `node scripts/simulate-cost-cohorts.mjs <snapshot.json>` gera cenários de 100/1.000 FREE e PRO a partir de uma configuração revisada. Nenhuma chamada de IA, mudança de preço ou aumento de limite. Relatórios ficam em `.test-build/`, fora do Git.
+- Migrações novas: `20261014213558_privacy_dependency_inventory.sql` e `20261015165036_domain_conflict_status.sql`, validadas e aplicadas apenas no staging. A segunda retorna `PT409` para conflitos permanentes, evitando repetição automática de transações; as telas aceitam também o código legado durante a implantação.
+
+Consulte os limites e pendências no relatório da fase. Não publicar esta fase automaticamente nem iniciar a Fase 14.

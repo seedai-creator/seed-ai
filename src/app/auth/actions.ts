@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { createSupabaseServer } from "@/lib/supabase/server";
 import { ACTIVE_COMPANY_COOKIE } from "@/lib/auth/context";
 import { validEmail, validPassword, type ActionState } from "@/lib/auth/validation";
+import {recordServerFailure} from '@/lib/operations/alert-worker';
 
 export async function login(_state: ActionState, form: FormData): Promise<ActionState> {
   const email = String(form.get("email") ?? "").trim();
@@ -14,7 +15,10 @@ export async function login(_state: ActionState, form: FormData): Promise<Action
   try {
     const client = await createSupabaseServer();
     const { error } = await client.auth.signInWithPassword({ email, password });
-    if (error) return { error: "Não foi possível entrar. Confira e-mail, senha e confirmação do e-mail." };
+    if (error) {
+      if ((error.status ?? 0) >= 500) await recordServerFailure('auth', 'AUTH_PROVIDER_FAILED');
+      return { error: "Não foi possível entrar. Confira e-mail, senha e confirmação do e-mail." };
+    }
     const { data: account } = await client.auth.getUser();
     if (account.user) {
       const { data: profile } = await client.from("profiles").select("locale").eq("id", account.user.id).maybeSingle();
@@ -38,7 +42,10 @@ export async function signup(_state: ActionState, form: FormData): Promise<Actio
     const { data, error } = await client.auth.signUp({
       email, password, options: { data: { display_name: displayName, commercial_country: String(form.get("country")??"") }, emailRedirectTo: new URL("/auth/callback", site).href },
     });
-    if (error) return { error: "Não foi possível criar a conta. Confira os dados ou tente novamente mais tarde." };
+    if (error) {
+      if ((error.status ?? 0) >= 500) await recordServerFailure('auth', 'AUTH_PROVIDER_FAILED');
+      return { error: "Não foi possível criar a conta. Confira os dados ou tente novamente mais tarde." };
+    }
     hasSession = !!data.session;
     (await cookies()).delete(ACTIVE_COMPANY_COOKIE);
   } catch { return { error: "Não foi possível criar a conta agora. Tente novamente." }; }

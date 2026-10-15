@@ -6,6 +6,7 @@ export function environmentIssues(env) {
   if(env.SEED_STAGING_CORE_ONLY&&!['true','false'].includes(env.SEED_STAGING_CORE_ONLY))issues.push('SEED_STAGING_CORE_ONLY must be true or false');
   if(coreOnly&&environment==='production')issues.push('Staging core mode is forbidden in production');
   if(coreOnly&&Object.entries(env).some(([key,value])=>/^(OPENAI_|STRIPE_)/.test(key)&&value?.trim()))issues.push('Staging core mode must not receive AI or billing configuration');
+  if(coreOnly&&(env.RESEND_API_KEY?.trim()||env.SEED_ALERTS_ENABLED==='true'))issues.push('Staging core mode must not send operational email');
   if(coreOnly&&env.SEED_OPERATIONS_ENABLED!=='true')issues.push('Staging core mode requires operations controls');
   const required=['NEXT_PUBLIC_SUPABASE_URL','NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY','SUPABASE_SECRET_KEY','NEXT_PUBLIC_SITE_URL','CRON_SECRET',...(!coreOnly?['OPENAI_API_KEY','OPENAI_MODEL','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET']:[])];
   for(const key of required)if(!env[key]?.trim())issues.push(key+' is required');
@@ -23,8 +24,13 @@ export function environmentIssues(env) {
   if(env.STRIPE_WEBHOOK_SECRET&&!env.STRIPE_WEBHOOK_SECRET.startsWith('whsec_'))issues.push('STRIPE_WEBHOOK_SECRET has an invalid format');
   if(env.CRON_SECRET&&env.CRON_SECRET.length<32)issues.push('CRON_SECRET must contain at least 32 characters');
   if(env.SUPABASE_SECRET_KEY&&env.SUPABASE_SECRET_KEY===env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)issues.push('Public and server Supabase keys must differ');
-  for(const key of Object.keys(env))if(key.startsWith('NEXT_PUBLIC_')&&/(SECRET|PASSWORD|PRIVATE|OPENAI.*KEY|SERVICE_ROLE)/.test(key))issues.push(key+' must not be public');
-  for(const key of ['SEED_OPERATIONS_ENABLED','SEED_COCKPIT_ENABLED','SEED_GROWTH_MAP_ENABLED','SEED_GOALS_ENABLED','SEED_RADAR_ENABLED','SEED_SIMULATOR_ENABLED','SEED_JOURNAL_ENABLED'])if(env[key]&&!['true','false'].includes(env[key]))issues.push(key+' must be true or false');
+  for(const key of Object.keys(env))if(key.startsWith('NEXT_PUBLIC_')&&/(SECRET|PASSWORD|PRIVATE|OPENAI.*KEY|RESEND.*KEY|SERVICE_ROLE)/.test(key))issues.push(key+' must not be public');
+  for(const key of ['SEED_OPERATIONS_ENABLED','SEED_ALERTS_ENABLED','SEED_COCKPIT_ENABLED','SEED_GROWTH_MAP_ENABLED','SEED_GOALS_ENABLED','SEED_RADAR_ENABLED','SEED_SIMULATOR_ENABLED','SEED_JOURNAL_ENABLED'])if(env[key]&&!['true','false'].includes(env[key]))issues.push(key+' must be true or false');
+  if(env.SEED_ALERTS_ENABLED==='true'){
+    if(env.SEED_OPERATIONS_ENABLED!=='true')issues.push('Alerts require operations controls');
+    if(!/^re_[A-Za-z0-9_-]{16,}$/.test(env.RESEND_API_KEY??''))issues.push('RESEND_API_KEY is required for alerts');
+    for(const key of ['SEED_ALERT_FROM','SEED_ALERT_TO'])if(!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(env[key]??'')||(env[key]?.length??0)>254)issues.push(key+' must be one valid email address');
+  }
   if(env.SEED_EXTERNAL_MODE&&!['DISABLED','OFFLINE_OR_CACHE_ONLY','LIVE_WEB_ENABLED'].includes(env.SEED_EXTERNAL_MODE))issues.push('Invalid SEED_EXTERNAL_MODE');
   return issues;
 }

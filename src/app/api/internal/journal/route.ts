@@ -1,4 +1,5 @@
 import {logEvent} from '../../../../lib/operations/logging';
+import {processOperationalAlerts} from '@/lib/operations/alert-worker';
 import {scheduleGrowth,processGrowthJob} from '@/lib/growth/server';
 import {externalEnabled} from '@/lib/external/domain';
 import {processExternalJob} from '@/lib/external/server';
@@ -17,6 +18,8 @@ export async function GET(request:Request){
  const actual=request.headers.get("authorization")??"";
  const target="Bearer "+expected;
  if(!expected||Buffer.byteLength(actual)!==Buffer.byteLength(target)||!timingSafeEqual(Buffer.from(actual),Buffer.from(target)))return new Response(null,{status:401});
+ const alerts=processOperationalAlerts();
+ try{
  if(!journalEnabled()&&!radarEnabled()&&!externalEnabled())return Response.json({enabled:false});
  const afterId=new URL(request.url).searchParams.get("after");
  if(afterId&&!/^[a-f0-9-]{36}$/.test(afterId))return new Response(null,{status:400});
@@ -41,4 +44,5 @@ export async function GET(request:Request){
  await processGrowthJob();
  await externalWork;
  return Response.json({next:companies.data.length===25?companies.data.at(-1)?.id:null},{headers:{"Cache-Control":"no-store"}});
+ }finally{await alerts;}
 }

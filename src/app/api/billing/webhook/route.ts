@@ -51,5 +51,10 @@ export async function POST(request: Request) {
     } });
     if (error) throw new Error("BILLING_PERSISTENCE_FAILED");
     return Response.json({ received: true });
-  } catch { logEvent('billing',{ code: "WEBHOOK_PROCESSING_FAILED", eventId: event.id },'error'); return Response.json({ error: "Retry later" }, { status: 503 }); }
+  } catch {
+    logEvent('billing',{ code: "WEBHOOK_PROCESSING_FAILED" },'error');
+    const {recordServerFailure} = await import('@/lib/operations/alert-worker');
+    await recordServerFailure('billing', 'WEBHOOK_PROCESSING_FAILED');
+    return Response.json({ error: "Retry later" }, { status: 503 });
+  }
 }

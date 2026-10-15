@@ -4,7 +4,8 @@ export function buildStagingBootstrap(migrations,project) {
   if(!/^[a-z]{20}$/.test(project??'')||!migrations.length)throw Error('Invalid staging manifest');
   const names=new Set();
   const parts=migrations.map(({name,sql})=>{
-    if(!/^\d{12}_[a-z0-9_]+\.sql$/.test(name)||names.has(name))throw Error('Invalid migration name');
+    // Keep legacy 12-digit versions and the official CLI's 14-digit timestamps.
+    if(!/^\d{12}(?:\d{2})?_[a-z0-9_]+\.sql$/.test(name)||names.has(name))throw Error('Invalid migration name');
     names.add(name);
     const opening=sql.match(/^(?:\s|--[^\n]*(?:\n|$))*begin;\s*/i),closing=sql.match(/commit;\s*$/i);
     if(!opening||!closing||closing.index<opening[0].length)throw Error('Review transaction boundaries: '+name);

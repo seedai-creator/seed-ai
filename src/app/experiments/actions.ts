@@ -11,7 +11,7 @@ export async function saveExperiment(companyId: string, id: string, value: unkno
  try {
   await authorizeChat({companyId}); const {supabase}=await companyContext(companyId);
   const {data,error}=await supabase.rpc("save_experiment",{p_company_id:companyId,p_id:id,p_draft:draft});
-  if(error||!data)return {error:t(error?.code==="40001"?"experiment.conflict":"experiment.error")};
+  if(error||!data)return {error:t(["PT409","40001"].includes(error?.code??"")?"experiment.conflict":"experiment.error")};
   revalidatePath("/experiments"); return {id:data};
  } catch {return {error:t("experiment.error")};}
 }
@@ -26,7 +26,7 @@ export async function changeExperiment(_state: ExperimentState,form: FormData): 
   await authorizeChat({companyId}); const {supabase}=await companyContext(companyId);
   const args={p_company_id:companyId,p_id:id,p_version:version};
   const {error}=outcome?await supabase.rpc("finish_experiment",{...args,p_status:outcome.status,p_result:outcome.result,p_learning:outcome.learning}):await supabase.rpc("start_experiment",args);
-  if(error)return {error:t(error.code==="40001"?"experiment.conflict":"experiment.error")};
+  if(error)return {error:t(["PT409","40001"].includes(error.code)?"experiment.conflict":"experiment.error")};
   revalidatePath("/experiments");return {success:t("experiment.updated")};
  }catch{return {error:t("experiment.error")};}
 }

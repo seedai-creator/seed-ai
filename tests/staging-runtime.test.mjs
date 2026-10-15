@@ -11,12 +11,14 @@ test('staging does not inherit production secrets, providers, preloads or build 
  assert.equal(env.NODE_OPTIONS,undefined);assert.equal(env.PATH,'fixture-path');
  assert.equal(env.SEED_BUILD_TARGET,'staging');assert.equal(env.SEED_OPERATIONS_ENABLED,'true');
  assert.equal(env.SEED_JOURNAL_ENABLED,'false');assert.equal(env.SEED_EXTERNAL_MODE,'DISABLED');
+ assert.equal(env.RESEND_API_KEY,'');assert.equal(env.SEED_ALERTS_ENABLED,'false');
  assert.deepEqual(environmentIssues(env),[]);
 });
 test('core-only exemption cannot disable production validation or admit provider secrets',()=>{
  const env=stagingRuntimeEnvironment(fixture(),[],{});
  assert.ok(environmentIssues({...env,SEED_ENV:'production'}).some(x=>x.includes('forbidden')));
  assert.ok(environmentIssues({...env,OPENAI_API_KEY:'accidental-key'}).some(x=>x.includes('must not receive')));
+ assert.ok(environmentIssues({...env,RESEND_API_KEY:'accidental-key'}).some(x=>x.includes('must not send')));
  assert.ok(environmentIssues({...env,SEED_OPERATIONS_ENABLED:'false'}).some(x=>x.includes('operations controls')));
  assert.ok(environmentIssues({...env,SEED_STAGING_CORE_ONLY:'false'}).includes('OPENAI_API_KEY is required'));
  assert.throws(()=>stagingRuntimeEnvironment({...fixture(),NEXT_PUBLIC_SUPABASE_URL:'https://'+'p'.repeat(20)+'.supabase.co'},[],{}));

@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {PGlite} from '@electric-sql/pglite';
 import {readFile,readdir} from 'node:fs/promises';
+import {buildPrivacyReview} from '../scripts/privacy-review.mjs';
 test('operations migration preserves tenant isolation and controls beta, support and consent',async t=>{
  const db=new PGlite(),user=crypto.randomUUID(),other=crypto.randomUUID(),admin=crypto.randomUUID();
  async function asUser(sql,params=[],who=user,claims={aal:'aal1',amr:[{method:'password',timestamp:Math.floor(Date.now()/1000)}]}){await db.exec('begin');try{await db.exec('set local role authenticated');await db.query("select set_config('request.jwt.claim.sub',$1,true),set_config('request.jwt.claims',$2,true)",[who,JSON.stringify(claims)]);const r=await db.query(sql,params);await db.exec('commit');return r.rows;}catch(e){await db.exec('rollback');throw e;}}
@@ -108,6 +109,35 @@ test('operations migration preserves tenant isolation and controls beta, support
    await asUser('select export_private_data(null)');
    await assert.rejects(asUser('select export_private_data(null)'),/Export limit/);
    assert.equal((await db.query("select count(*)::int n from operational_events where user_id=$1 and code='DATA_EXPORTED'",[user])).rows[0].n,3);
+  });
+  await t.test('manual deletion rehearsal preserves a shared company and refuses deleting its last owner blindly',async()=>{
+   await db.exec('update operations_controls set closed_beta=false');
+   const leaving=crypto.randomUUID(),remaining=crypto.randomUUID();
+   await db.query("insert into auth.users(id,email) values($1,'privacy-leaving@example.invalid'),($2,'privacy-remaining@example.invalid')",[leaving,remaining]);
+   const own=(await db.query('select company_id from company_members where user_id=$1',[leaving])).rows[0].company_id;
+   const shared=(await db.query('select company_id from company_members where user_id=$1',[remaining])).rows[0].company_id;
+   await db.query("insert into company_members(company_id,user_id,role) values($1,$2,'member'),($3,$4,'member')",[shared,leaving,own,remaining]);
+   await db.query("insert into business_memories(company_id,key,kind,value) values($1,'segment','FACT','SHARED_COMPANY_CANARY')",[shared]);
+   const preview=buildPrivacyReview({memberships:[{companyId:own,role:'owner',members:2,owners:1},{companyId:shared,role:'member',members:2,owners:1}],subscriptionCount:0,financialRecordCount:0,activeJobCount:0});
+   assert.equal(preview.automaticDeletionAllowed,false);
+   assert.equal(preview.companies.find(c=>c.companyId===own).handling,'TRANSFER_OWNERSHIP_FIRST');
+   assert.equal(preview.companies.find(c=>c.companyId===shared).handling,'PRESERVE_SHARED_COMPANY');
+   // Fixture-only manual scenario: the second member leaves the disposable company first.
+   await db.query('delete from company_members where company_id=$1 and user_id=$2',[own,remaining]);
+   await db.exec('begin');
+   try{
+    await db.query('select id from companies where id=any($1::uuid[]) for update',[[own,shared]]);
+    assert.equal((await db.query('select count(*)::int n from company_members where company_id=$1',[own])).rows[0].n,1);
+    assert.equal((await db.query("select count(*)::int n from company_members where company_id=$1 and user_id<>$2 and role='owner'",[shared,leaving])).rows[0].n,1);
+    await db.query('delete from company_members where company_id=$1 and user_id=$2',[shared,leaving]);
+    await db.query('delete from companies where id=$1',[own]);
+    await db.query('delete from auth.users where id=$1',[leaving]);
+    await db.exec('commit');
+   }catch(e){await db.exec('rollback');throw e;}
+   assert.equal((await db.query('select count(*)::int n from profiles where id=$1',[leaving])).rows[0].n,0);
+   assert.equal((await db.query('select count(*)::int n from company_members where user_id=$1',[leaving])).rows[0].n,0);
+   assert.equal((await asUser('select value from business_memories where company_id=$1',[shared],remaining))[0].value,'SHARED_COMPANY_CANARY');
+   assert.equal((await asUser('select * from business_memories where company_id=$1',[shared],leaving)).length,0);
   });
  }finally{await db.close();}
 });

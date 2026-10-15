@@ -4,9 +4,11 @@ import {createClient} from '@supabase/supabase-js';
 import {randomUUID,randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {loadStagingEnvironment,stagingDatabaseConfig} from './staging-config.mjs';
+import {runBoundedStagingLoad,StagingLoadFailure} from './staging-load.mjs';
 
 const manifestPath=new URL('../.test-build/staging-integration-state.json',import.meta.url);
-const reportPath=new URL('../.test-build/staging-integration-report.json',import.meta.url);
+const loadMode=process.argv.includes('--load');
+const reportPath=new URL(loadMode?'../.test-build/staging-load-report.json':'../.test-build/staging-integration-report.json',import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],cleanup:false};
 let phase='configuration',admin,state;
 class CheckFailure extends Error {}
@@ -103,6 +105,11 @@ try{
  requireTrue(data(await b.session.from('company_facts').select('id').eq('company_id',a.company),'cross_fact_read').length===0,'cross_fact_leak');
  denied(await b.session.rpc('save_company_fact',{p_company_id:a.company,p_key:'segment',p_value:'FORBIDDEN',p_expected_version:1}),'cross_fact_rpc_write');
  passed('confirmed_memory_rpc_and_tenant_isolation');
+ if(loadMode){
+  phase='bounded_load';
+  report.load=await runBoundedStagingLoad(admin,users);
+  passed('bounded_authenticated_load_isolation_and_concurrent_version_conflicts');
+ }
  phase='operations_authorization';
  denied(await a.session.from('operations_controls').update({disable_ai:false}).eq('id',true),'client_cannot_unpause_ai');
  denied(await a.session.rpc('operations_change',{p_actor:a.id,p_kind:'controls',p_key:'disable_ai',p_value:false,p_version:controls.version,p_reason:'FORBIDDEN FIXTURE CHANGE'}),'client_cannot_call_admin_rpc');
@@ -126,12 +133,13 @@ try{
  report.passed=true;
 }catch(error){
  report.passed=false;report.failedPhase=phase;process.exitCode=1;
- if(error instanceof CheckFailure)report.failedCheck=error.message;
+ if(error instanceof CheckFailure||error instanceof StagingLoadFailure)report.failedCheck=error.message;
+ if(error instanceof StagingLoadFailure&&error.diagnostics)report.diagnostics=error.diagnostics;
  console.error(JSON.stringify({failedPhase:phase,failedCheck:report.failedCheck,note:'Remote response and credentials omitted.'}));
 }finally{
  if(state){try{await cleanup();}catch(error){report.passed=false;report.cleanup=false;state.status='cleanup_required';await saveState();process.exitCode=1;console.error(JSON.stringify({failedPhase:'cleanup',failedCheck:error instanceof CheckFailure?error.message:undefined,note:'Inspect the private fixture manifest before another run.'}));}}
  report.finishedAt=new Date().toISOString();
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
  await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');
- console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:'.test-build/staging-integration-report.json'}));
+ console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:loadMode?'.test-build/staging-load-report.json':'.test-build/staging-integration-report.json'}));
 }

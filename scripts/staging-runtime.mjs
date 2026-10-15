@@ -20,7 +20,9 @@ export function stagingRuntimeEnvironment(staging,ambientKeys=[],parent=process.
   env.CRON_SECRET=randomBytes(32).toString('hex');
   env.SEED_EXTERNAL_MODE='DISABLED';
   // Core staging is deliberately incapable of paid calls or scheduled work.
-  for(const key of Object.keys(env))if(/^(OPENAI_|STRIPE_)/.test(key))env[key]='';
+  for(const key of Object.keys(env))if(/^(OPENAI_|STRIPE_|RESEND_)/.test(key))env[key]='';
+  env.SEED_ALERTS_ENABLED='false';
+  env.RESEND_API_KEY='';
   for(const key of ['OPENAI_API_KEY','OPENAI_MODEL','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET'])env[key]='';
   env.SEED_JOURNAL_ENABLED='false';
   env.VERCEL_ENV='';
