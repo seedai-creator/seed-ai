@@ -40,8 +40,8 @@ export function renderOperationalAlert(raw: unknown) {
   });
   return {
     from: row.sender, to: [row.recipient],
-    subject: `[SEED ${row.environment}] ${row.severity} — verificar operação`,
-    text: [`SEED AI — alerta operacional ${row.severity}`, `Ambiente: ${row.environment}`,
+    subject: `[SeedAI ${row.environment}] ${row.severity} — verificar operação`,
+    text: [`SeedAI — alerta operacional ${row.severity}`, `Ambiente: ${row.environment}`,
       `Registrado: ${new Date(row.created_at).toISOString()}`, `Referência: ${row.id}`, '', ...lines, '',
       'Confira o painel administrativo e os registros do provedor. Este alerta não confirma a causa da falha.',
       'Custos são estimativas e reservas, não uma fatura. O limite de referência não inclui exceções temporárias.',

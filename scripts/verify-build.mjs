@@ -6,6 +6,7 @@ delete env.VERCEL_ENV;
 for(const key of Object.keys(env))if(key.startsWith('SEED_')&&key.endsWith('_ENABLED'))env[key]='false';
 for(const key of ['OPERATIONS','ALERTS','COCKPIT','GROWTH_MAP','GOALS','RADAR','SIMULATOR','JOURNAL'])env[`SEED_${key}_ENABLED`]='false';
 env.RESEND_API_KEY='';
+env.SEED_HEALTH_TOKEN='';
 const command=process.argv.includes('--serve')?['start','--hostname','127.0.0.1','--port','3002']:['build'];
 const child=spawn(process.execPath,['node_modules/next/dist/bin/next',...command],{env,stdio:'inherit'});
 child.on('exit',code=>{process.exitCode=code??1;});

@@ -123,7 +123,7 @@ Não existe política jurídica final aprovada nem expurgo automático validado.
 | Solicitações de suporte/privacidade | Durante tratamento e prazo justificado de comprovação | Prazo, expurgo de texto livre e acesso do operador |
 | Backups | Retenção do plano contratado; acesso restrito | Confirmar duração e propagação de exclusões após restauração |
 
-Fornecedores existentes: Supabase (Auth/banco), Vercel (hospedagem/logs), OpenAI (inferência), Stripe (pagamento em teste). Não foram adicionados analytics de terceiros, cookies de marketing, ferramenta externa de monitoramento ou envio automático de relatórios de erro. Avaliar contratos, regiões e minimização antes de ativá-los.
+Fornecedores existentes: Supabase (Auth/banco), Vercel (hospedagem/logs), OpenAI (inferência), Stripe (pagamento em teste), Resend (e-mails transacionais e teste autorizado de alertas), Zoho (caixa empresarial) e Gmail (contato de privacidade/alertas). GitHub hospeda código público e CI. O verificador externo preparado transmite somente uma resposta operacional mínima; não envia conversas ou dados empresariais. Seu agendamento e notificação ainda não estão ativos. Não foram adicionados analytics de terceiros ou cookies de marketing. Avaliar contratos, regiões e minimização por serviço.
 
 ## Ensaio de beta e critérios de saída
 
@@ -188,3 +188,39 @@ Para o ensaio de reversão, preparar duas versões READY, confirmar o mesmo proj
 O acesso automatizado deve ser temporário, enviado por cabeçalho somente à origem de staging e revogado em `finally`. Não colocá-lo na URL ou em logs, nem enviar esse cabeçalho a Supabase/outros destinos. Criar apenas fixtures com identificadores próprios, remover somente essas fixtures e verificar os controles e os usuários preexistentes ao terminar. O teste não deve enviar e-mails nem consumir IA. Confirmar anonimamente a proteção e a landing oficial depois do ensaio.
 
 Em novos projetos, a Vercel pode classificar o primeiro envio como Production mesmo quando solicitado Preview. Se isso ocorrer, deixar o validador falhar; não copiar as credenciais de teste para Production como atalho. Inspecionar o target retornado antes de atribuir o alias. Fonte: [ambientes da Vercel](https://vercel.com/docs/deployments/environments) e [controle de acesso Vercel](https://vercel.com/docs/deployment-protection/methods-to-protect-deployments/vercel-authentication).
+
+## Catálogo instalado e histórico de migrações
+
+`node scripts/prepare-schema-audit.mjs` instala as migrações em PostgreSQL local isolado e gera o catálogo esperado e uma consulta somente de leitura em `.test-build/schema-audit/`. Executar essa consulta no projeto explicitamente escolhido, salvar apenas seu resultado `snapshot` em arquivo privado e comparar com `node scripts/prepare-schema-audit.mjs compare <arquivo>`. Para o baseline anterior à Fase 13, usar `--through=202610090004` tanto na preparação quanto na comparação.
+
+O comparador verifica tabelas, colunas, nulidade, defaults, constraints, índices, triggers, RLS/policies, grants, funções, configurações e hashes dos corpos. Não lê linhas empresariais. Objetos adicionais aparecem como extras; não são autorização para apagar estruturas compartilhadas da landing. Diferenças de corpos exigem revisão; igualdade de contagem não é equivalência. Owners, extensões gerenciadas, jobs de plataforma e objetos fora do schema público precisam de inspeção separada.
+
+A auditoria de 15/10 comprovou o contrato instalado no staging, mas não reparou o histórico. Migrações antigas executadas pelo SQL Editor não aparecem no ledger e três recentes usam timestamps remotos diferentes. Antes de usar migrações automáticas: salvar evidências e backup, mapear cada versão/local/remota e seus hashes, revisar mudanças efetivamente instaladas, preparar a reconciliação de histórico e conferir a lista/dry-run. Reparar histórico altera metadados, não instala schema; não marcar uma migração como aplicada apenas por seu nome. Nunca reaplicar o bootstrap sobre banco existente. [Documentação de migrações](https://supabase.com/docs/guides/deployment/database-migrations) e [repair](https://supabase.com/docs/reference/cli/supabase-migration-repair).
+
+## Regressão comercial e senha em staging
+
+`npm run staging:test -- --commercial` usa Auth/PostgREST reais e eventos de billing explicitamente fictícios. Valida FREE/PRO, pagamento atrasado, recuperação, cancelamento, repetição simultânea, ordem de eventos, preço e isolamento. Um checkout sozinho não libera PRO. O preço é uma fixture inativa; planos/mercados globais não são alterados. IDs persistem antes das gravações; a limpeza valida membros e recusa remover dados compartilhados com terceiros. O manifesto anterior deve estar limpo antes de novo ensaio.
+
+Não é teste de Checkout, assinatura de webhook recebida pela rede Stripe, reembolso ou compras de lojas. Esses fluxos exigem sandbox e roteiro próprios antes do beta comercial. Não transformar esse roteiro em lançador de eventos de produção.
+
+`npm run staging:test -- --password-policy` confirma a recusa de uma senha comprometida em conta fictícia. A proteção foi habilitada no staging em 15/10; produção permanece como estava. O teste não lê senhas de usuários nem envia e-mail. Evidências e relatórios ficam em `.test-build/`; preservá-los antes de repetir porque o relatório atual é substituído.
+
+## Verificação externa de saúde — candidata, ainda sem ativação
+
+`GET /api/internal/health` exige `Authorization: Bearer <SEED_HEALTH_TOKEN>`, token dedicado de 32 a 256 caracteres seguros para URL. O validador recusa reutilizar credenciais privilegiadas ou expor esse token em `NEXT_PUBLIC_*`. Autenticação ocorre antes de acessar o banco; respostas são mínimas e não armazenáveis. O token permite somente consultar saúde, não executar cron, ler dados empresariais ou alterar controles.
+
+O endpoint retorna 200 apenas se o banco responder, houver recibo `scheduler/CRON_FINISHED` nos últimos cinco minutos e não houver falha recente ou entrega de alerta parada por mais de 15 minutos. Ausência, falha ou timeout retorna 503; token ausente/inválido retorna 401. As consultas têm limite de três segundos. O recibo é gravado após completar o handler de cron e os alertas; não certifica que cada job de negócio foi bem-sucedido nem que o e-mail chegou à caixa de entrada. Um recibo por minuto gera até 1.440 eventos/dia; retenção e expurgo dependem da política aprovada. Não registrar conteúdo de empresas nesse recibo.
+
+O script `node scripts/run-health-check.mjs` usa somente `SEED_HEALTH_URL` e `SEED_HEALTH_TOKEN`, recusa hosts não permitidos e redirecionamentos e encerra com erro em oito segundos ou resposta inválida. O workflow `operational-health.yml` foi preparado com execução **somente manual**. Nenhum token foi cadastrado no GitHub/Vercel; nenhuma rotina periódica ou notificação de falha foi ativada neste complemento.
+
+Ativação após aprovação da liberação:
+
+1. Configurar token dedicado no servidor e no segredo do workflow, sem copiar qualquer chave de banco, cron ou provedor para o monitor.
+2. Publicar o candidato e abrir no firewall apenas o caminho exato `/api/internal/health`, mantendo a autenticação do endpoint. Preservar o bloqueio de todas as demais rotas e a landing.
+3. Validar 401 sem token, 200 saudável, 503 sem cron/alerta travado e falha diante de indisponibilidade/redirect. Não adulterar dados reais para fabricar sucesso.
+4. Executar a checagem manual e comprovar uma notificação externa de falha e recuperação no canal escolhido. Não presumir que ativar um workflow comprova notificação por e-mail.
+5. Só então ativar o agendamento revisado e registrar dono, intervalo e tolerância de resposta. Agendamentos GitHub podem atrasar; este mecanismo não é SLA nem garantia de aviso imediato.
+
+`node scripts/test-staging-health.mjs --run` após `npm test` executa as mesmas consultas em staging e confirma que a chave pública não lê as tabelas. É somente leitura. A ausência de cron no Preview protegido deve produzir estado degradado, sem recibos artificiais.
+
+Limites: não monitora validade de backup, quota de infraestrutura, todas as filas, saldo de provedores ou falhas de entrega anteriores à janela observada. O monitor ainda precisa de ativação e teste de notificação independente. Essas pendências não são resolvidas por um build verde.

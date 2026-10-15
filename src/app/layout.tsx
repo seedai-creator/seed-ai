@@ -6,7 +6,7 @@ import { SecondaryLanguage } from "@/components/secondary-language";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslator();
-  return { title: "SEED AI", description: t("home.tagline") };
+  return { title: "SeedAI", description: t("home.tagline") };
 }
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();

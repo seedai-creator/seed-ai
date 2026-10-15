@@ -7,3 +7,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Marca
+
+O nome da marca é **SeedAI**, sempre junto e com essa capitalização, conforme correção do titular em 15/10/2026. Use essa grafia nos textos, interfaces e documentos novos ou revisados. A razão social é **Seed Tecnologias LTDA**. Preserve o acrônimo **SEED** no nome **Método SEED** e os identificadores técnicos existentes (variáveis, nomes de arquivos e rotas).

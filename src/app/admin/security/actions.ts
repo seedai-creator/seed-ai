@@ -19,7 +19,7 @@ export async function enrollAdminMfa():Promise<MfaState>{
    const removed=await supabase.auth.mfa.unenroll({factorId:factor.id});
    if(removed.error)return {error:failure};
   }
-  const result=await supabase.auth.mfa.enroll({factorType:'totp',issuer:'SEED AI',friendlyName:'SEED Admin '+new Date().toISOString()});
+  const result=await supabase.auth.mfa.enroll({factorType:'totp',issuer:'SeedAI',friendlyName:'SeedAI Admin '+new Date().toISOString()});
   if(result.error)return {error:failure};
   return {factorId:result.data.id,qr:result.data.totp.qr_code};
  }catch{return {error:failure};}

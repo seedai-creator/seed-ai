@@ -1,4 +1,4 @@
-# SEED AI
+# SeedAI
 Inteligência estratégica empresarial. Next.js 16 App Router, React, TypeScript,
 Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 
@@ -7,7 +7,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 2: código de autenticação, empresas e RLS implementado. Projeto Supabase conectado e migração aplicada; RLS confirmada nas três tabelas. Cadastro e login reais confirmados pelo proprietário; acesso à empresa e persistência da sessão verificados no navegador.
 - Fase 3: concluída. Memória confirmada, correção e uso em nova conversa validados com Supabase e OpenAI reais em 25/09/2026.
 - Fase 4: concluída em 25/09/2026. Dez categorias integradas; 32 testes locais e 26/26 exemplos reais de classificação passaram.
-- Fase 5: SEED Brain implementado e validado com memória + metodologia em testes reais.
+- Fase 5: SeedAI Brain implementado e validado com memória + metodologia em testes reais.
 - Fases 6–9.3: implementadas; histórico e evidências nos relatórios abaixo.
 - Fase 9.4: Execution Loop implementado e validado com IA real, incluindo memória em nova conversa, revisão, aprendizado e novo plano. Consulte [o relatório](docs/PHASE_9_4_DELIVERY.md).
 - Fase 9.5: Modelo Vivo publicado, migração aplicada, 195 testes aprovados e fluxo principal validado com IA real; correções e limites da validação documentados. Consulte [o relatório](docs/PHASE_9_5_DELIVERY.md).
@@ -19,6 +19,10 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
 - Fase 13: em implementação; staging hospedado e protegido, MFA, exportação, recuperação, backup restaurado e troca da chave OpenAI verificados. Em 15/10, exclusão fictícia com empresa compartilhada, carga limitada, correção de conflitos e reversão do endereço Preview também passaram. A liberação do beta continua condicionada às pendências operacionais e jurídicas. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
+
+Privacidade: [minuta da política em português brasileiro](docs/legal/POLITICA_DE_PRIVACIDADE_PT_BR.md), preparada em 15/10/2026 para revisão. Ainda não aprovada nem publicada; [decisões e evidências](docs/legal/REVISAO_PRIVACIDADE.md). O aviso da lista de espera tem escopo separado.
+
+Termos: [minuta dos Termos de Uso da SeedAI](docs/legal/TERMOS_DE_USO_PT_BR.md), com identificação empresarial, limites, beta e condições para futuras assinaturas web/lojas. Ainda não aprovada nem publicada; [revisão e dependências de lançamento](docs/legal/REVISAO_TERMOS_DE_USO.md). Meta informada pelo titular: abertura pública em **04/11/2026**, com beta privado antes. Contas de desenvolvedor, versões móveis e publicação nas lojas ainda não estão concluídas; não abrir produção automaticamente nessa data.
 
 ## Executar localmente
 Node.js 22 ou superior e npm (pipeline configurado para Node 26.10.0).
@@ -64,11 +68,20 @@ e limpeza ao terminar, mantendo IA pausada. Esses comandos usam exclusivamente
 `.env.staging.local`, ignorado pelo Git. Esse arquivo não inicia nem configura
 automaticamente o app Next.js. Consulte o procedimento antes de executar.
 
+Verificações adicionais da Fase 13: `npm run staging:test -- --commercial`
+testa conciliação com eventos sintéticos e contas reais temporárias; `--password-policy`
+confirma a rejeição de senha comprometida. Ambos removem somente suas fixtures.
+Após `npm test`, `node scripts/test-staging-health.mjs --run` consulta a saúde do
+staging sem gravar dados. `node scripts/prepare-schema-audit.mjs` prepara o catálogo
+esperado para comparação, sem reparar o histórico nem aplicar migrações remotas.
+O monitor externo é opcional e ainda não está ativo: consulte a seção correspondente
+no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+
 ## Uso
 1. Criar conta com nome, e-mail e senha; confirmar o e-mail e entrar.
 2. Uma empresa inicial é criada automaticamente pelo banco.
 3. Renomear Minha empresa e acessar o espaço da empresa.
-4. Conversar com a SEED; Enter envia e Shift+Enter cria linha.
+4. Conversar com a SeedAI; Enter envia e Shift+Enter cria linha.
 5. O seletor do cabeçalho leva à lista de empresas.
 6. Criar/selecionar outra empresa começa uma conversa vazia.
 7. Sair encerra a sessão local.
@@ -241,10 +254,10 @@ A amostra inclui duas ou mais mensagens por categoria, negação, prioridade ent
 continuação, mudança de assunto e instrução maliciosa na memória sintética.
 Fase 5 autorizada em 26/09/2026.
 
-## SEED Brain — Fase 5
+## SeedAI Brain — Fase 5
 Conhecimento em src/lib/brain/modules: identity, method-seed, diagnosis, sales,
 marketing, positioning, pricing, growth, decision, expansion, launch e limits.
-Base inicial derivada da especificação SEED; não é pesquisa de mercado nem conteúdo
+Base inicial derivada da especificação SeedAI; não é pesquisa de mercado nem conteúdo
 externamente validado. Versionada em código com BRAIN_VERSION.
 
 Fluxo atual: autorização → memória da empresa → classificação → retrieval local por
@@ -275,7 +288,7 @@ Não confundir classificação correta com qualidade estratégica: conferir a re
 contra os critérios em rubric. Não usar dados reais nos arquivos de avaliação.
 
 Na aplicação local, confirme segmento/cidade da sua empresa e inicie nova conversa.
-Pergunte sobre vendas, preços ou expansão: a SEED deve usar o contexto já conhecido,
+Pergunte sobre vendas, preços ou expansão: a SeedAI deve usar o contexto já conhecido,
 aplicar o protocolo pertinente e pedir somente os dados essenciais que faltam.
 Para testar sem dados reais, use a empresa identificada como TESTE FASE 3 — DADOS FICTÍCIOS.
 
@@ -335,7 +348,7 @@ Essa avaliação usa dados sintéticos e faz chamadas pagas à OpenAI.
 A resposta empresarial inclui diagnosis: situation, objective, main_bottleneck,
 secondary_bottlenecks, evidence, hypotheses, missing_data, opportunities, risks,
 priorities e confidence. Saudações GENERAL podem retornar null.
-A interface mostra Diagnóstico SEED, expansível, junto da resposta correspondente.
+A interface mostra Diagnóstico SeedAI, expansível, junto da resposta correspondente.
 Diagnósticos pertencem à conversa em memória nesta fase; não são gravados no banco
 nem transformados automaticamente em fatos, estratégias ou ações.
 
@@ -359,7 +372,7 @@ Referência do contrato: https://developers.openai.com/api/docs/guides/structure
 
 ### Como testar
 1. Execute npm run dev -- --port 3001 e abra http://127.0.0.1:3001.
-2. Entre e envie 'Quero vender mais'. Abra Diagnóstico SEED: o gargalo deve permanecer
+2. Entre e envie 'Quero vender mais'. Abra Diagnóstico SeedAI: o gargalo deve permanecer
    desconhecido quando não houver evidências suficientes; observe dados faltantes.
 3. Em empresa fictícia, relate muitos orçamentos, poucas vendas e demora no atendimento.
    A análise deve investigar conversão antes de sugerir mais anúncios.
@@ -385,7 +398,7 @@ preserva a falha para rastreabilidade. Não há retries automáticos em produç�
 A instrução do diagnóstico reserva cálculos de taxas e projeções ao software; nesta fase a IA deve citar apenas números fornecidos, sem produzir novas métricas calculadas.
 
 ## Fase 7 — Estratégias e plano de ação
-Transformar em Estratégia SEED abre um rascunho editável a partir do diagnóstico.
+Transformar em Estratégia SeedAI abre um rascunho editável a partir do diagnóstico.
 A conversão é determinística: reaproveita objetivo, situação, hipótese e prioridades;
 não realiza outra chamada paga à IA nem inventa responsáveis, datas, indicadores ou metas.
 Revise o texto, complete como/por que executar e confirme explicitamente para persistir.
@@ -411,7 +424,7 @@ seed-workspace.tsx, tipos Supabase, quatro catálogos de idioma e testes/strateg
 
 ### Testar
 1. Na empresa fictícia, converse até receber um diagnóstico e clique Transformar em
-   Estratégia SEED abaixo da resposta. Revise e complete os campos, adicione/remova ações.
+   Estratégia SeedAI abaixo da resposta. Revise e complete os campos, adicione/remova ações.
 2. Confirme o salvamento. Abra Ver estratégia ou o link Estratégias no cabeçalho.
 3. Atualize uma ação para Em andamento e depois Concluída. Recarregue e confira.
 4. Inicie outra conversa: a estratégia continua em Estratégias.
@@ -587,7 +600,7 @@ A seção **Mapa de crescimento** fica em **Diagnóstico**. Ela usa seis dimens�
 - Requer também `SEED_GOALS_ENABLED=true` e `SEED_JOURNAL_ENABLED=true`.
 - O direito `growth_map` dos planos pagos permite gerar/atualizar; mapas existentes permanecem legíveis após downgrade. Nenhum preço, assinatura ou orçamento foi alterado.
 - O worker protegido existente processa atualizações, leases e tentativas. Atualização manual: no máximo uma por empresa a cada60segundos.
-- Para testar: informe resultados de períodos completos em Minha Empresa, abra Diagnóstico, atualize o mapa, confira evidências e use **Investigar com a SEED**. Corrija o indicador de origem para verificar a invalidação do mapa.
+- Para testar: informe resultados de períodos completos em Minha Empresa, abra Diagnóstico, atualize o mapa, confira evidências e use **Investigar com a SeedAI**. Corrija o indicador de origem para verificar a invalidação do mapa.
 - Verificações: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 - Teste real opcional: compilar `npx tsc -p tsconfig.growth-live.json`; depois `node --conditions=react-server scripts/verify-growth-live.mjs --live-authorized`, somente com autorização específica vigente. O roteiro exige uma autorização própria da fase, limita o gasto adicional, usa empresa identificada como fictícia e restaura o plano no encerramento. Não executar para renovação automática de testes.
 - Nenhuma dependência adicionada. Fase11 concluída; Fase12 descrita abaixo.

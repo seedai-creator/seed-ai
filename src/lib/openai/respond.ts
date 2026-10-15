@@ -12,7 +12,7 @@ import type {Simulation,SimulationLifecycle} from '../simulation/domain';
 export async function respond(messages: ChatMessage[], memory: string, signal?: AbortSignal, market: MarketContext = EMPTY_MARKET, metering?: { companyId: string; requestId: string }, previousDiagnosis: Diagnosis | null = null, execution?: ExecutionSnapshot, attachment=false,lifecycle?:SimulationLifecycle): Promise<StructuredAnswer & { diagnosis: Diagnosis | null;execution_commands:ExecutionCommand[];simulation:Simulation|null }> {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   const model = process.env.OPENAI_MODEL?.trim();
-  if (!apiKey || !model) throw new ChatError(503, "NOT_CONFIGURED", "A SEED ainda precisa ser configurada no servidor.");
+  if (!apiKey || !model) throw new ChatError(503, "NOT_CONFIGURED", "A SeedAI ainda precisa ser configurada no servidor.");
   const client = new OpenAI({ apiKey, timeout: 60000, maxRetries: 0 });
   try {
     const timeout = AbortSignal.timeout(60000);

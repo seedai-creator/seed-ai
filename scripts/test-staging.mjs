@@ -5,10 +5,13 @@ import {randomUUID,randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {loadStagingEnvironment,stagingDatabaseConfig} from './staging-config.mjs';
 import {runBoundedStagingLoad,StagingLoadFailure} from './staging-load.mjs';
+import {runStagingCommercial,CommercialCheckFailure} from './staging-commercial.mjs';
 
 const manifestPath=new URL('../.test-build/staging-integration-state.json',import.meta.url);
 const loadMode=process.argv.includes('--load');
-const reportPath=new URL(loadMode?'../.test-build/staging-load-report.json':'../.test-build/staging-integration-report.json',import.meta.url);
+const commercialMode=process.argv.includes('--commercial');
+const reportName=commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
+const reportPath=new URL('../.test-build/'+reportName,import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],cleanup:false};
 let phase='configuration',admin,state;
 class CheckFailure extends Error {}
@@ -31,6 +34,18 @@ async function cleanup(){
   requireTrue(page<10,'cleanup_user_scan_limit');
  }
  const ids=fixtures.map(user=>user.id);
+ if(state.commercial){
+  const records=data(await admin.from('subscriptions').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_subscriptions');
+  requireTrue(records.every(r=>ids.includes(r.user_id)),'cleanup_foreign_subscription_refused');
+  const attempts=data(await admin.from('checkout_attempts').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_checkouts');
+  requireTrue(attempts.every(r=>ids.includes(r.user_id)),'cleanup_foreign_checkout_refused');
+  data(await admin.from('subscriptions').delete().eq('price_id',state.commercial.priceId),'cleanup_subscriptions');
+  data(await admin.from('checkout_attempts').delete().eq('price_id',state.commercial.priceId),'cleanup_checkouts');
+  data(await admin.from('commercial_events').delete().in('dedupe_key',state.commercial.eventIds),'cleanup_commercial_events');
+  data(await admin.from('billing_events').delete().in('provider_event_id',state.commercial.eventIds),'cleanup_billing_events');
+  data(await admin.from('commercial_prices').delete().eq('id',state.commercial.priceId),'cleanup_price');
+  requireTrue(data(await admin.from('commercial_prices').select('id').eq('id',state.commercial.priceId),'cleanup_price_check').length===0,'cleanup_price_remaining');
+ }
  if(ids.length){
   const memberships=data(await admin.from('company_members').select('company_id').in('user_id',ids),'cleanup_memberships');
   const companyIds=[...new Set(memberships.map(row=>row.company_id))];
@@ -56,6 +71,7 @@ async function cleanup(){
 
 try{
  requireTrue(process.argv.includes('--run'),'Use --run to execute the isolated integration test.');
+ requireTrue(!(loadMode&&commercialMode),'run_load_and_commercial_separately');
  const config=stagingDatabaseConfig(await loadStagingEnvironment());
  report.project=config.project;
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
@@ -89,6 +105,12 @@ try{
  passed('two_real_logins_profiles_memberships_and_invitations');
  const [a,b]=users;
  requireTrue(a.company!==b.company,'companies_must_differ');
+ if(process.argv.includes('--password-policy')){
+  phase='password_policy';
+  const weak=await a.session.auth.updateUser({password:'password123'});
+  requireTrue(weak.error?.code==='weak_password','known_leaked_password_not_rejected');
+  passed('known_leaked_password_rejected_by_real_auth');
+ }
  phase='tenant_isolation';
  const anonymous=client(config.url,config.publicKey);
  denied(await anonymous.from('companies').select('id'),'anonymous_company_read');
@@ -105,6 +127,14 @@ try{
  requireTrue(data(await b.session.from('company_facts').select('id').eq('company_id',a.company),'cross_fact_read').length===0,'cross_fact_leak');
  denied(await b.session.rpc('save_company_fact',{p_company_id:a.company,p_key:'segment',p_value:'FORBIDDEN',p_expected_version:1}),'cross_fact_rpc_write');
  passed('confirmed_memory_rpc_and_tenant_isolation');
+ if(commercialMode){
+  phase='commercial_reconciliation';
+  state.commercial={priceId:randomUUID(),providerPriceId:'price_fixture_'+run,customerId:'cus_fixture_'+run,
+   subscriptionId:'sub_fixture_'+run,eventIds:Array.from({length:7},(_,i)=>'evt_fixture_'+run+'_'+i)};
+  await saveState();
+  report.commercial=await runStagingCommercial(admin,users,state.commercial);
+  passed('real_database_billing_replay_failure_cancellation_and_isolation');
+ }
  if(loadMode){
   phase='bounded_load';
   report.load=await runBoundedStagingLoad(admin,users);
@@ -133,7 +163,7 @@ try{
  report.passed=true;
 }catch(error){
  report.passed=false;report.failedPhase=phase;process.exitCode=1;
- if(error instanceof CheckFailure||error instanceof StagingLoadFailure)report.failedCheck=error.message;
+ if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure)report.failedCheck=error.message;
  if(error instanceof StagingLoadFailure&&error.diagnostics)report.diagnostics=error.diagnostics;
  console.error(JSON.stringify({failedPhase:phase,failedCheck:report.failedCheck,note:'Remote response and credentials omitted.'}));
 }finally{
@@ -141,5 +171,5 @@ try{
  report.finishedAt=new Date().toISOString();
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
  await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');
- console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:loadMode?'.test-build/staging-load-report.json':'.test-build/staging-integration-report.json'}));
+ console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:'.test-build/'+reportName}));
 }

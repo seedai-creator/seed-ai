@@ -17,3 +17,10 @@ test('preview cannot pretend to be production and remote HTTP is forbidden',()=>
   assert.ok(environmentIssues({...fixture(),VERCEL_ENV:'preview',SEED_ENV:'production'}).some(x=>x.includes('Preview')));
   assert.ok(environmentIssues({...fixture(),NEXT_PUBLIC_SITE_URL:'http://staging.seed.example'}).some(x=>x.includes('HTTPS')));
 });
+test('health monitor requires a separate non-public credential when configured',()=>{
+  const env=fixture();
+  assert.deepEqual(environmentIssues({...env,SEED_HEALTH_TOKEN:'dedicated_monitor_fixture_'.repeat(3)}),[]);
+  assert.ok(environmentIssues({...env,SEED_HEALTH_TOKEN:env.CRON_SECRET}).some(x=>x.includes('privileged credential')));
+  assert.ok(environmentIssues({...env,SEED_HEALTH_TOKEN:'short'}).some(x=>x.includes('URL-safe')));
+  assert.ok(environmentIssues({...env,NEXT_PUBLIC_SEED_HEALTH_TOKEN:'fixture'}).some(x=>x.includes('must not be public')));
+});

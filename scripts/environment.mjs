@@ -23,8 +23,12 @@ export function environmentIssues(env) {
   if(env.STRIPE_SECRET_KEY&&!/^(sk|rk)_test_/.test(env.STRIPE_SECRET_KEY))issues.push('Stripe must remain in test mode');
   if(env.STRIPE_WEBHOOK_SECRET&&!env.STRIPE_WEBHOOK_SECRET.startsWith('whsec_'))issues.push('STRIPE_WEBHOOK_SECRET has an invalid format');
   if(env.CRON_SECRET&&env.CRON_SECRET.length<32)issues.push('CRON_SECRET must contain at least 32 characters');
+  if(env.SEED_HEALTH_TOKEN){
+    if(!/^[A-Za-z0-9_-]{32,256}$/.test(env.SEED_HEALTH_TOKEN))issues.push('SEED_HEALTH_TOKEN must contain 32 to 256 URL-safe characters');
+    if(['CRON_SECRET','SUPABASE_SECRET_KEY','OPENAI_API_KEY','STRIPE_SECRET_KEY','STRIPE_WEBHOOK_SECRET','RESEND_API_KEY'].some(key=>env[key]===env.SEED_HEALTH_TOKEN))issues.push('SEED_HEALTH_TOKEN must not reuse a privileged credential');
+  }
   if(env.SUPABASE_SECRET_KEY&&env.SUPABASE_SECRET_KEY===env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)issues.push('Public and server Supabase keys must differ');
-  for(const key of Object.keys(env))if(key.startsWith('NEXT_PUBLIC_')&&/(SECRET|PASSWORD|PRIVATE|OPENAI.*KEY|RESEND.*KEY|SERVICE_ROLE)/.test(key))issues.push(key+' must not be public');
+  for(const key of Object.keys(env))if(key.startsWith('NEXT_PUBLIC_')&&/(SECRET|PASSWORD|PRIVATE|OPENAI.*KEY|RESEND.*KEY|SERVICE_ROLE|HEALTH.*TOKEN)/.test(key))issues.push(key+' must not be public');
   for(const key of ['SEED_OPERATIONS_ENABLED','SEED_ALERTS_ENABLED','SEED_COCKPIT_ENABLED','SEED_GROWTH_MAP_ENABLED','SEED_GOALS_ENABLED','SEED_RADAR_ENABLED','SEED_SIMULATOR_ENABLED','SEED_JOURNAL_ENABLED'])if(env[key]&&!['true','false'].includes(env[key]))issues.push(key+' must be true or false');
   if(env.SEED_ALERTS_ENABLED==='true'){
     if(env.SEED_OPERATIONS_ENABLED!=='true')issues.push('Alerts require operations controls');
