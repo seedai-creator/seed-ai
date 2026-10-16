@@ -2,6 +2,7 @@ import {obj,str,nullable,list} from '../journal/domain';
 import {validateSchema,type Reliability} from '../reliability/contracts';
 import {memorySources} from '../reliability/validate';
 import {supportedNumber} from '../business-model/domain';
+import {hasPeriodEvidence} from './period-evidence';
 import type {ChatMessage} from '../chat/contracts';
 import type {StrategicRoute} from '../reliability/routing';
 import {calculate,quantity,FORMULAS,CALCULATION_VERSION,type Quantity,type Calculation,type Formula} from './calculation';
@@ -39,9 +40,9 @@ function groundedNumber(quote:string,q:Quantity) {
  const present=(n:number)=>supportedNumber(quote,n)||q.unit==='RATIO'&&quote.includes('%')&&supportedNumber(quote,n*100);
  return present(q.min)&&present(q.max);
 }
-export function parseExtraction(raw:unknown,messages:ChatMessage[],memory:string):Extraction {
+export function parseExtraction(raw:unknown,messages:ChatMessage[],memory:string,locale='pt-BR'):Extraction {
  if(!validateSchema(raw,EXTRACTION_SCHEMA))throw Error('SIMULATION_EXTRACTION_INVALID');
- const e=structuredClone(raw as Extraction),ids=new Set<string>(),rows=memorySources(memory);
+ const e=structuredClone(raw as Extraction),ids=new Set<string>(),rows=memorySources(memory),unverified=new Set<string>();
  for(const input of e.inputs){
   if(ids.has(input.id))throw Error('SIMULATION_DUPLICATE_INPUT');ids.add(input.id);quantity(input.value);
   if(input.kind!=='FACT'&&!input.limitation)throw Error('SIMULATION_ASSUMPTION_UNLABELED');
@@ -61,6 +62,7 @@ export function parseExtraction(raw:unknown,messages:ChatMessage[],memory:string
     }
    }
    if(!source?.includes(input.quote)||!groundedNumber(input.quote,input.value))throw Error('SIMULATION_NUMBER_UNGROUNDED');
+   if(!hasPeriodEvidence(input.quote,input.value))unverified.add(input.id);
   }
  }
  const scenarioIds=new Set<string>();
@@ -73,6 +75,19 @@ export function parseExtraction(raw:unknown,messages:ChatMessage[],memory:string
    if(available.has(c.id)||c.operands.some(o=>!available.has(o.input_id))||new Set(c.operands.map(o=>o.name)).size!==c.operands.length)throw Error('SIMULATION_CALCULATION_REFERENCE');
    for(const o of c.operands){const input=e.inputs.find(i=>i.id===o.input_id);if(input&&input.kind!=='FACT'&&!s.assumption_ids.includes(input.id))throw Error('SIMULATION_HIDDEN_ASSUMPTION');}
    available.add(c.id);
+  }
+ }
+ if(unverified.size){
+  const prompt=locale.startsWith('en')?'Confirm the period for':locale.startsWith('es')?'Confirma el período de':'Confirme o período de';
+  const labels=e.inputs.filter(i=>unverified.has(i.id)).map(i=>i.label).join(', ');
+  e.essential_missing=[`${prompt}: ${labels}`,...e.essential_missing].slice(0,6);
+  e.inputs=e.inputs.filter(i=>!unverified.has(i.id));
+  for(const s of e.scenarios){
+   const unavailable=new Set(unverified);
+   s.calculations=s.calculations.filter(c=>{if(c.operands.some(o=>unavailable.has(o.input_id))){unavailable.add(c.id);return false;}return true;});
+   s.assumption_ids=s.assumption_ids.filter(id=>!unverified.has(id));
+   // Qualitative model conclusions might refer to a rejected capacity/period.
+   s.qualitative_effects=[];
   }
  }
  return e;

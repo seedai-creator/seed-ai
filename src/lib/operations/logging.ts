@@ -11,7 +11,7 @@ export function safeLogFields(fields: Record<string, unknown>) {
   const safe: Record<string, string | number> = {};
   for (const [key,value] of Object.entries(fields)) {
     if (identifiers.has(key) && typeof value === 'string' && ID.test(value)) safe[key]=value;
-    else if (labels.has(key) && typeof value === 'string' && LABEL.test(value) && !/^(sk-|sk_|rk_|whsec_|sb_secret_|eyJ)/i.test(value)) safe[key]=value;
+    else if (labels.has(key) && typeof value === 'string' && LABEL.test(value) && !/^(sk-|sk_|rk_|whsec_|sb_secret_|re_|eyJ)/i.test(value)) safe[key]=value;
     else if (numbers.has(key) && typeof value === 'number' && Number.isFinite(value) && value>=0) safe[key]=value;
   }
   return safe;

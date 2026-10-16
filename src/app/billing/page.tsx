@@ -24,7 +24,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
   const countries=!c?await Promise.resolve().then(()=>commercialDatabase().from("commercial_markets").select("code,name").eq("status","ACTIVE").eq("signup_enabled",true).eq("disable_new_signups",false)).catch(()=>null):null;
   const price=c?await c.db.from("commercial_prices").select("currency,amount_minor").eq("market_code",c.market.code).eq("plan_code","PRO").eq("status","ACTIVE").is("effective_to",null).single():null;
   return <main className="account-shell"><div className="account-top"><Brand/><Link href="/">{t("strategy.back")}</Link></div><section className="account-card">
-    <p className="account-kicker">SEED AI</p><h1>{t("billing.title")}</h1><p>{t("billing.description")}</p>
+    <p className="account-kicker">SeedAI</p><h1>{t("billing.title")}</h1><p>{t("billing.description")}</p>
     {query.error&&<p role="alert">{t("billing.error")}</p>}
     {query.checkout==="returned"&&(c?.plan.code==="PRO"
       ? <p role="status">{t("billing.confirmed")}</p>
@@ -33,7 +33,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
       <p>{t("billing.current")}: <strong>{c.plan.code}</strong></p>
       {state&&<p role="status">{t(`billing.usage.${state}`)}</p>}
       {state&&usage?.data&&<div>
-        <p>{t("billing.analysisBalance",{used:Number(usage.data.diagnoses??0),limit:Number(usage.data.analysis_limit??c.policy.diagnoses)})}</p>
+        {c.policy.analysis_limit_mode !== 'budget' && <p>{t("billing.analysisBalance",{used:Number(usage.data.diagnoses??0),limit:Number(usage.data.analysis_limit??c.policy.diagnoses)})}</p>}
         <p>{t("billing.analysisDefinition")}</p>
         {usage.data.allowance_expires_at
           ? <p>{t("billing.testAllowanceUntil",{date:new Intl.DateTimeFormat(locale,{dateStyle:"medium",timeStyle:"short",timeZone:"UTC"}).format(new Date(usage.data.allowance_expires_at))})}</p>
@@ -44,7 +44,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
         <p>{t("billing.financialProtection")}</p>
       </div>}
       <p>{t("billing.dataPreserved")}</p>
-      <h2>SEED PRO</h2>{price?.data&&<p>{new Intl.NumberFormat(locale,{style:"currency",currency:price.data.currency}).format(Number(price.data.amount_minor)/100)} / {t("billing.month")}</p>}
+      <h2>SeedAI PRO</h2>{price?.data&&<p>{new Intl.NumberFormat(locale,{style:"currency",currency:price.data.currency}).format(Number(price.data.amount_minor)/100)} / {t("billing.month")}</p>}
       <p>{t("billing.continuous")}</p>
       <p>{t("billing.test")}</p>
       {c.plan.code==="FREE"&&isPlanAvailable(c.market,"PRO")&&<form action={startCheckout}><button className="primary-button">{t("billing.upgrade")}</button></form>}

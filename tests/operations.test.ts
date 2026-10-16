@@ -7,6 +7,7 @@ import {featureEnabled,externalMode} from '../src/lib/operations/flags';
 test('operational logs omit raw errors, documents, credentials and arbitrary values',()=>{
   const result=safeLogFields({requestId:'11111111-1111-4111-8111-111111111111',code:'PROVIDER_TIMEOUT',durationMs:100,password:'private',message:'Revenue details',body:{secret:'private'},model:'sk-'+ 'a'.repeat(40),companyId:'malicious\nrecord',costUsd:NaN});
   assert.deepEqual(result,{requestId:'11111111-1111-4111-8111-111111111111',code:'PROVIDER_TIMEOUT',durationMs:100});
+  assert.deepEqual(safeLogFields({provider:'re_'+'private'.repeat(8)}),{});
 });
 test('origin cannot be authorized by forging Host or X-Forwarded-Host',()=>{
   const request=new Request('https://seed.example/api/chat',{headers:{origin:'https://evil.example',host:'evil.example','x-forwarded-host':'evil.example'}});
@@ -31,7 +32,7 @@ test('production headers forbid framing and inline scripts without nonce',()=>{
   assert.match(h['Content-Security-Policy'],/nonce-randomNonce/);
   assert.doesNotMatch(h['Content-Security-Policy'],/script-src[^;]*unsafe-inline|unsafe-eval/);
   assert.match(h['Content-Security-Policy'],/frame-ancestors 'none'/);
-  assert.equal(h['Referrer-Policy'],'no-referrer');
+  assert.equal(h['Referrer-Policy'],'strict-origin');
   assert.ok(h['Strict-Transport-Security']);
   assert.equal(securityHeaders('randomNonce',true,false)['Strict-Transport-Security'],undefined);
 });

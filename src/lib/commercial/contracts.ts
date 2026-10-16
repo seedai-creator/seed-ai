@@ -4,6 +4,7 @@ export type UsageState = "NORMAL" | "APPROACHING_LIMIT" | "SOFT_LIMIT" | "HARD_L
 export type Feature = "chat" | "memory" | "diagnosis" | "strategies" | "decisions" | "experiments" | "advanced_analysis" | "growth_map" | "weekly_checkin" | "goals" | "metrics" | "reports";
 export type Flags = Partial<Record<Feature, boolean>>;
 export type UsagePolicy = {
+  analysis_limit_mode?: 'count' | 'budget';
   window: "lifetime" | "month"; target_usd: number; approaching_usd: number;
   soft_usd: number; warning_usd: number; heavy_usd: number; hard_usd: number;
   interactions: number; diagnoses: number; max_concurrent: number; requests_per_minute: number;
@@ -24,6 +25,7 @@ export type Subscription = {
 export type Override = { expires_at: string; plan_code?: "PRO"; flags?: Flags; policy?: UsagePolicy; market_access?: boolean };
 export function finiteNonnegative(value: number) { return Number.isFinite(value) && value >= 0; }
 export function validatePolicy(p: UsagePolicy): UsagePolicy {
+  if (p.analysis_limit_mode !== undefined && !['count','budget'].includes(p.analysis_limit_mode)) throw new Error('Invalid analysis limit mode');
   if (!["lifetime", "month"].includes(p.window)) throw new Error("Invalid policy window");
   const thresholds = [p.target_usd, p.approaching_usd, p.soft_usd, p.warning_usd, p.heavy_usd, p.hard_usd];
   if (thresholds.some((v, i) => !finiteNonnegative(v) || (i > 0 && v < thresholds[i - 1])) || p.hard_usd <= 0) throw new Error("Invalid thresholds");

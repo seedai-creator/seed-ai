@@ -1,4 +1,6 @@
 import {logEvent} from '../../../../lib/operations/logging';
+import {processOperationalAlerts} from '@/lib/operations/alert-worker';
+import {recordSchedulerCompletion} from '@/lib/operations/health-server';
 import {scheduleGrowth,processGrowthJob} from '@/lib/growth/server';
 import {externalEnabled} from '@/lib/external/domain';
 import {processExternalJob} from '@/lib/external/server';
@@ -17,7 +19,10 @@ export async function GET(request:Request){
  const actual=request.headers.get("authorization")??"";
  const target="Bearer "+expected;
  if(!expected||Buffer.byteLength(actual)!==Buffer.byteLength(target)||!timingSafeEqual(Buffer.from(actual),Buffer.from(target)))return new Response(null,{status:401});
- if(!journalEnabled()&&!radarEnabled()&&!externalEnabled())return Response.json({enabled:false});
+ const alerts=processOperationalAlerts();
+ let completed=false;
+ try{
+ if(!journalEnabled()&&!radarEnabled()&&!externalEnabled()){completed=true;return Response.json({enabled:false});}
  const afterId=new URL(request.url).searchParams.get("after");
  if(afterId&&!/^[a-f0-9-]{36}$/.test(afterId))return new Response(null,{status:400});
  const db=commercialDatabase();
@@ -40,5 +45,7 @@ export async function GET(request:Request){
  if(radarEnabled())try{await processRadarJob();}catch{logEvent('radar',{code:'SCHEDULE_FAILED'},'error');}
  await processGrowthJob();
  await externalWork;
+ completed=true;
  return Response.json({next:companies.data.length===25?companies.data.at(-1)?.id:null},{headers:{"Cache-Control":"no-store"}});
+ }finally{await alerts;if(completed)await recordSchedulerCompletion();}
 }

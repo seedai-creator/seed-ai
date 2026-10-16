@@ -7,6 +7,15 @@ import {stagingDatabaseConfig} from '../scripts/staging-config.mjs';
 const project='dgqvcvebydjxxkuvrgkl';
 const env={SEED_STAGING_SUPABASE_REF:project,SEED_PRODUCTION_SUPABASE_REF:'gqumxaapjyujrpqggnon',NEXT_PUBLIC_SUPABASE_URL:`https://${project}.supabase.co`};
 
+test('bootstrap accepts official CLI timestamps while rejecting paths, duplicates and malformed names',()=>{
+ const migration={name:'20261014211433_fixture.sql',sql:'begin; select 1; commit;'};
+ assert.match(buildStagingBootstrap([migration],project),/20261014211433_fixture.sql/);
+ for(const name of ['../20261014211433_fixture.sql','2026101421143_fixture.sql','20261014211433_fixture;drop.sql'])
+  assert.throws(()=>buildStagingBootstrap([{...migration,name}],project));
+ assert.throws(()=>buildStagingBootstrap([migration,migration],project));
+ assert.throws(()=>buildStagingBootstrap([{name:'20261013171010_waitlist_email_notifications.sql',sql:'select 1;'}],project),/transaction boundaries/);
+});
+
 test('staging configuration never accepts production, arbitrary hosts or missing keys',()=>{
  assert.equal(stagingDatabaseConfig(env,{requireKeys:false}).project,project);
  assert.throws(()=>stagingDatabaseConfig(env),/chaves/);

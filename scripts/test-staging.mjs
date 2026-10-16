@@ -1,14 +1,30 @@
 // Opt-in integration test. Uses only the isolated staging project and fictitious
-// accounts; never contacts OpenAI, Stripe or production. Passwords stay in memory.
+// accounts; never contacts OpenAI or production. The explicit --stripe-network
+// option contacts Stripe test mode only. Passwords stay in memory.
 import {createClient} from '@supabase/supabase-js';
 import {randomUUID,randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {loadStagingEnvironment,stagingDatabaseConfig} from './staging-config.mjs';
+import {runStagingWorkers,WorkerCheckFailure} from './staging-workers.mjs';
+import {runBoundedStagingLoad,StagingLoadFailure} from './staging-load.mjs';
+import {runStagingCommercial,CommercialCheckFailure} from './staging-commercial.mjs';
+import {stripeFixtureClient,runStagingStripe,cleanupStripeFixture,StripeCheckFailure} from './staging-stripe.mjs';
+import {runStagingStripeWebhook} from './staging-stripe-webhook.mjs';
+import {runStagingStripeHosted} from './staging-stripe-hosted.mjs';
+import {runStagingProcessors} from './staging-processors.mjs';
 
 const manifestPath=new URL('../.test-build/staging-integration-state.json',import.meta.url);
-const reportPath=new URL('../.test-build/staging-integration-report.json',import.meta.url);
+const workersMode=process.argv.includes('--workers');
+const processorsMode=process.argv.includes('--processors');
+const loadMode=process.argv.includes('--load');
+const commercialMode=process.argv.includes('--commercial');
+const webhookMode=process.argv.includes('--stripe-webhook');
+const hostedMode=process.argv.includes('--stripe-hosted');
+const stripeMode=hostedMode||webhookMode||process.argv.includes('--stripe-network');
+const reportName=hostedMode?'staging-stripe-hosted-report.json':processorsMode?'staging-processors-report.json':process.argv.includes('--stripe-renewals')?'staging-stripe-renewals-report.json':webhookMode?'staging-stripe-webhook-report.json':workersMode?'staging-workers-report.json':stripeMode?'staging-stripe-report.json':commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
+const reportPath=new URL('../.test-build/'+reportName,import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],cleanup:false};
-let phase='configuration',admin,state;
+let phase='configuration',admin,state,stripe;
 class CheckFailure extends Error {}
 function requireTrue(value,label){if(!value)throw new CheckFailure(label);}
 function data(result,label){requireTrue(!result.error,label);return result.data;}
@@ -19,6 +35,9 @@ function client(url,key){return createClient(url,key,{auth:{persistSession:false
 
 async function cleanup(){
  phase='cleanup';
+ if(state.commercial?.stripe){
+  report.stripeCleanup=await cleanupStripeFixture(stripe,state.commercial,state.run);
+ }
  // Also recover an account whose creation response timed out. Never delete by
  // prefix or user-provided ID alone: match the exact fixture email manifest.
  const fixtures=[];
@@ -29,6 +48,18 @@ async function cleanup(){
   requireTrue(page<10,'cleanup_user_scan_limit');
  }
  const ids=fixtures.map(user=>user.id);
+ if(state.commercial){
+  const records=data(await admin.from('subscriptions').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_subscriptions');
+  requireTrue(records.every(r=>ids.includes(r.user_id)),'cleanup_foreign_subscription_refused');
+  const attempts=data(await admin.from('checkout_attempts').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_checkouts');
+  requireTrue(attempts.every(r=>ids.includes(r.user_id)),'cleanup_foreign_checkout_refused');
+  data(await admin.from('subscriptions').delete().eq('price_id',state.commercial.priceId),'cleanup_subscriptions');
+  data(await admin.from('checkout_attempts').delete().eq('price_id',state.commercial.priceId),'cleanup_checkouts');
+  data(await admin.from('commercial_events').delete().in('dedupe_key',state.commercial.eventIds),'cleanup_commercial_events');
+  data(await admin.from('billing_events').delete().in('provider_event_id',state.commercial.eventIds),'cleanup_billing_events');
+  data(await admin.from('commercial_prices').delete().eq('id',state.commercial.priceId),'cleanup_price');
+  requireTrue(data(await admin.from('commercial_prices').select('id').eq('id',state.commercial.priceId),'cleanup_price_check').length===0,'cleanup_price_remaining');
+ }
  if(ids.length){
   const memberships=data(await admin.from('company_members').select('company_id').in('user_id',ids),'cleanup_memberships');
   const companyIds=[...new Set(memberships.map(row=>row.company_id))];
@@ -54,11 +85,15 @@ async function cleanup(){
 
 try{
  requireTrue(process.argv.includes('--run'),'Use --run to execute the isolated integration test.');
+ requireTrue(!process.argv.includes('--stripe-renewals')||webhookMode,'renewals_require_stripe_webhook_mode');
+ requireTrue([hostedMode,webhookMode,process.argv.includes('--stripe-network')].filter(Boolean).length<=1,'stripe_modes_are_exclusive');
+ requireTrue([loadMode,commercialMode,stripeMode,workersMode,processorsMode].filter(Boolean).length<=1,'run_integration_modes_separately');
  const config=stagingDatabaseConfig(await loadStagingEnvironment());
  report.project=config.project;
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
  try{const previous=JSON.parse(await readFile(manifestPath,'utf8'));requireTrue(previous.status==='cleaned','previous_test_cleanup_required');}catch(error){if(error.code!=='ENOENT')throw error;}
  admin=client(config.url,config.serverKey);
+ if(stripeMode)stripe=await stripeFixtureClient();
  const controls=data(await admin.from('operations_controls').select('*').eq('id',true).single(),'controls_read');
  requireTrue(controls.closed_beta&&controls.disable_ai&&controls.disable_uploads,'staging_must_remain_closed');
  requireTrue(data(await admin.rpc('operations_can_call_ai',{p_feature:'CHAT',p_model:'fixture-model'}),'ai_pause_check')===false,'ai_pause_failed');
@@ -87,6 +122,12 @@ try{
  passed('two_real_logins_profiles_memberships_and_invitations');
  const [a,b]=users;
  requireTrue(a.company!==b.company,'companies_must_differ');
+ if(process.argv.includes('--password-policy')){
+  phase='password_policy';
+  const weak=await a.session.auth.updateUser({password:'password123'});
+  requireTrue(weak.error?.code==='weak_password','known_leaked_password_not_rejected');
+  passed('known_leaked_password_rejected_by_real_auth');
+ }
  phase='tenant_isolation';
  const anonymous=client(config.url,config.publicKey);
  denied(await anonymous.from('companies').select('id'),'anonymous_company_read');
@@ -103,6 +144,28 @@ try{
  requireTrue(data(await b.session.from('company_facts').select('id').eq('company_id',a.company),'cross_fact_read').length===0,'cross_fact_leak');
  denied(await b.session.rpc('save_company_fact',{p_company_id:a.company,p_key:'segment',p_value:'FORBIDDEN',p_expected_version:1}),'cross_fact_rpc_write');
  passed('confirmed_memory_rpc_and_tenant_isolation');
+ if(stripeMode){
+  phase='stripe_test_network';
+  state.commercial={stripe:true,started:Math.floor(Date.now()/1000),productId:'prod_seed_fixture_'+run.replaceAll('-',''),priceId:randomUUID(),eventIds:Array.from({length:3},(_,i)=>'evt_fixture_network_'+run+'_'+i)};
+  await saveState();
+  report.stripe=await (hostedMode?runStagingStripeHosted:webhookMode?runStagingStripeWebhook:runStagingStripe)(stripe,admin,users,state.commercial,run,saveState);
+  passed('stripe_test_network_checkout_subscription_cancellation');
+ }
+ if(commercialMode){
+  phase='commercial_reconciliation';
+  state.commercial={priceId:randomUUID(),providerPriceId:'price_fixture_'+run,customerId:'cus_fixture_'+run,
+   subscriptionId:'sub_fixture_'+run,eventIds:Array.from({length:7},(_,i)=>'evt_fixture_'+run+'_'+i)};
+  await saveState();
+  report.commercial=await runStagingCommercial(admin,users,state.commercial);
+  passed('real_database_billing_replay_failure_cancellation_and_isolation');
+ }
+ if(workersMode){phase='worker_coordination';report.workers=await runStagingWorkers(admin,users);passed('bounded_real_worker_concurrency_recovery_and_isolation');}
+ if(processorsMode){phase='processor_recovery';report.processors=await runStagingProcessors(admin,users);passed('journal_model_external_persistence_recovery_and_isolation');}
+ if(loadMode){
+  phase='bounded_load';
+  report.load=await runBoundedStagingLoad(admin,users);
+  passed('bounded_authenticated_load_isolation_and_concurrent_version_conflicts');
+ }
  phase='operations_authorization';
  denied(await a.session.from('operations_controls').update({disable_ai:false}).eq('id',true),'client_cannot_unpause_ai');
  denied(await a.session.rpc('operations_change',{p_actor:a.id,p_kind:'controls',p_key:'disable_ai',p_value:false,p_version:controls.version,p_reason:'FORBIDDEN FIXTURE CHANGE'}),'client_cannot_call_admin_rpc');
@@ -126,12 +189,13 @@ try{
  report.passed=true;
 }catch(error){
  report.passed=false;report.failedPhase=phase;process.exitCode=1;
- if(error instanceof CheckFailure)report.failedCheck=error.message;
+ if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure||error instanceof StripeCheckFailure||error instanceof WorkerCheckFailure)report.failedCheck=error.message;
+ if(error instanceof StagingLoadFailure&&error.diagnostics)report.diagnostics=error.diagnostics;
  console.error(JSON.stringify({failedPhase:phase,failedCheck:report.failedCheck,note:'Remote response and credentials omitted.'}));
 }finally{
  if(state){try{await cleanup();}catch(error){report.passed=false;report.cleanup=false;state.status='cleanup_required';await saveState();process.exitCode=1;console.error(JSON.stringify({failedPhase:'cleanup',failedCheck:error instanceof CheckFailure?error.message:undefined,note:'Inspect the private fixture manifest before another run.'}));}}
  report.finishedAt=new Date().toISOString();
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
  await writeFile(reportPath,JSON.stringify(report,null,2)+'\n');
- console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:'.test-build/staging-integration-report.json'}));
+ console.log(JSON.stringify({checks:report.checks.length,passed:report.passed===true,cleanup:report.cleanup,report:'.test-build/'+reportName}));
 }

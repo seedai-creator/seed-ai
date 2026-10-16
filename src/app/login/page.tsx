@@ -6,9 +6,13 @@ import { AuthForm } from "@/components/auth-form";
 import { SetupNotice } from "@/components/setup-notice";
 import { supabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServer } from "@/lib/supabase/server";
+import {getLocale} from '@/lib/i18n/server';
+import {recoveryCopy} from '@/lib/operations/recovery-copy';
+import {SupportContact} from '@/components/support-contact';
 export const dynamic = "force-dynamic";
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ confirmation?: string }> }) {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ confirmation?: string; password?: string }> }) {
   const t = await getTranslator();
+  const locale = await getLocale();
   if (!supabaseConfig()) return <SetupNotice />;
   const client = await createSupabaseServer();
   const { data } = await client.auth.getUser();
@@ -20,6 +24,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
     <h1>{t("auth.title")}</h1>
     <p>{t("auth.subtitle")}</p>
     {params.confirmation === "failed" && <p className="error" role="alert">{t("auth.confirmFailed")}</p>}
+    {params.password === 'updated' && <p role="status">{recoveryCopy(locale).updated}</p>}
     <AuthForm markets={markets?.data??[]} />
+    <SupportContact locale={locale}/>
   </section></main>;
 }

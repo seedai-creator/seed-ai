@@ -1,5 +1,6 @@
 node_modules/
 .next/
+.next-staging/
 out/
 .env*
 !.env.example
@@ -7,3 +8,4 @@ out/
 npm-debug.log*
 .test-build/
 .vercel/
+supabase/.temp/

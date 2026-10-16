@@ -5,6 +5,16 @@ import {emptyReliability} from './reliability-fixtures';
 const intent:DecisionIntent={type:'PRICING',materiality:'LOW',reversibility:'REVERSIBLE',quote:'E se aumentar 10%?'};
 const extraction=():Extraction=>({inputs:[{id:'price',label:'Preço',kind:'FACT',source:'USER_MESSAGE',reference:'0',quote:'Preço 100 BRL',limitation:null,value:{min:100,max:100,approximate:false,unit:'MONEY_PER_UNIT',currency:'BRL',period:'ONCE',scope:'product:A'}},{id:'change',label:'Aumento',kind:'USER_ASSUMPTION',source:'USER_MESSAGE',reference:'0',quote:'aumentar 10%',limitation:'Cenário solicitado, não preço atual.',value:{min:.1,max:.1,approximate:false,unit:'RATIO',currency:null,period:'ONCE',scope:'product:A'}}],scenarios:[{id:'higher',label:'Aumento condicional',kind:'OPTION',assumption_ids:['change'],calculations:[{id:'new_price',formula:'CHANGED_PRICE',operands:[{name:'price',input_id:'price'},{name:'change_ratio',input_id:'change'}]}],qualitative_effects:[]}],missing_information:[],essential_missing:[],constraints:[],goals:[],dependencies:[],external_dependencies:[]});
 const messages=[{role:'user' as const,content:'Preço 100 BRL. E se aumentar 10%?'}];
+
+test('unverified capacity period is removed and requests clarification while preserving independent price math',()=>{
+ const e=extraction();e.inputs.push({...e.inputs[0],id:'capacity',label:'Capacidade',quote:'capacidade de 120',value:{min:120,max:120,approximate:false,unit:'UNITS',currency:null,period:'MONTH',scope:'product:A'}});
+ const parsed=parseExtraction(e,[{role:'user',content:messages[0].content+' Temos capacidade de 120.'}],'[]');
+ assert.ok(!parsed.inputs.some(i=>i.id==='capacity'));assert.ok(parsed.essential_missing[0].includes('Capacidade'));
+ const result=buildSimulation(intent,parsed);assert.equal(result.readiness,'NOT_READY');assert.equal(result.scenarios[0].results.length,1);
+ e.inputs.at(-1)!.quote='capacidade de 120 por mês';
+ const confirmed=parseExtraction(e,[{role:'user',content:messages[0].content+' Temos capacidade de 120 por mês.'}],'[]');
+ assert.equal(confirmed.inputs.length,3);assert.equal(confirmed.essential_missing.length,0);
+});
 test('simulation intent: explicit provenance, null for non-decision and deterministic severity floors',()=>{
  assert.equal(parseDecisionIntent(null,'Ontem contratei alguém.'),null);
  assert.throws(()=>parseDecisionIntent(intent,'Olá'),/UNGROUNDED/);

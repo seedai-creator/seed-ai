@@ -1,13 +1,17 @@
-# SEED AI
+# SeedAI
 Inteligência estratégica empresarial. Next.js 16 App Router, React, TypeScript,
 Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
+
+Atualização de 16/10/2026: [histórico compartilhado reconciliado](docs/MIGRATION_HISTORY.md) nos bancos de staging e produção, preservando seus schemas. O ensaio `node scripts/test-staging.mjs --run --stripe-hosted` passou com entrega HTTPS assinada, falha/reenvio, idempotência e cancelamento. Requer preparação privada do preview e webhook fictício; não é executado pelo CI. As credenciais, webhook e preview temporários foram removidos após o ensaio. Planos continuam desativados; a landing permanece publicada. [Situação e bloqueadores atuais da Fase 13](docs/PHASE_13_STATUS.md).
+
+O staging está alinhado às 43 migrações; a correção final de custos passou em dez grupos de integração sem mudar planos/preços. O [monitor independente](docs/INDEPENDENT_MONITOR.md) e o [candidato de publicação](docs/PHASE_13_RELEASE_CANDIDATE.md) estão preparados. Agendamento e novos e-mails não foram ativados. Suíte local: 554 testes aprovados; conferir a CI do commit exato antes de publicar.
 
 ## Estado das fases
 - Fase 1: implementada; teste real confirmado pelo proprietário na conversa.
 - Fase 2: código de autenticação, empresas e RLS implementado. Projeto Supabase conectado e migração aplicada; RLS confirmada nas três tabelas. Cadastro e login reais confirmados pelo proprietário; acesso à empresa e persistência da sessão verificados no navegador.
 - Fase 3: concluída. Memória confirmada, correção e uso em nova conversa validados com Supabase e OpenAI reais em 25/09/2026.
 - Fase 4: concluída em 25/09/2026. Dez categorias integradas; 32 testes locais e 26/26 exemplos reais de classificação passaram.
-- Fase 5: SEED Brain implementado e validado com memória + metodologia em testes reais.
+- Fase 5: SeedAI Brain implementado e validado com memória + metodologia em testes reais.
 - Fases 6–9.3: implementadas; histórico e evidências nos relatórios abaixo.
 - Fase 9.4: Execution Loop implementado e validado com IA real, incluindo memória em nova conversa, revisão, aprendizado e novo plano. Consulte [o relatório](docs/PHASE_9_4_DELIVERY.md).
 - Fase 9.5: Modelo Vivo publicado, migração aplicada, 195 testes aprovados e fluxo principal validado com IA real; correções e limites da validação documentados. Consulte [o relatório](docs/PHASE_9_5_DELIVERY.md).
@@ -17,8 +21,19 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; staging separado instalado e nove verificações reais de Auth/RLS aprovadas. Aplicação, integrações e operação do beta ainda em preparação. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: em implementação; staging protegido, MFA, exportação, recuperação, restauração de backup, rotação da chave, exclusão fictícia e reversão de Preview verificados. Em 16/10, Checkout e portal Stripe no navegador, eventos assinados pela rede, renovação/falha/recuperação, processamento concorrente das cinco famílias de filas e anexos limitados passaram em testes isolados. Suíte local de 544 testes aprovada, além da guarda adicional de limpeza do relógio Stripe; lint, tipos e build aprovados. Monitor independente, reconciliação do histórico compartilhado e liberação revisada continuam pendentes. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
+
+Diretriz de lançamento confirmada pelo titular em 15/10/2026: abertura pública da
+SeedAI como produto funcional **com cobrança**, sem anunciar beta ou teste gratuito.
+As validações anteriores são internas. Stripe continua em modo de teste e as
+compras das lojas não estão implementadas; esses estados não bastam para a abertura
+comercial. O titular informou que os documentos foram revisados e enviará os ajustes;
+as minutas locais aguardam essa incorporação e a aprovação da versão final.
+
+Privacidade: [minuta da política em português brasileiro](docs/legal/POLITICA_DE_PRIVACIDADE_PT_BR.md), preparada em 15/10/2026 para revisão. Ainda não aprovada nem publicada; [decisões e evidências](docs/legal/REVISAO_PRIVACIDADE.md). O aviso da lista de espera tem escopo separado.
+
+Termos: [minuta dos Termos de Uso da SeedAI](docs/legal/TERMOS_DE_USO_PT_BR.md), com identificação empresarial, limites, beta e condições para futuras assinaturas web/lojas. Ainda não aprovada nem publicada; [revisão e dependências de lançamento](docs/legal/REVISAO_TERMOS_DE_USO.md). Meta informada pelo titular: abertura pública em **04/11/2026**, com beta privado antes. Contas de desenvolvedor, versões móveis e publicação nas lojas ainda não estão concluídas; não abrir produção automaticamente nessa data.
 
 ## Executar localmente
 Node.js 22 ou superior e npm (pipeline configurado para Node 26.10.0).
@@ -64,11 +79,32 @@ e limpeza ao terminar, mantendo IA pausada. Esses comandos usam exclusivamente
 `.env.staging.local`, ignorado pelo Git. Esse arquivo não inicia nem configura
 automaticamente o app Next.js. Consulte o procedimento antes de executar.
 
+Verificações adicionais da Fase 13: `npm run staging:test -- --commercial`
+testa conciliação com eventos sintéticos e contas reais temporárias; `--password-policy`
+confirma a rejeição de senha comprometida. Ambos removem somente suas fixtures.
+Após `npm test`, `node scripts/test-staging-health.mjs --run` consulta a saúde do
+staging sem gravar dados. `node scripts/prepare-schema-audit.mjs` prepara o catálogo
+esperado para comparação, sem reparar o histórico nem aplicar migrações remotas.
+O monitor externo é opcional e ainda não está ativo: consulte a seção correspondente
+no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+
+Ensaios adicionais (opt-in, com fixtures e limpeza): `node scripts/test-staging.mjs --run --stripe-webhook`
+valida Checkout/portal e entrega assinada pela CLI oficial no candidato local;
+acrescente `--stripe-renewals` para o relógio de renovação/falha/recuperação.
+Requer Stripe CLI, chave **de teste** e configuração de portal; não modifica `.env.local`,
+webhooks cadastrados, ofertas ou planos globais. O namespace `seed_staging_*` impede
+que a assinatura fictícia seja aplicada pelo webhook publicado. Produção preserva
+`seed_*`; o ambiente precisa estar explicitamente configurado.
+`node scripts/test-staging.mjs --run --processors` testa Journal/Modelo/Pesquisa sem IA.
+Com `npm run staging:build` e `npm run staging:start`, use
+`node scripts/test-staging-browser.mjs --run --uploads-only` para validar anexos e os
+limites HTTP. Relatórios ficam privados em `.test-build/`; não os publicar no GitHub.
+
 ## Uso
 1. Criar conta com nome, e-mail e senha; confirmar o e-mail e entrar.
 2. Uma empresa inicial é criada automaticamente pelo banco.
 3. Renomear Minha empresa e acessar o espaço da empresa.
-4. Conversar com a SEED; Enter envia e Shift+Enter cria linha.
+4. Conversar com a SeedAI; Enter envia e Shift+Enter cria linha.
 5. O seletor do cabeçalho leva à lista de empresas.
 6. Criar/selecionar outra empresa começa uma conversa vazia.
 7. Sair encerra a sessão local.
@@ -241,10 +277,10 @@ A amostra inclui duas ou mais mensagens por categoria, negação, prioridade ent
 continuação, mudança de assunto e instrução maliciosa na memória sintética.
 Fase 5 autorizada em 26/09/2026.
 
-## SEED Brain — Fase 5
+## SeedAI Brain — Fase 5
 Conhecimento em src/lib/brain/modules: identity, method-seed, diagnosis, sales,
 marketing, positioning, pricing, growth, decision, expansion, launch e limits.
-Base inicial derivada da especificação SEED; não é pesquisa de mercado nem conteúdo
+Base inicial derivada da especificação SeedAI; não é pesquisa de mercado nem conteúdo
 externamente validado. Versionada em código com BRAIN_VERSION.
 
 Fluxo atual: autorização → memória da empresa → classificação → retrieval local por
@@ -275,7 +311,7 @@ Não confundir classificação correta com qualidade estratégica: conferir a re
 contra os critérios em rubric. Não usar dados reais nos arquivos de avaliação.
 
 Na aplicação local, confirme segmento/cidade da sua empresa e inicie nova conversa.
-Pergunte sobre vendas, preços ou expansão: a SEED deve usar o contexto já conhecido,
+Pergunte sobre vendas, preços ou expansão: a SeedAI deve usar o contexto já conhecido,
 aplicar o protocolo pertinente e pedir somente os dados essenciais que faltam.
 Para testar sem dados reais, use a empresa identificada como TESTE FASE 3 — DADOS FICTÍCIOS.
 
@@ -335,7 +371,7 @@ Essa avaliação usa dados sintéticos e faz chamadas pagas à OpenAI.
 A resposta empresarial inclui diagnosis: situation, objective, main_bottleneck,
 secondary_bottlenecks, evidence, hypotheses, missing_data, opportunities, risks,
 priorities e confidence. Saudações GENERAL podem retornar null.
-A interface mostra Diagnóstico SEED, expansível, junto da resposta correspondente.
+A interface mostra Diagnóstico SeedAI, expansível, junto da resposta correspondente.
 Diagnósticos pertencem à conversa em memória nesta fase; não são gravados no banco
 nem transformados automaticamente em fatos, estratégias ou ações.
 
@@ -359,7 +395,7 @@ Referência do contrato: https://developers.openai.com/api/docs/guides/structure
 
 ### Como testar
 1. Execute npm run dev -- --port 3001 e abra http://127.0.0.1:3001.
-2. Entre e envie 'Quero vender mais'. Abra Diagnóstico SEED: o gargalo deve permanecer
+2. Entre e envie 'Quero vender mais'. Abra Diagnóstico SeedAI: o gargalo deve permanecer
    desconhecido quando não houver evidências suficientes; observe dados faltantes.
 3. Em empresa fictícia, relate muitos orçamentos, poucas vendas e demora no atendimento.
    A análise deve investigar conversão antes de sugerir mais anúncios.
@@ -385,7 +421,7 @@ preserva a falha para rastreabilidade. Não há retries automáticos em produç�
 A instrução do diagnóstico reserva cálculos de taxas e projeções ao software; nesta fase a IA deve citar apenas números fornecidos, sem produzir novas métricas calculadas.
 
 ## Fase 7 — Estratégias e plano de ação
-Transformar em Estratégia SEED abre um rascunho editável a partir do diagnóstico.
+Transformar em Estratégia SeedAI abre um rascunho editável a partir do diagnóstico.
 A conversão é determinística: reaproveita objetivo, situação, hipótese e prioridades;
 não realiza outra chamada paga à IA nem inventa responsáveis, datas, indicadores ou metas.
 Revise o texto, complete como/por que executar e confirme explicitamente para persistir.
@@ -411,7 +447,7 @@ seed-workspace.tsx, tipos Supabase, quatro catálogos de idioma e testes/strateg
 
 ### Testar
 1. Na empresa fictícia, converse até receber um diagnóstico e clique Transformar em
-   Estratégia SEED abaixo da resposta. Revise e complete os campos, adicione/remova ações.
+   Estratégia SeedAI abaixo da resposta. Revise e complete os campos, adicione/remova ações.
 2. Confirme o salvamento. Abra Ver estratégia ou o link Estratégias no cabeçalho.
 3. Atualize uma ação para Em andamento e depois Concluída. Recarregue e confira.
 4. Inicie outra conversa: a estratégia continua em Estratégias.
@@ -587,7 +623,7 @@ A seção **Mapa de crescimento** fica em **Diagnóstico**. Ela usa seis dimens�
 - Requer também `SEED_GOALS_ENABLED=true` e `SEED_JOURNAL_ENABLED=true`.
 - O direito `growth_map` dos planos pagos permite gerar/atualizar; mapas existentes permanecem legíveis após downgrade. Nenhum preço, assinatura ou orçamento foi alterado.
 - O worker protegido existente processa atualizações, leases e tentativas. Atualização manual: no máximo uma por empresa a cada60segundos.
-- Para testar: informe resultados de períodos completos em Minha Empresa, abra Diagnóstico, atualize o mapa, confira evidências e use **Investigar com a SEED**. Corrija o indicador de origem para verificar a invalidação do mapa.
+- Para testar: informe resultados de períodos completos em Minha Empresa, abra Diagnóstico, atualize o mapa, confira evidências e use **Investigar com a SeedAI**. Corrija o indicador de origem para verificar a invalidação do mapa.
 - Verificações: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
 - Teste real opcional: compilar `npx tsc -p tsconfig.growth-live.json`; depois `node --conditions=react-server scripts/verify-growth-live.mjs --live-authorized`, somente com autorização específica vigente. O roteiro exige uma autorização própria da fase, limita o gasto adicional, usa empresa identificada como fictícia e restaura o plano no encerramento. Não executar para renovação automática de testes.
 - Nenhuma dependência adicionada. Fase11 concluída; Fase12 descrita abaixo.
@@ -604,3 +640,65 @@ A Home mantém o Composer como elemento principal e seleciona até três blocos 
 - Leitura remota sem IA/gravações: após compilar testes, `node --conditions=react-server scripts/verify-cockpit-readonly.mjs`. Usa somente a empresa fictícia retida da validação anterior e impõe uma guarda GET/HEAD.
 - Execução local: `npm run dev -- --port 3001`; acesso em http://127.0.0.1:3001. Clique no logo para voltar à Home.
 - [Relatório, capacidades, riscos e validação manual](docs/PHASE_12_DELIVERY.md). Fase 12 concluída e publicada em [seed-ai-ashy.vercel.app](https://seed-ai-ashy.vercel.app/) em 10/10/2026, após aprovação visual local e autorização explícita do titular. Build Vercel, onze verificações HTTP e treze arquivos estáticos aprovados; Cockpit habilitado em Production. A matriz completa de dispositivos, teclado e leitor de tela e a interação autenticada em produção não foram automatizadas devido à indisponibilidade da ferramenta de navegador.
+
+## Fase 13 — Recuperação de acesso em validação
+
+O fluxo inclui `/forgot-password`, confirmação explícita do link em `/auth/recovery`, definição da senha em `/reset-password` e retorno ao login. Abrir a página do link não consome o token. A confirmação usa POST com verificação de origem; erros não expõem tokens nem identificam se um e-mail está cadastrado.
+
+- Configuração: `NEXT_PUBLIC_SITE_URL` deve corresponder ao endereço da aplicação e o Supabase Auth deve usar SMTP e o template `supabase/templates/password-recovery.html`. Publicar as rotas antes de ativar o template.
+- Validação isolada: `npm run staging:build` e depois `npm run staging:recovery`, com a porta 3002 livre e o `.env.staging.local` configurado conforme [o procedimento operacional](docs/PHASE_13_OPERATIONS.md). O teste cria e remove uma conta fictícia no banco de testes; não envia e-mails nem chama IA.
+- Após publicação autorizada, testar pelo botão **Esqueceu a senha?**. O titular define a própria senha no navegador; nunca enviá-la em mensagens ou relatórios.
+- O teste de integração verifica a troca real de senha, rejeição da senha anterior, reutilização do link e revogação das sessões de renovação. JWTs de acesso já emitidos podem permanecer válidos até expirar. A entrega e a interação final no ambiente publicado exigem validação própria.
+- A Fase 13 continua em andamento. Esta correção não autoriza publicação automática, abertura do beta nem início da Fase 14.
+
+O ensaio de backup pode preparar duas empresas fictícias com `node scripts/prepare-backup-drill.mjs prepare --run`, usando somente o staging isolado e vazio de contas/empresas. O manifesto privado permanece em `.test-build/backup-drill/`; `verify --run` compara a referência sem restaurar o banco. É necessário aguardar um backup contendo as fixtures e realizar a restauração antes de considerar esse requisito concluído. Consulte os cuidados, retenção temporária e limpeza no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+
+## Fase 13 — alertas internos
+
+Fila e entrega via Resend validadas no staging, com um teste fictício autorizado em 14/10/2026. Configuração, limites de cobertura e procedimento de teste em [Operação da Fase 13](docs/PHASE_13_OPERATIONS.md#alertas-operacionais--implementação-de-14102026). Envio permanece desativado por padrão; nenhuma publicação automática foi feita.
+
+## Fase 13 — privacidade, custos e concorrência
+
+- `node scripts/prepare-privacy-review.mjs <id>` prepara um inventário privado, somente leitura, para uma solicitação de exclusão aberta no staging. Não autoriza nem executa exclusão.
+- `node scripts/test-staging-privacy.mjs --run` ensaia a exclusão de duas contas fictícias criadas pelo próprio roteiro, preserva a empresa compartilhada durante o teste e limpa suas fixtures. Não usar como procedimento de exclusão em produção.
+- `npm run staging:test -- --load` acrescenta uma carga fixa de 96 consultas autenticadas, até quatro simultâneas, com 1.000 mensagens e 200 eventos fictícios. Verifica isolamento e conflitos entre duas abas; não certifica capacidade de produção.
+- `node scripts/simulate-cost-cohorts.mjs <snapshot.json>` gera cenários de 100/1.000 FREE e PRO a partir de uma configuração revisada. Nenhuma chamada de IA, mudança de preço ou aumento de limite. Relatórios ficam em `.test-build/`, fora do Git.
+- Migrações novas: `20261014213558_privacy_dependency_inventory.sql` e `20261015165036_domain_conflict_status.sql`, validadas e aplicadas apenas no staging. A segunda retorna `PT409` para conflitos permanentes, evitando repetição automática de transações; as telas aceitam também o código legado durante a implantação.
+
+Consulte os limites e pendências no relatório da fase. Não publicar esta fase automaticamente nem iniciar a Fase 14.
+
+### Avaliação de franquias antes da ativação
+
+`node --test tests/allowance-replay.test.mjs tests/allowance-caps-database.test.mjs` verifica orçamento compartilhado entre empresas, limites, tarefas automáticas e isolamento com banco local. Não altera planos remotos.
+
+Após compilar os testes, `node scripts/eval-allowances.mjs --run` executa casos fictícios usando o saldo do ledger privado de autorização da Fase 13. Exige autorização de gasto vigente; não cria nem renova o orçamento. Os parâmetros opcionais `--with-research` e `--with-quick-research` acrescentam pesquisa pública; `--retry-failed` repete falhas e `--repeat=...` permite repetir somente os casos de regressão explicitamente selecionados. Tentativas anteriores são preservadas.
+
+`node scripts/replay-allowance-experience.mjs` reutiliza as medições para cenários mensais sem novas chamadas pagas. Resultados e evidências ficam em `.test-build/phase-13-private-reports/`, fora do Git. Projeções não garantem satisfação, conversão ou capacidade de produção, e valores de uso desconhecido permanecem reservados. Nenhum desses comandos ativa preços, assinaturas ou limites.
+
+Os ajustes de limites de 16/10 estão preparados, sem ativação: `src/lib/commercial/pro-proposal.ts` fixa PRO 1/3/5 em R$99,99/R$199,99/R$399,99 e franquias compartilhadas de US$4/US$8/US$16. O modo `analysis_limit_mode: budget` remove a segunda cota de 200 análises e usa o ciclo da assinatura; FREE e políticas antigas continuam com contagem. Não há IDs de preços Stripe nem alteração automática de assinaturas nesta proposta.
+
+A migração local `20261016133617_allowance_guards.sql` separa saldo do ciclo, reserva da solicitação, proteção diária e pausa operacional. O orçamento geral mantém a proteção base e soma uma franquia por conta paga elegível; os alertas usam a mesma referência. Preserva autorização, isolamento, limite de frequência, concorrência e registros financeiros. Inclui preço separado para contexto longo do modelo estratégico, sem alterar o histórico. Validar e aplicar no staging antes de uma futura publicação autorizada; não foi aplicada aos bancos remotos nesta revisão.
+
+A medição de aplicação e testes usa `response-cost.ts`, incluindo cache, escrita de cache e todas as buscas retornadas. Uma quantidade de buscas maior que a solicitada gera diagnóstico/alerta, sem apagar o custo conhecido. Falhas sem uso confirmado continuam reservadas. Pesquisas podem reduzir a cobertura para caber no saldo, mantendo modelo e preço, com resultado marcado como parcial. Valores de simulações sem evidência do período exigem confirmação; cálculos independentes continuam disponíveis.
+
+Para repetir a aceitação: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build:verify`. Com autorização de gasto vigente, `node scripts/eval-allowances.mjs --run --adjustments --repeat=decision_simulation --with-research` verifica o período ausente, o período confirmado e a pesquisa; depois `node scripts/replay-allowance-experience.mjs` recalcula a projeção. A reserva anterior desconhecida é preservada no histórico, sem renovação do limite autorizado. A projeção explicita a diferença entre buscas medidas e abrangência projetada.
+
+### FREE — primeira análise antes do convite ao PRO
+
+Experiência publicada em 16/10/2026 após autorização, com o bloqueio público do aplicativo e as assinaturas preservados. A publicação isolou somente este fluxo e os patches de segurança da versão já existente; os ajustes de franquias acima e o restante da Fase 13 continuam separados. Antes da primeira análise de uma conta FREE, duas perguntas curtas recolhem o contexto sem chamar a IA. O problema e as respostas seguem juntos para uma análise, com autorização e medição normais. O usuário pode indicar que não conhece os dados; não se exige um questionário empresarial completo. Anexos seguem o fluxo existente de validação.
+
+A resposta prioriza situação, objetivo, evidências e um próximo passo com indicador e revisão. Quando faltam dados, pode orientar uma investigação de baixo risco; não transforma isso em gargalo confirmado. O cartão com convite ao PRO exige recomendação validada, evidência vinculada e conversa salva. Saudações, perguntas isoladas, recomendações retidas e falhas não liberam o convite. A análise é reconstruída do diagnóstico persistido ao reabrir a conversa; não depende de um marcador no navegador.
+
+Preservados: três respostas de IA por conta durante toda a experiência FREE e proteção financeira vigente (base de US$ 0,25), incluindo classificação, memória e custos desconhecidos reservados. Não há chamadas gratuitas extras, renovação por nova conversa ou dispensa de autorização/concorrência. O limite pode impedir concluir uma análise: nesse caso a interface informa a restrição e oferece suporte, sem apresentar sucesso ou pressionar a compra. Registros continuam acessíveis; uma falha na consulta de uso impede novas chamadas, sem bloquear sua leitura. Preços e franquias PRO combinados permanecem inalterados e inativos.
+
+Nenhuma migração adicional foi necessária para este fluxo. A migração de franquias citada acima continua pendente de aplicação remota. Testes: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build:verify`; após compilar os testes, `node scripts/test-free-browser.mjs` valida o componente real com serviços fictícios e navegador isolado. Exige Chromium do Playwright disponível em `.test-build/playwright-browsers`. `node scripts/eval-free-experience.mjs --run` usa empresas fictícias e o ledger privado de US$ 2 já existente, somente com autorização de gasto vigente; `--retry-failed` mantém tentativas anteriores e suas reservas. Não toca bancos remotos, Stripe ou planos.
+
+Verificação manual: em uma conta FREE de testes, descreva um problema, clique em “Vamos começar”, responda às duas perguntas e gere a análise. Confira evidências, hipótese, próximo passo, indicador e revisão antes de “Conhecer o PRO”. Reabra a conversa para confirmar sua leitura. Teste também uma resposta sem informações suficientes e a cota esgotada; nenhuma delas deve simular uma conclusão bem-sucedida. A experiência não garante conversão comercial nem substitui validação com usuários reais.
+
+
+Publicação FREE: lint, tipos, 453 testes e build aprovados no [CI do pacote publicado](https://github.com/seedai-creator/seed-ai/actions/runs/38948375813). O teste privado com Auth e banco de staging verificou contexto local, falha sem provedor, leitura persistente, limite e celular. A resposta persistida desse ensaio é uma fixture; as avaliações anteriores com IA real continuam registradas separadamente. Depois da publicação, 22 verificações confirmaram landing acessível, app bloqueado e rotas operacionais protegidas. Nenhuma migração, ativação de oferta ou aumento de limite.
+
+
+### Fase 13 — coordenação e recuperação de filas
+
+Após compilar os testes, `node scripts/test-staging.mjs --run --workers` executa um ensaio opt-in no banco de staging: duas contas fictícias, quatro concorrentes, Growth Map e Radar, aquisição exclusiva, recuperação de lease, recusa de gravações antigas, reagendamento, limite de tentativas e isolamento. O cálculo vazio permanece limitado, sem métricas inventadas. Remove as fixtures e preserva controles, planos e orçamentos; não usa IA ou provedores de pagamento. Essa carga pequena não certifica capacidade nem substitui o ensaio completo do agendador e dos demais processadores.

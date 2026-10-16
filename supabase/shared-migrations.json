@@ -1,0 +1,22 @@
+{
+  "origin": "seedai-institutional-v2/site",
+  "description": "Historical sources imported from the landing project. SHA256 uses LF line endings so Git checkout cannot change verification. This repository is canonical for shared database migrations.",
+  "migrations": [
+    {
+      "file": "20261012214901_seedai_institutional_waitlist.sql",
+      "sha256LF": "ace62e8291e246fb09480e65ff7816319cf9b21f3646a6fdcebac89f5b878068"
+    },
+    {
+      "file": "20261013123346_seedai_waitlist_retention.sql",
+      "sha256LF": "69852804cd5b516aef40d832ce3a39d894e025532ec5fc6868f05ca66c09e234"
+    },
+    {
+      "file": "20261013165001_waitlist_campaign_closure.sql",
+      "sha256LF": "6f7c4ca588b000258fa9b8eab8343799f3ccd4b69187be1eec26c085a072da8d"
+    },
+    {
+      "file": "20261013171010_waitlist_email_notifications.sql",
+      "sha256LF": "d987a3bfc7425d7723e0d146d662cbfbca50d69525b1bb02161179e724e5fae0"
+    }
+  ]
+}

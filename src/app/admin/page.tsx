@@ -1,21 +1,20 @@
 import {ExternalOperations} from './external-operations';
 import { EconomicsReport } from "./economics-report";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { Brand } from "@/components/brand";
-import { requireAdmin } from "@/lib/commercial/server";
+import {adminPageAccess} from '@/lib/auth/admin-page';
 import { updateConfiguration } from "./actions";
 import { READINESS_CATEGORIES } from "@/lib/commercial/markets";
 export const dynamic="force-dynamic";
 export default async function AdminPage({searchParams}:{searchParams:Promise<Record<string,string|undefined>>}){
- const c=await requireAdmin().catch(()=>null);if(!c)notFound();
+ const c=await adminPageAccess();
  const q=await searchParams;
  const results=await Promise.all(["commercial_markets","commercial_plans","commercial_prices","subscriptions","usage_logs","admin_audit_log","commercial_accounts"].map(table=>c.db.from(table).select("*",{count:"exact"}).limit(200)));
  if(results.some(r=>r.error))throw new Error("ADMIN_DATA_UNAVAILABLE");
  const [markets,plans,prices,subscriptions,usage,audit,accounts]=results.map(r=>r.data??[]);
  const economicConfig=await c.db.from("commercial_settings").select("value").eq("id","economics").single();
  const stats=await c.db.rpc("commercial_overview",{p_actor:c.user.id});
- return <main className="account-shell strategies-shell"><div className="account-top"><Brand/><Link href="/">SEED AI</Link></div><section className="account-card"><p className="account-kicker">ADMIN · {c.role}</p><h1>Operação da SEED</h1><p>Configurações de teste. Nenhuma cobrança real. Listagens limitadas a 200 registros; os totais gerais são identificados separadamente.</p>
+ return <main className="account-shell strategies-shell"><div className="account-top"><Brand/><Link href="/">SeedAI</Link></div><section className="account-card"><p className="account-kicker">ADMIN · {c.role}</p><h1>Operação da SeedAI</h1><p>Configurações de teste. Nenhuma cobrança real. Listagens limitadas a 200 registros; os totais gerais são identificados separadamente.</p>
  {q.error&&<p role="alert">Alteração recusada. Confira os dados, a versão e os requisitos do mercado.</p>}{q.updated&&<p role="status">Configuração salva e auditada.</p>}
  <nav className="status-form">{["overview","usage","subscriptions","markets","pricing","policies","audit"].map(k=><a key={k} href={"#"+k}>{k}</a>)}<Link href="/admin/catalog">Configurar</Link><Link href="/admin/operations">Operação do beta</Link>{["BR","PT","ES","US"].map(m=><Link key={m} href={"/admin/preview/"+m}>Preview {m}</Link>)}</nav>
  <section id="overview"><h2>Visão geral</h2><p>Contas: {results[6].count} · Ativadas nesta amostra: {accounts.filter(a=>a.activated_at).length}</p><p>Assinaturas registradas: {results[3].count} · Custos registrados: {results[4].count}</p><p>Contribuição: indisponível até reconciliação das receitas, taxas e moedas. Custos da IA são estimativas em USD, não lucro líquido.</p>{stats.error?<p>Agregados indisponíveis.</p>:<><EconomicsReport data={stats.data} config={economicConfig.data?.value??{}}/><details><summary>Totais completos por plano, mercado, recurso e modelo</summary><pre>{JSON.stringify(stats.data,null,2)}</pre></details></>}</section>

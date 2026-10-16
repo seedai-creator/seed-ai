@@ -2,7 +2,8 @@
 import {redirect} from 'next/navigation';
 import {cookies} from 'next/headers';
 import {createSupabaseServer} from '@/lib/supabase/server';
-import {validEmail,validPassword,type ActionState} from '@/lib/auth/validation';
+import {validEmail,type ActionState} from '@/lib/auth/validation';
+import {completePasswordRecovery} from '@/lib/auth/recovery';
 import {getLocale} from '@/lib/i18n/server';
 import {recoveryCopy} from '@/lib/operations/recovery-copy';
 import {ACTIVE_COMPANY_COOKIE} from '@/lib/auth/context';
@@ -20,16 +21,14 @@ export async function requestRecovery(_state:ActionState,form:FormData):Promise<
  }catch{return {success:copy.sent};}
 }
 export async function updatePassword(_state:ActionState,form:FormData):Promise<ActionState>{
- const copy=recoveryCopy(await getLocale()),password=form.get('password');
- if(!validPassword(password)||password!==form.get('confirmation'))return {error:copy.error};
+ const copy=recoveryCopy(await getLocale());
  try{
-  const client=await createSupabaseServer(),{data,error}=await client.auth.getUser();
-  if(error||!data.user)return {error:copy.expired};
-  const result=await client.auth.updateUser({password:password as string});
-  if(result.error)return {error:copy.error};
-  const logout=await client.auth.signOut({scope:'global'});
-  if(logout.error)logEvent('auth.recovery',{code:'SESSION_REVOCATION_FAILED',userId:data.user.id},'error');
+  const client=await createSupabaseServer();
+  const result=await completePasswordRecovery(client,form.get('password'),form.get('confirmation'));
+  if(result.status==='expired')return {error:copy.expired};
+  if(result.status!=='updated')return {error:copy.error};
+  if(result.revocationFailed)logEvent('auth.recovery',{code:'SESSION_REVOCATION_FAILED',userId:result.userId},'error');
   (await cookies()).delete(ACTIVE_COMPANY_COOKIE);
  }catch{return {error:copy.error};}
- redirect('/login');
+ redirect('/login?password=updated');
 }

@@ -18,7 +18,7 @@ export async function saveFact(input: { companyId: string; key: string; value: s
       p_company_id: companyId, p_key: input.key, p_value: value, p_expected_version: input.expectedVersion,
     }).single();
     if (error || !data) {
-      if (error && ["40001", "23505"].includes(error.code)) return { error: "Este dado mudou em outra aba. Inicie uma nova conversa ou atualize a página para conferir o valor atual." };
+      if (error && ["PT409", "40001", "23505"].includes(error.code)) return { error: "Este dado mudou em outra aba. Inicie uma nova conversa ou atualize a página para conferir o valor atual." };
       return { error: "Não foi possível salvar. Confira seu acesso à empresa e tente novamente." };
     }
     revalidatePath("/");

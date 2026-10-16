@@ -12,7 +12,7 @@ export async function saveDecision(companyId: string, id: string, value: unknown
   try {
     await authorizeChat({ companyId }); const { supabase } = await companyContext(companyId);
     const { data, error } = await supabase.rpc("save_decision", { p_company_id: companyId, p_id: id, p_draft: draft });
-    if (error || !data) return { error: t(error?.code === "40001" ? "decision.conflict" : "decision.error") };
+    if (error || !data) return { error: t(["PT409", "40001"].includes(error?.code ?? "") ? "decision.conflict" : "decision.error") };
     revalidatePath("/decisions"); return { id: data };
   } catch { return { error: t("decision.error") }; }
 }
@@ -23,7 +23,7 @@ export async function reviewDecision(_state: DecisionState, form: FormData): Pro
   try {
     await authorizeChat({ companyId }); const { supabase } = await companyContext(companyId);
     const { error } = await supabase.rpc("review_decision", { p_company_id: companyId, p_id: id, p_version: version, p_result: review.result, p_learning: review.learning });
-    if (error) return { error: t(error.code === "40001" ? "decision.conflict" : "decision.error") };
+    if (error) return { error: t(["PT409", "40001"].includes(error.code) ? "decision.conflict" : "decision.error") };
     revalidatePath("/decisions"); return { success: t("decision.reviewSaved") };
   } catch { return { error: t("decision.error") }; }
 }

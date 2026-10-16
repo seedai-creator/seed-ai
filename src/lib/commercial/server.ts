@@ -4,6 +4,9 @@ import { createClient } from "@supabase/supabase-js";
 import { currentUser } from "../auth/context";
 import { effectivePlan, getPlanEntitlements, getUsagePolicy } from "./entitlements";
 import type { Flags, Market, Override, Plan, Subscription } from "./contracts";
+import {operationsEnabled} from '../operations/server';
+import {ChatError} from '../chat/contracts';
+import {adminMfaSatisfied,permittedAdminRole,type AdminRole} from '../auth/admin-security';
 export function commercialDatabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) throw new Error("COMMERCIAL_SERVER_NOT_CONFIGURED");
@@ -37,10 +40,18 @@ export async function commercialContextForUser(user: {id:string}) {
   const plan = planResult.data as Plan, market = marketResult.data as Market;
   return { db, user, plan, market, subscription, flags: getPlanEntitlements(global.data.value as Flags, plan, market, override, new Date()), policy: getUsagePolicy(plan, override, new Date()), override };
 }
-export async function requireAdmin(minimum: "ADMIN_VIEWER" | "ADMIN_OPERATOR" | "SUPER_ADMIN" = "ADMIN_VIEWER") {
-  const { user } = await currentUser(); const db = commercialDatabase();
+// Only the MFA enrollment/challenge page may use this identity-only check.
+export async function adminIdentity(minimum:AdminRole='ADMIN_VIEWER') {
+  const { user,supabase } = await currentUser(); const db = commercialDatabase();
   const { data, error } = await db.from("admin_roles").select("role").eq("user_id", user.id).maybeSingle();
-  const levels = ["ADMIN_VIEWER", "ADMIN_OPERATOR", "SUPER_ADMIN"];
-  if (error || !data || levels.indexOf(data.role) < levels.indexOf(minimum)) throw new Error("ADMIN_FORBIDDEN");
-  return { db, user, role: String(data.role) };
+  if (error || !data || !permittedAdminRole(data.role,minimum)) throw new Error("ADMIN_FORBIDDEN");
+  return { db, user, role:data.role, supabase };
+}
+export async function requireAdmin(minimum:AdminRole='ADMIN_VIEWER') {
+  const context=await adminIdentity(minimum);
+  if(operationsEnabled()){
+    const {data,error}=await context.supabase.auth.getClaims();
+    if(error||!adminMfaSatisfied(data?.claims))throw new ChatError(403,'ADMIN_MFA_REQUIRED','Confirme o código do seu autenticador para acessar a administração.');
+  }
+  return context;
 }

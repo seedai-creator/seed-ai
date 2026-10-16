@@ -6,6 +6,7 @@ import { billingSite, stripeClient } from "@/lib/billing/stripe";
 import { validateTestPrice } from "@/lib/billing/contracts";
 import { isPlanAvailable } from "@/lib/commercial/markets";
 import { getLocale } from "@/lib/i18n/server";
+import { billingMetadata } from "@/lib/billing/metadata";
 export async function startCheckout() {
   let destination: string;
   try {
@@ -41,7 +42,7 @@ export async function startCheckout() {
       mode: "subscription", client_reference_id: c.user.id,
       expires_at: Math.floor(Date.parse(attempt.expires_at)/1000),
       line_items: [{ price: priceId, quantity: 1 }],
-      subscription_data: { metadata: { seed_user_id: c.user.id, seed_market: c.market.code, seed_price_id: price.id } },
+      subscription_data: { metadata: billingMetadata({userId:c.user.id,market:c.market.code,priceId:price.id},process.env.SEED_ENV) },
       metadata: { seed_attempt_id: attempt.id },
       success_url: billingSite() + "/billing?checkout=returned", cancel_url: billingSite() + "/billing?checkout=canceled",
       locale: locale.startsWith("pt") ? (locale === "pt-BR" ? "pt-BR" : "pt") : locale.startsWith("es") ? "es" : "en",

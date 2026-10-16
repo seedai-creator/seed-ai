@@ -1,0 +1,52 @@
+name: SeedAI operational health
+# No schedule before publication approval and a real failure/recovery drill.
+on:
+  workflow_dispatch:
+    inputs:
+      initialize_state:
+        description: Initialize only the first monitor run; never reset an incident
+        type: boolean
+        default: false
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: seedai-operational-health
+  cancel-in-progress: false
+jobs:
+  independent-monitor:
+    if: github.ref == 'refs/heads/main' && vars.SEED_MONITOR_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 26.10.0
+      - id: restore
+        name: Restore incident state from the previous trusted run
+        run: node scripts/restore-monitor-state.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SEED_MONITOR_INITIALIZE: ${{ inputs.initialize_state }}
+      - name: Check health and notify only on a change
+        run: node scripts/run-operational-monitor.mjs
+        env:
+          SEED_HEALTH_URL: https://appseedai.com/api/internal/health
+          SEED_HEALTH_TOKEN: ${{ secrets.SEED_HEALTH_TOKEN }}
+          SEED_MONITOR_ALERTS_ENABLED: 'true'
+          SEED_MONITOR_INITIALIZE: ${{ inputs.initialize_state }}
+          SEED_MONITOR_FROM: alertas@auth.appseedai.com
+          SEED_MONITOR_TO: seedtecnologias.suporte@gmail.com
+          SEED_MONITOR_RESEND_KEY: ${{ secrets.SEED_MONITOR_RESEND_KEY }}
+      - name: Preserve incident state even after an unhealthy check
+        if: always() && steps.restore.outcome == 'success'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: seedai-health-state-${{ github.run_attempt }}
+          path: .test-build/monitor-state/state.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

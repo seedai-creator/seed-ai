@@ -5,6 +5,7 @@ import { stripeClient } from "@/lib/billing/stripe";
 import { cancelsAtPeriodEnd, isBillingEvent, validateTestPrice } from "@/lib/billing/contracts";
 import { commercialDatabase } from "@/lib/commercial/server";
 import { verifyStripeWebhook } from "@/lib/billing/verify-webhook";
+import { billingReference } from "@/lib/billing/metadata";
 export const runtime = "nodejs";
 const idOf = (value: string | { id: string } | null | undefined) => typeof value === "string" ? value : value?.id;
 const iso = (seconds: number | null) => seconds === null ? null : new Date(seconds * 1000).toISOString();
@@ -35,9 +36,10 @@ export async function POST(request: Request) {
     if (subscription.livemode || subscription.items.data.length !== 1) throw new Error("UNSUPPORTED_SUBSCRIPTION");
     const item = subscription.items.data[0];
     if (item.quantity !== 1) throw new Error("INVALID_QUANTITY");
-    const { seed_user_id: userId, seed_market: market, seed_price_id: priceId } = subscription.metadata;
-    // Foreign Stripe products are acknowledged without changing SEED access.
-    if (!userId || !market || !priceId) return Response.json({ received: true });
+    const reference = billingReference(subscription.metadata, process.env.SEED_ENV);
+    // Foreign products/environments are acknowledged without changing access.
+    if (!reference) return Response.json({ received: true });
+    const { userId, market, priceId } = reference;
     const db = commercialDatabase();
     const { data: price, error: priceError } = await db.from("commercial_prices").select("*").eq("id", priceId).single();
     if (priceError || !price || price.provider_price_id !== item.price.id) throw new Error("PRICE_MISMATCH");
@@ -51,5 +53,10 @@ export async function POST(request: Request) {
     } });
     if (error) throw new Error("BILLING_PERSISTENCE_FAILED");
     return Response.json({ received: true });
-  } catch { logEvent('billing',{ code: "WEBHOOK_PROCESSING_FAILED", eventId: event.id },'error'); return Response.json({ error: "Retry later" }, { status: 503 }); }
+  } catch {
+    logEvent('billing',{ code: "WEBHOOK_PROCESSING_FAILED" },'error');
+    const {recordServerFailure} = await import('@/lib/operations/alert-worker');
+    await recordServerFailure('billing', 'WEBHOOK_PROCESSING_FAILED');
+    return Response.json({ error: "Retry later" }, { status: 503 });
+  }
 }
