@@ -4,6 +4,8 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 
 Atualização de 16/10/2026: [histórico compartilhado reconciliado](docs/MIGRATION_HISTORY.md) nos bancos de staging e produção, preservando seus schemas. O ensaio `node scripts/test-staging.mjs --run --stripe-hosted` passou com entrega HTTPS assinada, falha/reenvio, idempotência e cancelamento. Requer preparação privada do preview e webhook fictício; não é executado pelo CI. As credenciais, webhook e preview temporários foram removidos após o ensaio. Planos continuam desativados; a landing permanece publicada. [Situação e bloqueadores atuais da Fase 13](docs/PHASE_13_STATUS.md).
 
+O staging está alinhado às 43 migrações; a correção final de custos passou em dez grupos de integração sem mudar planos/preços. O [monitor independente](docs/INDEPENDENT_MONITOR.md) e o [candidato de publicação](docs/PHASE_13_RELEASE_CANDIDATE.md) estão preparados. Agendamento e novos e-mails não foram ativados. Suíte local: 554 testes aprovados; conferir a CI do commit exato antes de publicar.
+
 ## Estado das fases
 - Fase 1: implementada; teste real confirmado pelo proprietário na conversa.
 - Fase 2: código de autenticação, empresas e RLS implementado. Projeto Supabase conectado e migração aplicada; RLS confirmada nas três tabelas. Cadastro e login reais confirmados pelo proprietário; acesso à empresa e persistência da sessão verificados no navegador.

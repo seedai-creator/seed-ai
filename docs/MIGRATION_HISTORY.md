@@ -17,9 +17,15 @@ Staging corresponde exatamente às fontes. Em produção, 11 corpos de função 
 
 As transações verificaram o histórico completo anterior e a impressão digital do catálogo. Cópias anteriores, fontes, comparação, reparo e inversão estão em `.test-build/migration-ledger/`, fora do Git público. Testes locais comprovaram atomicidade, rollback, preservação de dados e recusa de repetição/schema/histórico divergentes. As impressões digitais dos catálogos hospedados ficaram idênticas após os reparos.
 
+## Validação posterior no staging
+
+Após o reparo de histórico, `20261016133617_allowance_guards.sql` foi aplicada **somente no staging**. O identificador gerado pelo provedor foi alinhado ao arquivo local depois de comparar integralmente o SQL, sem reaplicá-lo. São agora 43 migrações, 81 tabelas e 106 funções, com comparação estrita sem diferenças. Dez grupos de integração comercial/RLS passaram; fixtures removidas. Planos, preços, mercados e controles ficaram idênticos antes/depois; limite global vigente continua US$ 10, sem ativar as franquias candidatas. A nova função de orçamento não é executável por `anon` ou `authenticated`.
+
+O advisor de segurança mantém 13 avisos informativos de tabelas fechadas por RLS sem políticas de cliente e 19 avisos sobre RPCs `SECURITY DEFINER` acessíveis a usuários autenticados. Esses contratos já fazem parte das fontes/testes de autorização; não são 19 novas concessões dessa migração. Não retirar as verificações de identidade nem abrir políticas para silenciar o advisor. [Explicação do aviso de RPC](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable).
+
 ## Ainda não aplicado
 
-- Staging: `20261016133617_allowance_guards.sql`.
+- Staging: nenhuma migração local pendente nesta conferência.
 - Produção: sete migrações operacionais entre `202610100001_production_readiness.sql` e `20261016100618_operational_queue_coverage.sql`, além de `20261016133617_allowance_guards.sql`.
 
 Essas diferenças são intencionais. Nunca marcar trabalho pendente como executado. A proposta de franquias/ofertas não foi ativada. A publicação operacional ainda exige aprovação específica.

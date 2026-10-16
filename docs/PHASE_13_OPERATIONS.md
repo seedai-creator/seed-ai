@@ -8,6 +8,8 @@ O modo `SEED_STAGING_HOSTED_BILLING=true` exige `SEED_ENV=staging`, `VERCEL_ENV=
 
 ## Primeiro ambiente de testes
 
+Preparação final de 16/10: staging agora possui as 43 migrações, incluindo a correção de reservas/custos, com catálogo estritamente igual às fontes e integração real aprovada. Preços/franquias candidatas continuam inativos. A publicação operacional está delimitada no [candidato de release](PHASE_13_RELEASE_CANDIDATE.md). O [monitor independente](INDEPENDENT_MONITOR.md) está implementado, mas desativado; execução real, mensagens e agendamento ainda dependem da aprovação correspondente. Os registros datados abaixo preservam o histórico; as pendências já encerradas não devem ser reabertas por leitura isolada de uma seção antiga.
+
 1. No Supabase, criar `seed-ai-staging` vazio, preferencialmente na mesma região da produção. Não clonar dados pessoais ou empresariais da produção.
 2. Guardar a senha do banco e a chave de servidor no gerenciador de senhas. Informar à equipe somente a URL pública para identificar o projeto; nunca colar secrets no chat.
 3. Configurar o ambiente local com `SEED_ENV=development`, `SEED_PRODUCTION_SUPABASE_REF=gqumxaapjyujrpqggnon`, URL/chaves do **novo** projeto e endereço local. No Preview da Vercel, usar `SEED_ENV=staging`, o novo banco e URL HTTPS própria.
