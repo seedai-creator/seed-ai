@@ -11,6 +11,8 @@ const {chromium,expect:baseExpect}=await import('@playwright/test');
 // Local development compiles routes on first use. This timeout is not an SLA.
 const expect=baseExpect.configure({timeout:60000});
 const base='http://127.0.0.1:3002';
+const uploadsOnly=process.argv.includes('--uploads-only');
+const reportFile=uploadsOnly?'staging-uploads-report.json':'staging-browser-report.json';
 const manifest=new URL('../.test-build/staging-browser-state.json',import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],passed:false,cleanup:false};
 let admin,browser,state,activePage,phase='configuration';
@@ -68,8 +70,16 @@ try{
  admin=client(config.url,config.serverKey);
  const controls=data(await admin.from('operations_controls').select('*').eq('id',true).single(),'controls');
  requireTrue(controls.closed_beta&&controls.disable_ai&&controls.disable_uploads,'staging_not_paused');
- // Fixture legal documents must never be visible to real staging participants.
- requireTrue(data(await admin.auth.admin.listUsers({perPage:1}),'empty_staging').users.length===0,'staging_has_existing_users');
+ // Only an empty staging database or the exact, verified restore-drill
+ // identities may coexist with temporary legal fixtures. Never admit arbitrary
+ // accounts merely because their address looks fictional.
+ const existingUsers=data(await admin.auth.admin.listUsers({perPage:1000}),'staging_identities').users;
+ if(existingUsers.length){
+  const retained=JSON.parse(await readFile(new URL('../.test-build/backup-drill/manifest.json',import.meta.url),'utf8'));
+  requireTrue(retained.project===config.project&&retained.restoreVerified===true&&existingUsers.length<1000,'unknown_retained_accounts');
+  requireTrue(existingUsers.every(user=>retained.users.some(expected=>expected.id===user.id&&expected.email===user.email)),'staging_has_existing_users');
+  requireTrue(retained.users.every(user=>user.email===`seed-restore-${retained.run}-${user.email.endsWith('-a@example.invalid')?'a':'b'}@example.invalid`),'retained_fixture_identity_invalid');
+ }
  const run=randomUUID();state={run,status:'running',project:config.project,controls,emails:['a','b','admin'].map(s=>`seed-browser-${run}-${s}@example.invalid`)};await save();
  data(await admin.from('beta_invitations').insert(state.emails.map(email=>({email,cohort:'FIXTURE-'+run,expires_at:new Date(Date.now()+3600000).toISOString()}))),'invitations');
  const users=[];
@@ -81,7 +91,7 @@ try{
   users.push({id:user.id,email,password,company});
  }
  const [a,b,operator]=users;
- data(await admin.from('admin_roles').insert({user_id:operator.id,role:'SUPER_ADMIN'}),'fixture_admin');
+ if(!uploadsOnly)data(await admin.from('admin_roles').insert({user_id:operator.id,role:'SUPER_ADMIN'}),'fixture_admin');
  const legal=[];
  for(const locale of ['pt-BR','pt-PT','en-US','es-ES'])for(const kind of ['TERMS','PRIVACY'])legal.push({kind,locale,version:'FIXTURE-'+run,content:'FICTITIOUS TEST DOCUMENT. NOT VALID FOR REAL USERS. DOCUMENTO FICTICIO, SEM VALIDADE PARA USO REAL. '.repeat(3),approved:true,approved_by:operator.id});
  data(await admin.from('legal_documents').insert(legal),'fixture_legal');
@@ -94,6 +104,38 @@ try{
  await page.locator('.company-card form button.send-button').first().click();await page.waitForURL(base+'/');
  await expect(page.locator('#challenge')).toBeVisible();
  passed('browser_login_consent_and_company_selection');
+ if(uploadsOnly){
+  phase='attachment_ui';
+  const input=page.locator('input[type=file]');
+  for(const name of ['fixture.txt','fixture.csv','fixture.md']){
+   await input.setInputFiles({name,mimeType:'text/plain',buffer:Buffer.from('FICTITIOUS DATA: 18 leads')});
+   await expect(page.locator('.core-file')).toContainText(name);
+   await page.locator('.core-file button').click();await expect(page.locator('.core-file')).toHaveCount(0);
+  }
+  for(const [name,content] of [['fixture.pdf','%PDF-1.4'],['fixture.exe','MZ'],['oversize.txt','x'.repeat(20481)],['long.txt','x'.repeat(2001)],['binary.txt','a\0b']]){
+   await input.setInputFiles({name,mimeType:'application/octet-stream',buffer:Buffer.from(content)});
+   await expect(page.locator('.core-error')).toBeVisible();await expect(page.locator('.core-file')).toHaveCount(0);
+  }
+  passed('browser_accepts_bounded_text_rejects_binary_unsupported_and_oversized_files');
+  phase='attachment_server';
+  const body={companyId:a.company,conversationId:randomUUID(),requestId:randomUUID(),version:0,hasAttachment:true,messages:[{role:'user',content:'FICTITIOUS FILE QA'}]};
+  const post=value=>context.request.post(base+'/api/chat',{data:value,headers:{origin:base,'content-type':'application/json'},timeout:60000});
+  const paused=await post(body);
+  requireTrue(paused.status()===503&&(await paused.json()).code==='UPLOADS_PAUSED','upload_pause_not_enforced');
+  const cross=await post({...body,companyId:b.company});requireTrue(cross.status()===403,'upload_tenant_mismatch');
+  const invalid=await post({...body,messages:[{role:'user',content:'x'.repeat(4001)}]});requireTrue(invalid.status()===400,'message_limit_ignored');
+  const binary=await context.request.post(base+'/api/chat',{data:Buffer.from([0xff]),headers:{origin:base,'content-type':'application/json'}});requireTrue(binary.status()===400,'invalid_utf8_accepted');
+  const multipart=await context.request.post(base+'/api/chat',{data:'FICTITIOUS',headers:{origin:base,'content-type':'multipart/form-data'}});requireTrue(multipart.status()===415,'binary_transport_accepted');
+  const samples=[];
+  for(let round=0;round<4;round++)await Promise.all(Array.from({length:4},async()=>{
+   const started=performance.now();const response=await context.request.post(base+'/api/chat',{data:'x'.repeat(160001),headers:{origin:base,'content-type':'application/json'},timeout:30000});
+   requireTrue(response.status()===413,'oversized_http_body_accepted');samples.push(Math.round(performance.now()-started));await response.dispose();
+  }));
+  requireTrue(data(await admin.from('conversations').select('id').eq('user_id',a.id),'attachment_no_conversation').length===0,'rejected_upload_persisted');
+  requireTrue(data(await admin.from('usage_logs').select('id').eq('user_id',a.id),'attachment_no_usage').length===0,'rejected_upload_charged');
+  report.uploads={requests:16,concurrency:4,samples,paidCalls:0,limits:{httpBytes:160000,fileBytes:20480,fileCharacters:2000,messageCharacters:4000},limitations:['Limited local HTTP rejection test, not a production capacity or SLA estimate.','Text-only attachments; PDF, Office, images, audio and antivirus scanning are unsupported.','Uploads stay paused in staging; no document was sent to AI.']};
+  passed('server_pause_tenant_encoding_transport_and_bounded_body_load_no_cost_or_persistence');
+ }else{
  phase='core_views';
  for(const view of ['company','memory','diagnosis','plan','settings']){
   await page.goto(base+'/?view='+view,{waitUntil:'domcontentloaded'});
@@ -157,6 +199,7 @@ try{
  phase='revocation';data(await admin.from('beta_access').update({disabled:true}).eq('user_id',a.id),'revoke_fixture');
  await page.goto(base+'/');await expect(page).toHaveURL(/\/access$/);await page.goto(base+'/support');await expect(page.locator('textarea[name=description]')).toBeVisible();
  passed('revocation_blocks_workspace_keeps_privacy_support');
+ }
  report.passed=true;
 }catch(error){
  report.failedPhase=phase;report.failureKind=error?.name==='TimeoutError'?'TIMEOUT':'ASSERTION_OR_PROVIDER';process.exitCode=1;
@@ -169,6 +212,6 @@ try{
 }
 finally{
  try{await clean();}catch{report.cleanup=false;report.passed=false;process.exitCode=1;if(state){state.status='cleanup_required';await save();}console.error('Fixture cleanup needs review.');}
- report.finishedAt=new Date().toISOString();await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});await writeFile(new URL('../.test-build/staging-browser-report.json',import.meta.url),JSON.stringify(report,null,2));
- console.log(JSON.stringify({passed:report.passed,checks:report.checks.length,cleanup:report.cleanup,report:'.test-build/staging-browser-report.json'}));
+ report.finishedAt=new Date().toISOString();await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});await writeFile(new URL('../.test-build/'+reportFile,import.meta.url),JSON.stringify(report,null,2));
+ console.log(JSON.stringify({passed:report.passed,checks:report.checks.length,cleanup:report.cleanup,report:'.test-build/'+reportFile}));
 }

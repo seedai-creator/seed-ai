@@ -29,6 +29,14 @@ function owned(record,run){
  return record;
 }
 export async function cleanupStripeFixture(stripe,fixture,run){
+ if(fixture.clockId){
+  const clock=await stripe.testHelpers.testClocks.retrieve(fixture.clockId);
+  check(clock.livemode===false&&clock.name==='SeedAI FIXTURE '+run,'stripe_clock_ownership_failed');
+  const clockCustomers=await stripe.customers.list({test_clock:clock.id,limit:100});
+  check(!clockCustomers.has_more,'stripe_clock_cleanup_limit');
+  for(const customer of clockCustomers.data)owned(customer,run);
+  check((await stripe.testHelpers.testClocks.del(clock.id)).deleted===true,'stripe_clock_cleanup_failed');
+ }
  // Find even a customer whose creation succeeded but whose response timed out.
  const customers=await stripe.customers.list({created:{gte:fixture.started},limit:100});
  check(!customers.has_more,'stripe_cleanup_scan_limit');

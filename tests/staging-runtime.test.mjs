@@ -23,3 +23,16 @@ test('core-only exemption cannot disable production validation or admit provider
  assert.ok(environmentIssues({...env,SEED_STAGING_CORE_ONLY:'false'}).includes('OPENAI_API_KEY is required'));
  assert.throws(()=>stagingRuntimeEnvironment({...fixture(),NEXT_PUBLIC_SUPABASE_URL:'https://'+'p'.repeat(20)+'.supabase.co'},[],{}));
 });
+
+test('billing-only validation admits test Stripe locally but not AI, email or production',()=>{
+ const base=stagingRuntimeEnvironment(fixture(),[],{});
+ const env={...base,SEED_STAGING_CORE_ONLY:'false',SEED_STAGING_BILLING_ONLY:'true',STRIPE_SECRET_KEY:'sk_test_fixture',STRIPE_WEBHOOK_SECRET:'whsec_fixture'};
+ assert.deepEqual(environmentIssues(env),[]);
+ for(const override of [
+  {SEED_ENV:'production'},{VERCEL_ENV:'preview'},{SEED_STAGING_CORE_ONLY:'true'},
+  {OPENAI_API_KEY:'unexpected'},{RESEND_API_KEY:'unexpected'},{SEED_ALERTS_ENABLED:'true'},
+  {SEED_JOURNAL_ENABLED:'true'},{SEED_OPERATIONS_ENABLED:'false'},
+  {SEED_EXTERNAL_MODE:'LIVE_WEB_ENABLED'},{NEXT_PUBLIC_SITE_URL:'https://external.example'},
+  {STRIPE_SECRET_KEY:'sk_live_fixture'},{STRIPE_WEBHOOK_SECRET:''},
+ ])assert.ok(environmentIssues({...env,...override}).length,JSON.stringify(override));
+});

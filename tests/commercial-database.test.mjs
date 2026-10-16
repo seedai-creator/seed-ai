@@ -28,7 +28,7 @@ test('commercial migrations: deny client writes, budgets, idempotency and billin
    await assert.rejects(role(reserve,[uid,company,id,.1],'service_role'));
    assert.equal((await role(reserve,[uid,company,crypto.randomUUID(),.1],'service_role'))[0].result.reason,'RATE_LIMIT');
    await role("select public.finish_ai_request($1,'UNKNOWN',null)",[id],'service_role');
-   assert.equal((await role(reserve,[uid,company,crypto.randomUUID(),.16],'service_role'))[0].result.reason,'HARD_LIMIT');
+   assert.equal((await role(reserve,[uid,company,crypto.randomUUID(),.16],'service_role'))[0].result.reason,'REQUEST_BUDGET');
    await assert.rejects(role(reserve,[other,company,crypto.randomUUID(),.01],'service_role'));
   });
   await t.test('checkout requires active billing; simultaneous repeats reuse attempt',async()=>{
@@ -63,7 +63,7 @@ test('commercial migrations: deny client writes, budgets, idempotency and billin
    await assert.rejects(role(rpc,[other,'AI_PRICE_CHANGED',JSON.stringify(ai),'Test unauthorized'],'service_role'));
    await role(rpc,[uid,'AI_PRICE_CHANGED',JSON.stringify(ai),'Test first version'],'service_role');
    await role(rpc,[uid,'AI_PRICE_CHANGED',JSON.stringify({...ai,input_per_million:'3'}),'Test second version'],'service_role');
-   const rows=(await db.query('select * from ai_model_pricing')).rows;assert.equal(rows.length,2);assert.equal(rows.filter(r=>r.effective_to===null).length,1);
+   const rows=(await db.query("select * from ai_model_pricing where model='fixture-model' and context_tier='standard'")).rows;assert.equal(rows.length,2);assert.equal(rows.filter(r=>r.effective_to===null).length,1);
    assert.equal((await db.query("select count(*)::int n from admin_audit_log where action='AI_PRICE_CHANGED'")).rows[0].n,2);
    const pt=(await db.query("select * from commercial_markets where code='PT'")).rows[0];
    await assert.rejects(role('select public.update_commercial_config($1,$2,$3,$4,$5::jsonb,$6)',[uid,'market','PT',pt.version,JSON.stringify({...pt,status:'ACTIVE'}),'Test launch blocked'],'service_role'));

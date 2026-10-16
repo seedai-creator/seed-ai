@@ -22,3 +22,10 @@ test('cleanup never deletes a customer belonging to a different fixture',async()
  await cleanupStripeFixture(stripe,{started:1,productId:'prod_fixture'},run);
  assert.equal(deleted,false);
 });
+
+test('clock cleanup refuses mismatched ownership before deleting any simulation',async()=>{
+ let deleted=false;
+ const stripe={testHelpers:{testClocks:{retrieve:async()=>({id:'clock_fixture',livemode:false,name:'Different test'}),del:async()=>{deleted=true;}}}};
+ await assert.rejects(cleanupStripeFixture(stripe,{clockId:'clock_fixture'},run),/clock_ownership/);
+ assert.equal(deleted,false);
+});

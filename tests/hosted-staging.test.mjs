@@ -17,3 +17,16 @@ test('deployment source allowlist excludes secrets, private evidence, migrations
   for(const file of ['.env.local','.env.staging.local','.test-build/report.json','.vercel/project.json','docs/private.md','supabase/migrations/test.sql','src/../.env','src/.env','src/data.log','public/data.sql','C:\\secret.txt'])assert.equal(hostedSourceFile(file),false,file);
   for(const file of ['src/app/page.tsx','src/lib/brain/index.ts','public/logo.png','package-lock.json','next.config.mjs','scripts/environment.mjs'])assert.equal(hostedSourceFile(file),true,file);
 });
+
+test('hosted billing exemption accepts only isolated Preview, test Stripe, no AI/email and paused jobs',()=>{
+ const env={...hostedStagingEnvironment(fixture,'https://fixture-staging.vercel.app','x'.repeat(32)),VERCEL_ENV:'preview',SEED_STAGING_CORE_ONLY:'false',SEED_STAGING_HOSTED_BILLING:'true',STRIPE_SECRET_KEY:'sk_test_fixture',STRIPE_WEBHOOK_SECRET:'whsec_fixture'};
+ assert.deepEqual(environmentIssues(env),[]);
+ for(const change of [
+  {SEED_ENV:'production'},{SEED_ENV:'development'},{VERCEL_ENV:'production'},{VERCEL_ENV:undefined},
+  {SEED_STAGING_CORE_ONLY:'true'},{SEED_STAGING_BILLING_ONLY:'true'},
+  {NEXT_PUBLIC_SITE_URL:'https://appseedai.com'},{NEXT_PUBLIC_SUPABASE_URL:'https://other.supabase.co'},
+  {SEED_STAGING_SUPABASE_REF:undefined},{STRIPE_SECRET_KEY:'sk_live_fixture'},
+  {OPENAI_API_KEY:'unexpected'},{RESEND_API_KEY:'unexpected'},{SEED_ALERTS_ENABLED:'true'},
+  {SEED_JOURNAL_ENABLED:'true'},{SEED_OPERATIONS_ENABLED:'false'},{SEED_EXTERNAL_MODE:'LIVE_WEB_ENABLED'},
+ ])assert.ok(environmentIssues({...env,...change}).length,JSON.stringify(change));
+});

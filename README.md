@@ -2,6 +2,8 @@
 Inteligência estratégica empresarial. Next.js 16 App Router, React, TypeScript,
 Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 
+Atualização de 16/10/2026: [histórico compartilhado reconciliado](docs/MIGRATION_HISTORY.md) nos bancos de staging e produção, preservando seus schemas. O ensaio `node scripts/test-staging.mjs --run --stripe-hosted` passou com entrega HTTPS assinada, falha/reenvio, idempotência e cancelamento. Requer preparação privada do preview e webhook fictício; não é executado pelo CI. As credenciais, webhook e preview temporários foram removidos após o ensaio. Planos continuam desativados; a landing permanece publicada. [Situação e bloqueadores atuais da Fase 13](docs/PHASE_13_STATUS.md).
+
 ## Estado das fases
 - Fase 1: implementada; teste real confirmado pelo proprietário na conversa.
 - Fase 2: código de autenticação, empresas e RLS implementado. Projeto Supabase conectado e migração aplicada; RLS confirmada nas três tabelas. Cadastro e login reais confirmados pelo proprietário; acesso à empresa e persistência da sessão verificados no navegador.
@@ -17,7 +19,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; staging protegido, MFA, exportação, recuperação, restauração de backup, rotação da chave, exclusão fictícia e reversão de Preview verificados. Em 16/10, monitoramento de cinco filas, carga limitada de 4.001 itens e ciclo de assinatura com a API Stripe em teste passaram; 510 testes locais aprovados. Ativação do monitor externo, entrega real dos webhooks, reconciliação do histórico e liberação revisada continuam pendentes. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: em implementação; staging protegido, MFA, exportação, recuperação, restauração de backup, rotação da chave, exclusão fictícia e reversão de Preview verificados. Em 16/10, Checkout e portal Stripe no navegador, eventos assinados pela rede, renovação/falha/recuperação, processamento concorrente das cinco famílias de filas e anexos limitados passaram em testes isolados. Suíte local de 544 testes aprovada, além da guarda adicional de limpeza do relógio Stripe; lint, tipos e build aprovados. Monitor independente, reconciliação do histórico compartilhado e liberação revisada continuam pendentes. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
 
 Diretriz de lançamento confirmada pelo titular em 15/10/2026: abertura pública da
@@ -83,6 +85,18 @@ staging sem gravar dados. `node scripts/prepare-schema-audit.mjs` prepara o cat�
 esperado para comparação, sem reparar o histórico nem aplicar migrações remotas.
 O monitor externo é opcional e ainda não está ativo: consulte a seção correspondente
 no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+
+Ensaios adicionais (opt-in, com fixtures e limpeza): `node scripts/test-staging.mjs --run --stripe-webhook`
+valida Checkout/portal e entrega assinada pela CLI oficial no candidato local;
+acrescente `--stripe-renewals` para o relógio de renovação/falha/recuperação.
+Requer Stripe CLI, chave **de teste** e configuração de portal; não modifica `.env.local`,
+webhooks cadastrados, ofertas ou planos globais. O namespace `seed_staging_*` impede
+que a assinatura fictícia seja aplicada pelo webhook publicado. Produção preserva
+`seed_*`; o ambiente precisa estar explicitamente configurado.
+`node scripts/test-staging.mjs --run --processors` testa Journal/Modelo/Pesquisa sem IA.
+Com `npm run staging:build` e `npm run staging:start`, use
+`node scripts/test-staging-browser.mjs --run --uploads-only` para validar anexos e os
+limites HTTP. Relatórios ficam privados em `.test-build/`; não os publicar no GitHub.
 
 ## Uso
 1. Criar conta com nome, e-mail e senha; confirmar o e-mail e entrar.
@@ -650,3 +664,39 @@ Fila e entrega via Resend validadas no staging, com um teste fictício autorizad
 - Migrações novas: `20261014213558_privacy_dependency_inventory.sql` e `20261015165036_domain_conflict_status.sql`, validadas e aplicadas apenas no staging. A segunda retorna `PT409` para conflitos permanentes, evitando repetição automática de transações; as telas aceitam também o código legado durante a implantação.
 
 Consulte os limites e pendências no relatório da fase. Não publicar esta fase automaticamente nem iniciar a Fase 14.
+
+### Avaliação de franquias antes da ativação
+
+`node --test tests/allowance-replay.test.mjs tests/allowance-caps-database.test.mjs` verifica orçamento compartilhado entre empresas, limites, tarefas automáticas e isolamento com banco local. Não altera planos remotos.
+
+Após compilar os testes, `node scripts/eval-allowances.mjs --run` executa casos fictícios usando o saldo do ledger privado de autorização da Fase 13. Exige autorização de gasto vigente; não cria nem renova o orçamento. Os parâmetros opcionais `--with-research` e `--with-quick-research` acrescentam pesquisa pública; `--retry-failed` repete falhas e `--repeat=...` permite repetir somente os casos de regressão explicitamente selecionados. Tentativas anteriores são preservadas.
+
+`node scripts/replay-allowance-experience.mjs` reutiliza as medições para cenários mensais sem novas chamadas pagas. Resultados e evidências ficam em `.test-build/phase-13-private-reports/`, fora do Git. Projeções não garantem satisfação, conversão ou capacidade de produção, e valores de uso desconhecido permanecem reservados. Nenhum desses comandos ativa preços, assinaturas ou limites.
+
+Os ajustes de limites de 16/10 estão preparados, sem ativação: `src/lib/commercial/pro-proposal.ts` fixa PRO 1/3/5 em R$99,99/R$199,99/R$399,99 e franquias compartilhadas de US$4/US$8/US$16. O modo `analysis_limit_mode: budget` remove a segunda cota de 200 análises e usa o ciclo da assinatura; FREE e políticas antigas continuam com contagem. Não há IDs de preços Stripe nem alteração automática de assinaturas nesta proposta.
+
+A migração local `20261016133617_allowance_guards.sql` separa saldo do ciclo, reserva da solicitação, proteção diária e pausa operacional. O orçamento geral mantém a proteção base e soma uma franquia por conta paga elegível; os alertas usam a mesma referência. Preserva autorização, isolamento, limite de frequência, concorrência e registros financeiros. Inclui preço separado para contexto longo do modelo estratégico, sem alterar o histórico. Validar e aplicar no staging antes de uma futura publicação autorizada; não foi aplicada aos bancos remotos nesta revisão.
+
+A medição de aplicação e testes usa `response-cost.ts`, incluindo cache, escrita de cache e todas as buscas retornadas. Uma quantidade de buscas maior que a solicitada gera diagnóstico/alerta, sem apagar o custo conhecido. Falhas sem uso confirmado continuam reservadas. Pesquisas podem reduzir a cobertura para caber no saldo, mantendo modelo e preço, com resultado marcado como parcial. Valores de simulações sem evidência do período exigem confirmação; cálculos independentes continuam disponíveis.
+
+Para repetir a aceitação: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build:verify`. Com autorização de gasto vigente, `node scripts/eval-allowances.mjs --run --adjustments --repeat=decision_simulation --with-research` verifica o período ausente, o período confirmado e a pesquisa; depois `node scripts/replay-allowance-experience.mjs` recalcula a projeção. A reserva anterior desconhecida é preservada no histórico, sem renovação do limite autorizado. A projeção explicita a diferença entre buscas medidas e abrangência projetada.
+
+### FREE — primeira análise antes do convite ao PRO
+
+Experiência publicada em 16/10/2026 após autorização, com o bloqueio público do aplicativo e as assinaturas preservados. A publicação isolou somente este fluxo e os patches de segurança da versão já existente; os ajustes de franquias acima e o restante da Fase 13 continuam separados. Antes da primeira análise de uma conta FREE, duas perguntas curtas recolhem o contexto sem chamar a IA. O problema e as respostas seguem juntos para uma análise, com autorização e medição normais. O usuário pode indicar que não conhece os dados; não se exige um questionário empresarial completo. Anexos seguem o fluxo existente de validação.
+
+A resposta prioriza situação, objetivo, evidências e um próximo passo com indicador e revisão. Quando faltam dados, pode orientar uma investigação de baixo risco; não transforma isso em gargalo confirmado. O cartão com convite ao PRO exige recomendação validada, evidência vinculada e conversa salva. Saudações, perguntas isoladas, recomendações retidas e falhas não liberam o convite. A análise é reconstruída do diagnóstico persistido ao reabrir a conversa; não depende de um marcador no navegador.
+
+Preservados: três respostas de IA por conta durante toda a experiência FREE e proteção financeira vigente (base de US$ 0,25), incluindo classificação, memória e custos desconhecidos reservados. Não há chamadas gratuitas extras, renovação por nova conversa ou dispensa de autorização/concorrência. O limite pode impedir concluir uma análise: nesse caso a interface informa a restrição e oferece suporte, sem apresentar sucesso ou pressionar a compra. Registros continuam acessíveis; uma falha na consulta de uso impede novas chamadas, sem bloquear sua leitura. Preços e franquias PRO combinados permanecem inalterados e inativos.
+
+Nenhuma migração adicional foi necessária para este fluxo. A migração de franquias citada acima continua pendente de aplicação remota. Testes: `npm test`, `npm run lint`, `npm run typecheck`, `npm run build:verify`; após compilar os testes, `node scripts/test-free-browser.mjs` valida o componente real com serviços fictícios e navegador isolado. Exige Chromium do Playwright disponível em `.test-build/playwright-browsers`. `node scripts/eval-free-experience.mjs --run` usa empresas fictícias e o ledger privado de US$ 2 já existente, somente com autorização de gasto vigente; `--retry-failed` mantém tentativas anteriores e suas reservas. Não toca bancos remotos, Stripe ou planos.
+
+Verificação manual: em uma conta FREE de testes, descreva um problema, clique em “Vamos começar”, responda às duas perguntas e gere a análise. Confira evidências, hipótese, próximo passo, indicador e revisão antes de “Conhecer o PRO”. Reabra a conversa para confirmar sua leitura. Teste também uma resposta sem informações suficientes e a cota esgotada; nenhuma delas deve simular uma conclusão bem-sucedida. A experiência não garante conversão comercial nem substitui validação com usuários reais.
+
+
+Publicação FREE: lint, tipos, 453 testes e build aprovados no [CI do pacote publicado](https://github.com/seedai-creator/seed-ai/actions/runs/38948375813). O teste privado com Auth e banco de staging verificou contexto local, falha sem provedor, leitura persistente, limite e celular. A resposta persistida desse ensaio é uma fixture; as avaliações anteriores com IA real continuam registradas separadamente. Depois da publicação, 22 verificações confirmaram landing acessível, app bloqueado e rotas operacionais protegidas. Nenhuma migração, ativação de oferta ou aumento de limite.
+
+
+### Fase 13 — coordenação e recuperação de filas
+
+Após compilar os testes, `node scripts/test-staging.mjs --run --workers` executa um ensaio opt-in no banco de staging: duas contas fictícias, quatro concorrentes, Growth Map e Radar, aquisição exclusiva, recuperação de lease, recusa de gravações antigas, reagendamento, limite de tentativas e isolamento. O cálculo vazio permanece limitado, sem métricas inventadas. Remove as fixtures e preserva controles, planos e orçamentos; não usa IA ou provedores de pagamento. Essa carga pequena não certifica capacidade nem substitui o ensaio completo do agendador e dos demais processadores.

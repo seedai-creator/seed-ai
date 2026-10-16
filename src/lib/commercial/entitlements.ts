@@ -11,7 +11,7 @@ export function getPlanEntitlements(global: Flags, plan: Plan, market: Market, o
 }
 export function canUseFeature(flags: Flags, feature: Feature) { return flags[feature] === true; }
 export function canCreateCompany(plan: Plan, existingCount: number) { return Number.isSafeInteger(existingCount) && existingCount >= 0 && existingCount < plan.company_limit; }
-export function canRunDiagnosis(flags: Flags, count: number, policy: UsagePolicy) { return canUseFeature(flags, "diagnosis") && count < policy.diagnoses; }
+export function canRunDiagnosis(flags: Flags, count: number, policy: UsagePolicy) { return canUseFeature(flags, "diagnosis") && (policy.analysis_limit_mode === 'budget' || count < policy.diagnoses); }
 export function canCreateExperiment(flags: Flags) { return canUseFeature(flags, "experiments"); }
 // Existing records remain readable after downgrade; entitlement gates new work.
 export function canAccessDecisionHistory(isMember: boolean) { return isMember; }
@@ -23,7 +23,7 @@ export function usageState(cost: number, interactions: number, policy: UsagePoli
   validatePolicy(policy);
   if (!Number.isFinite(cost) || cost < 0 || !Number.isSafeInteger(interactions) || interactions < 0) throw new Error("Invalid usage");
   if (!Number.isSafeInteger(diagnoses) || diagnoses < 0) throw new Error("Invalid diagnosis count");
-  if (cost >= policy.hard_usd || interactions >= policy.interactions || diagnoses >= policy.diagnoses) return "HARD_LIMIT";
+  if (cost >= policy.hard_usd || (policy.analysis_limit_mode !== 'budget' && (interactions >= policy.interactions || diagnoses >= policy.diagnoses))) return "HARD_LIMIT";
   if (cost >= policy.soft_usd) return "SOFT_LIMIT";
   if (cost >= policy.approaching_usd) return "APPROACHING_LIMIT";
   return "NORMAL";

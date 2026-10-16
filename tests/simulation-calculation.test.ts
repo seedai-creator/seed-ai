@@ -10,9 +10,23 @@ test('simulator: price change produces conditional 11000 / 10450 / 9900, never a
  const changed=calculate('CHANGED_PRICE',{price:price(100),change_ratio:ratio(.1)}).output;
  for(const [units,expected] of [[100,11000],[95,10450],[90,9900]]){
   const r=calculate('REVENUE',{price:changed,volume:volume(units)});
-  assert.ok(Math.abs(r.output.min-expected)<1e-9);assert.equal(r.version,'1.0.0');assert.equal(r.output.period,'MONTH');
+  assert.ok(Math.abs(r.output.min-expected)<1e-9);assert.equal(r.version,'1.0.1');assert.equal(r.output.period,'MONTH');
  }
 });
+test('simulator: conditional volume reduction feeds revenue and contribution without an invented input',()=>{
+ const reduced=calculate('REDUCED_VOLUME',{volume:volume(100),loss_ratio:ratio(.1)});
+ assert.equal(reduced.output.min,90);assert.equal(reduced.output.period,'MONTH');assert.equal(reduced.output.unit,'UNITS');
+ assert.deepEqual(reduced.limitations,['CONDITIONAL_VOLUME_NOT_A_FORECAST']);
+ assert.equal(calculate('REVENUE',{price:price(110),volume:reduced.output}).output.min,9900);
+ assert.equal(calculate('TOTAL_CONTRIBUTION',{price:price(110),variable_cost:price(60),volume:reduced.output}).output.min,4500);
+ const range=calculate('REDUCED_VOLUME',{volume:{...volume(100),max:120,approximate:true},loss_ratio:{...ratio(.1),max:.2}}).output;
+ assert.equal(range.min,80);assert.equal(range.max,108);assert.equal(range.approximate,true);
+ assert.equal(calculate('REDUCED_VOLUME',{volume:volume(100),loss_ratio:ratio(1)}).output.min,0);
+ assert.throws(()=>calculate('REDUCED_VOLUME',{volume:volume(100),loss_ratio:ratio(1.1)}),/INVALID_RATIO/);
+ assert.throws(()=>calculate('REDUCED_VOLUME',{volume:money(100),loss_ratio:ratio(.1)}),/EXPECTED_UNITS/);
+ assert.throws(()=>calculate('REDUCED_VOLUME',{volume:volume(100),loss_ratio:{...ratio(.1),scope:'other'}}),/SCOPE_MISMATCH/);
+});
+
 test('simulator: discount distinguishes revenue from contribution and required whole sales',()=>{
  const current=calculate('TOTAL_CONTRIBUTION',{price:price(200),variable_cost:price(120),volume:volume(100)}).output;
  const discounted=calculate('CHANGED_PRICE',{price:price(200),change_ratio:ratio(-.2)}).output;

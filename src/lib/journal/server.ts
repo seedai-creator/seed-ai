@@ -85,10 +85,12 @@ export async function processJournalJob(company?:string) {
     if(diagnosis.data)entities.push({type:"DIAGNOSIS",id:diagnosis.data.id,label:diagnosis.data.diagnosis.main_bottleneck??diagnosis.data.diagnosis.situation});
     const referenceDay=localDay(new Date(job.context.at),job.context.timezone);
     const business_context=await builderContext(job.company_id,job.user_id);
+    const companyProfile=await db.from('companies').select('name').eq('id',job.company_id).single();
+    if(companyProfile.error||!companyProfile.data)throw Error('JOURNAL_COMPANY_UNAVAILABLE');
     const goalState=goalsEnabled()?await goalSnapshot(job.company_id,job.user_id):null;
     const radarMemories=radarEnabled()?await db.from('business_memories').select('id,version,kind,value,evidence').eq('company_id',job.company_id).eq('deleted',false).in('kind',['GOAL','BUSINESS_PREFERENCE','CONSTRAINT']).order('updated_at',{ascending:false}).limit(20):null;
     providerStarted=true;
-    const response=await complete(extractionRequest(process.env.OPENAI_MODEL??"",source.data.content,recent.slice(0,20),{...job.context,referenceDay,entities,business_context,...(goalState?{goals_context:{goals:goalState.goals.slice(0,8),observations:goalState.observations.slice(0,24),memories:goalState.memories.slice(0,6),entities:goalState.entities.slice(0,20),catalog:METRIC_CATALOG}}:{}),...(radarMemories?.data?{radar_memories:radarMemories.data}:{})}),AbortSignal.timeout(55000));
+    const response=await complete(extractionRequest(process.env.OPENAI_MODEL??"",source.data.content,recent.slice(0,20),{...job.context,company_name:companyProfile.data.name,referenceDay,entities,business_context,...(goalState?{goals_context:{goals:goalState.goals.slice(0,8),observations:goalState.observations.slice(0,24),memories:goalState.memories.slice(0,6),entities:goalState.entities.slice(0,20),catalog:METRIC_CATALOG}}:{}),...(radarMemories?.data?{radar_memories:radarMemories.data}:{})}),AbortSignal.timeout(55000));
     if(response.status!=="completed")throw Error("JOURNAL_OUTPUT_INCOMPLETE");
     const parsed=JSON.parse(response.output_text);
     if(goalState){const normalized=normalizeIngestion(parsed.goals_metrics,source.data.content,{company:job.company_id,goals:goalState.goals,observations:goalState.observations,memories:goalState.memories,timezone:job.context.timezone,at:job.context.at,document:!!job.context.document});

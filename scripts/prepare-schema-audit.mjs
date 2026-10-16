@@ -3,8 +3,11 @@ import {createHash} from 'node:crypto';
 import {readFile,readdir,mkdir,writeFile} from 'node:fs/promises';
 import {schemaAuditQuery,compareSchema} from './schema-audit.mjs';
 const through=process.argv.find(v=>v.startsWith('--through='))?.slice('--through='.length);
+const include=(process.argv.find(v=>v.startsWith('--include='))?.slice('--include='.length)??'').split(',').filter(Boolean);
 if(through&&!/^(?:\d{12}|\d{14})$/.test(through))throw Error('INVALID_MIGRATION_BOUNDARY');
-const dir=new URL('../.test-build/schema-audit'+(through?'-'+through:'')+'/',import.meta.url);
+if(include.some(v=>!/^\d{12}(?:\d{2})?$/.test(v))||new Set(include).size!==include.length)throw Error('INVALID_INCLUDED_MIGRATIONS');
+const suffix=(through?'-'+through:'')+(include.length?'-shared':'');
+const dir=new URL('../.test-build/schema-audit'+suffix+'/',import.meta.url);
 await mkdir(dir,{recursive:true});
 if(process.argv[2]==='compare') {
  const actual=JSON.parse(await readFile(process.argv[3],'utf8'));
@@ -23,7 +26,8 @@ if(process.argv[2]==='compare') {
   const source=new URL('../supabase/migrations/',import.meta.url),manifest=[];
   const files=(await readdir(source)).filter(f=>f.endsWith('.sql')).sort();
   if(through&&!files.some(file=>file.startsWith(through+'_')))throw Error('UNKNOWN_MIGRATION_BOUNDARY');
-  for(const file of files.filter(file=>!through||file.split('_')[0]<=through)) {
+  if(include.some(version=>!files.some(file=>file.startsWith(version+'_'))))throw Error('UNKNOWN_INCLUDED_MIGRATION');
+  for(const file of files.filter(file=>!through||file.split('_')[0]<=through||include.includes(file.split('_')[0]))) {
    const sql=await readFile(new URL(file,source),'utf8');
    await db.exec(sql);
    manifest.push({file,sha256:createHash('sha256').update(sql).digest('hex')});
@@ -32,6 +36,6 @@ if(process.argv[2]==='compare') {
   await writeFile(new URL('function-bodies.json',dir),JSON.stringify((await db.query("select proname,prosrc from pg_proc where pronamespace='public'::regnamespace")).rows,null,2));
   await writeFile(new URL('manifest.json',dir),JSON.stringify({createdAt:new Date().toISOString(),migrations:manifest},null,2));
   await writeFile(new URL('query.sql',dir),schemaAuditQuery);
-  console.log(JSON.stringify({migrations:manifest.length,output:'.test-build/schema-audit'+(through?'-'+through:''),network:false}));
+  console.log(JSON.stringify({migrations:manifest.length,output:'.test-build/schema-audit'+suffix,network:false}));
  } finally {await db.close();}
 }

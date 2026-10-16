@@ -3,11 +3,17 @@ import { companyContext } from "@/lib/auth/context";
 import { commercialDatabase } from "@/lib/commercial/server";
 import { validId } from "@/lib/auth/validation";
 import type { MemoryItem } from "@/lib/memory/automatic";
+import { freeExperienceForUser } from '@/lib/commercial/free-experience-server';
 export async function workspaceData(companyId:string){
  const c=await companyContext(companyId),db=commercialDatabase();
- const [conversations,memories]=await Promise.all([db.from("conversations").select("id,title,version,updated_at").eq("company_id",c.companyId).eq("user_id",c.userId).order("updated_at",{ascending:false}).limit(100),db.from("business_memories").select("*").eq("company_id",c.companyId).eq("deleted",false).order("updated_at",{ascending:false}).limit(200)]);
+ // Commercial availability controls new AI work, never access to saved records.
+ const [conversations,memories,usage]=await Promise.all([
+  db.from("conversations").select("id,title,version,updated_at").eq("company_id",c.companyId).eq("user_id",c.userId).order("updated_at",{ascending:false}).limit(100),
+  db.from("business_memories").select("*").eq("company_id",c.companyId).eq("deleted",false).order("updated_at",{ascending:false}).limit(200),
+  freeExperienceForUser(c.userId).then(free=>({available:true,free}),()=>({available:false,free:null})),
+ ]);
  if(conversations.error||memories.error)throw Error("WORKSPACE_UNAVAILABLE");
- return {conversations:conversations.data as {id:string;title:string;version:number;updated_at:string}[],memories:memories.data as MemoryItem[]};
+ return {conversations:conversations.data as {id:string;title:string;version:number;updated_at:string}[],memories:memories.data as MemoryItem[],freeExperience:usage.free,usageAvailable:usage.available};
 }
 export async function readConversation(companyId:string,id:string){
  const c=await companyContext(companyId),db=commercialDatabase();

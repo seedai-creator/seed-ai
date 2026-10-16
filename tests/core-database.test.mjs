@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {readFile,readdir} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
 import {parseDiagnosis} from '../.test-build/src/lib/diagnosis/contracts.js';
+import {firstValue,freeExperienceState} from '../.test-build/src/lib/commercial/free-experience.js';
+import {freePolicy,freeMessage,usefulDiagnosis} from '../.test-build/tests/free-experience-fixtures.js';
 import {emptyReliability} from '../.test-build/tests/reliability-fixtures.js';
 test('core experience: private conversations and temporal memory',async t=>{
  const db=new PGlite(); const uid='11111111-1111-4111-8111-111111111111',other='22222222-2222-4222-8222-222222222222';
@@ -58,6 +60,36 @@ test('core experience: private conversations and temporal memory',async t=>{
    const rows=await role("select diagnosis from messages where diagnosis->'reliability' is not null");
    assert.deepEqual(parseDiagnosis(rows[0].diagnosis).reliability,emptyReliability());
    assert.equal((await role('select diagnosis from messages',[],'authenticated',other)).length,0);
+  });
+  await t.test('FREE first value survives exhaustion and reload, cannot be forged or read by another tenant, and new conversations do not reset allowance',async()=>{
+   const d=usefulDiagnosis();
+   await role(commit,[uid,company,convo,crypto.randomUUID(),8,freeMessage,'Revise os orçamentos pendentes.',JSON.stringify(d),'[]'],'service_role');
+   await db.exec('begin');
+   try{
+    await db.query("update commercial_plans set policy=$1::jsonb where code='FREE'",[JSON.stringify(freePolicy)]);
+    for(let i=0;i<3;i++){
+     const request=crypto.randomUUID();
+     const reserved=(await db.query('select reserve_ai_request($1,$2,$3,.02) r',[uid,company,request])).rows[0].r;
+     assert.equal(reserved.allowed,true);await db.query("select finish_ai_request($1,'COMPLETED',.01)",[request]);
+    }
+    const usage=(await db.query("select commercial_usage($1,'lifetime') r",[uid])).rows[0].r;
+    assert.equal(freeExperienceState({cost:usage.cost,diagnoses:usage.diagnoses},freePolicy).limited,true);
+    const blocked=(await db.query('select reserve_ai_request($1,$2,$3,.01) r',[uid,company,crypto.randomUUID()])).rows[0].r;
+    assert.equal(blocked.reason,'DIAGNOSIS_LIMIT');
+    // Reading is not gated by paid status or remaining AI allowance.
+    await db.exec('set local role authenticated');await db.query("select set_config('request.jwt.claim.sub',$1,true)",[uid]);
+    const saved=(await db.query("select diagnosis from messages where conversation_id=$1 and diagnosis->>'objective'=$2",[convo,d.objective])).rows;
+    assert.equal(saved.length,1);assert.deepEqual(firstValue(parseDiagnosis(saved[0].diagnosis)),firstValue(d));
+    await db.query("select set_config('request.jwt.claim.sub',$1,true)",[other]);
+    assert.equal((await db.query('select diagnosis from messages where conversation_id=$1',[convo])).rows.length,0);
+    await db.exec('reset role');
+    const newConversation=crypto.randomUUID();
+    await db.query(commit,[uid,company,newConversation,crypto.randomUUID(),0,'Nova conversa','Fixture local','null','[]']);
+    assert.equal((await db.query("select commercial_usage($1,'lifetime') r",[uid])).rows[0].r.diagnoses,3);
+    await db.exec('savepoint forged;set local role authenticated');
+    await assert.rejects(db.query(commit,[uid,company,newConversation,crypto.randomUUID(),1,'forged','forged',JSON.stringify(d),'[]']));
+    await db.exec('rollback to forged;reset role');
+   }finally{await db.exec('rollback');}
   });
  }finally{await db.close();}
 });

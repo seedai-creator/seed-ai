@@ -1,5 +1,6 @@
 import {logEvent} from '../operations/logging';
 import 'server-only';
+import type {Response} from 'openai/resources/responses/responses';
 import OpenAI from 'openai';
 import {createHash,randomUUID} from 'node:crypto';
 import {after} from 'next/server';
@@ -47,7 +48,7 @@ async function event(company:string,user:string,id:string,kind:string,metadata:R
 export async function processExternalJob(id?:string,provider:ExternalResearchProvider=new OpenAIWebSearchProvider()){
  if(!externalEnabled())return;const db=commercialDatabase();const claim=await db.rpc('claim_external_job',{p_run:id??null});if(claim.error)throw Error('EXTERNAL_JOB_UNAVAILABLE');const job=claim.data?.[0] as Job|undefined;if(!job)return;
  const selected=await db.from('external_research_runs').select('user_id,request_id,created_at,status').eq('id',job.run_id).eq('company_id',job.company_id).single();if(selected.error)throw Error('EXTERNAL_RUN_UNAVAILABLE');const user=selected.data.user_id;
- let activeCharge:Charge|null=null;
+ let activeCharge:Charge|null=null;let received:Response|null=null;
  try{
  const member=await db.from('company_members').select('user_id').eq('company_id',job.company_id).eq('user_id',user).maybeSingle();if(member.error||!member.data)throw Error('EXTERNAL_ACCESS_DENIED');
  const pref=await externalPreference(job.company_id,user);if(!pref.enabled||pref.sensitive_mode)throw Error('EXTERNAL_DISABLED');
@@ -64,12 +65,15 @@ export async function processExternalJob(id?:string,provider:ExternalResearchPro
   if(expired)throw Error('EXTERNAL_TIMEOUT');
   const prepared=await prepareExternalRequest(user,job.company_id,job.run_id,('WEB_SEARCH_'+plan.depth) as 'WEB_SEARCH_QUICK',webRequest(plan,webMode()));activeCharge=prepared.charge;
   await saveJob(job,{provider_state:{charge:activeCharge,submitted:true}});
-  response=await provider.start(prepared.request,AbortSignal.timeout(Math.min(100000,DEPTH_LIMITS[plan.depth].timeout)));
+  response=await provider.start(prepared.request,AbortSignal.timeout(Math.min(100000,DEPTH_LIMITS[plan.depth].timeout)));received=response;
   await saveJob(job,{provider_state:{charge:activeCharge,submitted:true,id:response.id}});
  }
+ received=response;
  if(response.status==='queued'||response.status==='in_progress'){await saveJob(job,{lease_token:null,lease_until:new Date(Date.now()+3000).toISOString()});return;}
+ const coverageReduced=activeCharge.coverageReduced;
  await settleExternal(activeCharge,response);activeCharge=null;
  evidence=collectEvidence(response,plan);
+ if(coverageReduced)evidence.partial=true;
  if((response.status==='failed'||response.status==='cancelled')&&!evidence.citations.length)throw Error(expired?'EXTERNAL_TIMEOUT':'EXTERNAL_PROVIDER_FAILED');
  if(!evidence.calls||!evidence.citations.length)evidence.partial=true;
  await saveJob(job,{evidence,provider_state:null});
@@ -86,7 +90,7 @@ export async function processExternalJob(id?:string,provider:ExternalResearchPro
  const completed=await db.rpc('finish_external_job',{p_run:job.run_id,p_lease:job.lease_token,p_report:report,p_answer:report.partial?externalLabels(plan.locale).partial:externalLabels(plan.locale).done,p_ttl:Math.floor(ttlMs(plan.trigger)/1000)});if(completed.error)throw Error('EXTERNAL_COMMIT_FAILED');
  for(const competitor of report.competitors){const found=await db.from('external_competitors').select('id').eq('company_id',job.company_id).eq('domain',competitor.domain).maybeSingle();if(!found.data)await db.from('external_competitors').insert({company_id:job.company_id,domain:competitor.domain,name:competitor.name,last_run_id:job.run_id});}
  }catch(e){
- if(activeCharge)await settleExternal(activeCharge,null).catch(()=>{});
+ if(activeCharge)await settleExternal(activeCharge,received).catch(()=>{});
  const code=e instanceof ChatError?e.code:e instanceof Error&&/^[A-Z_]+$/.test(e.message)?e.message:'EXTERNAL_FAILED';
  if(job.provider_state?.id)await provider.cancel(job.provider_state.id).catch(()=>{});
  const usage=await db.from('usage_logs').select('estimated_total_cost_usd,router_decision').eq('company_id',job.company_id).eq('user_id',user).in('router_decision->>external_key',[job.run_id,selected.data.request_id]);

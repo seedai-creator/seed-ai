@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';
 import {useI18n} from '@/lib/i18n/provider';
 import {externalLabels} from '@/lib/external/labels';
+import {externalFailureMessage} from '@/lib/external/failure-message';
 import {publicUrl,type ResearchView,type Finding,type ResearchReport} from '@/lib/external/domain';
 import {readExternalResearch,cancelExternalResearch,refreshExternalResearch,externalFeedback,researchSourcesViewed,confirmExternalCompetitor,setExternalWatch,readExternalPreference,setExternalPreference} from '@/app/external/actions';
 export function ExternalResearchPanel({companyId,conversationId,version,onContinue,onRefresh}:{companyId:string;conversationId:string;version:number;onContinue:(id:string,prompt:string)=>void;onRefresh:()=>Promise<void>}){
@@ -11,7 +12,7 @@ export function ExternalResearchPanel({companyId,conversationId,version,onContin
  function linked(item:Finding,r:ResearchReport){const ids=[...new Set(item.claimIds.flatMap(id=>r.claims.find(c=>c.id===id)?.sourceIds??[]))];return <p>{item.text} <span className="external-citations">{ids.map(id=>{const source=r.sources.find(s=>s.id===id);return source&&publicUrl(source.url)?<a key={id} href={source.url} target="_blank" rel="noopener noreferrer" aria-label={source.title}>[{id}]</a>:null;})}</span></p>;}
  return <section className="external-research" aria-label={l.title}>{runs.map(run=>{const r=run.report;return <article className="external-card" key={run.id}>
  <p className="core-eyebrow">{l.title}</p>
- {['QUEUED','RUNNING'].includes(run.status)?<><p role="status">{l.queued}</p><button className="text-button" disabled={busy} onClick={()=>act(()=>cancelExternalResearch(companyId,run.id))}>{l.cancel}</button></>:run.status==='FAILED'?<p role="status">{['USAGE_LIMIT','HARD_LIMIT','AI_ACCESS_BLOCKED','DIAGNOSIS_LIMIT'].includes(run.error_code??'')?l.budget:l.failed}</p>:run.status==='CANCELLED'?<p>{l.cancelled}</p>:null}
+ {['QUEUED','RUNNING'].includes(run.status)?<><p role="status">{l.queued}</p><button className="text-button" disabled={busy} onClick={()=>act(()=>cancelExternalResearch(companyId,run.id))}>{l.cancel}</button></>:run.status==='FAILED'?<p role="status">{externalFailureMessage(locale,run.error_code)}</p>:run.status==='CANCELLED'?<p>{l.cancelled}</p>:null}
  {r&&<><p>{r.summary}</p><small>{l.updated} {new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeStyle:'short'}).format(new Date(r.retrievedAt))}</small>{run.status==='PARTIAL'&&<p>{l.partial}</p>}
  {r.internalContext.length>0&&<section><h3>{l.internal}</h3>{r.internalContext.map((v,i)=><p key={i}>{v}</p>)}</section>}
  {([[l.findings,r.findings],[l.conflicts,r.conflicts],[l.inferences,r.inferences],[l.implications,r.implications],[l.steps,r.nextSteps]] as [string,Finding[]][]).filter(([,v])=>v.length).map(([label,items])=><section key={label}><h3>{label}</h3>{items.map((v,i)=><div key={i}>{linked(v,r)}</div>)}</section>)}

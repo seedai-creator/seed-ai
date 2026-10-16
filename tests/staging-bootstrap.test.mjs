@@ -13,6 +13,7 @@ test('bootstrap accepts official CLI timestamps while rejecting paths, duplicate
  for(const name of ['../20261014211433_fixture.sql','2026101421143_fixture.sql','20261014211433_fixture;drop.sql'])
   assert.throws(()=>buildStagingBootstrap([{...migration,name}],project));
  assert.throws(()=>buildStagingBootstrap([migration,migration],project));
+ assert.throws(()=>buildStagingBootstrap([{name:'20261013171010_waitlist_email_notifications.sql',sql:'select 1;'}],project),/transaction boundaries/);
 });
 
 test('staging configuration never accepts production, arbitrary hosts or missing keys',()=>{

@@ -33,7 +33,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
       <p>{t("billing.current")}: <strong>{c.plan.code}</strong></p>
       {state&&<p role="status">{t(`billing.usage.${state}`)}</p>}
       {state&&usage?.data&&<div>
-        <p>{t("billing.analysisBalance",{used:Number(usage.data.diagnoses??0),limit:Number(usage.data.analysis_limit??c.policy.diagnoses)})}</p>
+        {c.policy.analysis_limit_mode !== 'budget' && <p>{t("billing.analysisBalance",{used:Number(usage.data.diagnoses??0),limit:Number(usage.data.analysis_limit??c.policy.diagnoses)})}</p>}
         <p>{t("billing.analysisDefinition")}</p>
         {usage.data.allowance_expires_at
           ? <p>{t("billing.testAllowanceUntil",{date:new Intl.DateTimeFormat(locale,{dateStyle:"medium",timeStyle:"short",timeZone:"UTC"}).format(new Date(usage.data.allowance_expires_at))})}</p>

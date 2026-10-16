@@ -5,15 +5,23 @@ import {createClient} from '@supabase/supabase-js';
 import {randomUUID,randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {loadStagingEnvironment,stagingDatabaseConfig} from './staging-config.mjs';
+import {runStagingWorkers,WorkerCheckFailure} from './staging-workers.mjs';
 import {runBoundedStagingLoad,StagingLoadFailure} from './staging-load.mjs';
 import {runStagingCommercial,CommercialCheckFailure} from './staging-commercial.mjs';
 import {stripeFixtureClient,runStagingStripe,cleanupStripeFixture,StripeCheckFailure} from './staging-stripe.mjs';
+import {runStagingStripeWebhook} from './staging-stripe-webhook.mjs';
+import {runStagingStripeHosted} from './staging-stripe-hosted.mjs';
+import {runStagingProcessors} from './staging-processors.mjs';
 
 const manifestPath=new URL('../.test-build/staging-integration-state.json',import.meta.url);
+const workersMode=process.argv.includes('--workers');
+const processorsMode=process.argv.includes('--processors');
 const loadMode=process.argv.includes('--load');
 const commercialMode=process.argv.includes('--commercial');
-const stripeMode=process.argv.includes('--stripe-network');
-const reportName=stripeMode?'staging-stripe-report.json':commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
+const webhookMode=process.argv.includes('--stripe-webhook');
+const hostedMode=process.argv.includes('--stripe-hosted');
+const stripeMode=hostedMode||webhookMode||process.argv.includes('--stripe-network');
+const reportName=hostedMode?'staging-stripe-hosted-report.json':processorsMode?'staging-processors-report.json':process.argv.includes('--stripe-renewals')?'staging-stripe-renewals-report.json':webhookMode?'staging-stripe-webhook-report.json':workersMode?'staging-workers-report.json':stripeMode?'staging-stripe-report.json':commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
 const reportPath=new URL('../.test-build/'+reportName,import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],cleanup:false};
 let phase='configuration',admin,state,stripe;
@@ -77,7 +85,9 @@ async function cleanup(){
 
 try{
  requireTrue(process.argv.includes('--run'),'Use --run to execute the isolated integration test.');
- requireTrue([loadMode,commercialMode,stripeMode].filter(Boolean).length<=1,'run_load_and_commercial_separately');
+ requireTrue(!process.argv.includes('--stripe-renewals')||webhookMode,'renewals_require_stripe_webhook_mode');
+ requireTrue([hostedMode,webhookMode,process.argv.includes('--stripe-network')].filter(Boolean).length<=1,'stripe_modes_are_exclusive');
+ requireTrue([loadMode,commercialMode,stripeMode,workersMode,processorsMode].filter(Boolean).length<=1,'run_integration_modes_separately');
  const config=stagingDatabaseConfig(await loadStagingEnvironment());
  report.project=config.project;
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
@@ -138,7 +148,7 @@ try{
   phase='stripe_test_network';
   state.commercial={stripe:true,started:Math.floor(Date.now()/1000),productId:'prod_seed_fixture_'+run.replaceAll('-',''),priceId:randomUUID(),eventIds:Array.from({length:3},(_,i)=>'evt_fixture_network_'+run+'_'+i)};
   await saveState();
-  report.stripe=await runStagingStripe(stripe,admin,users,state.commercial,run,saveState);
+  report.stripe=await (hostedMode?runStagingStripeHosted:webhookMode?runStagingStripeWebhook:runStagingStripe)(stripe,admin,users,state.commercial,run,saveState);
   passed('stripe_test_network_checkout_subscription_cancellation');
  }
  if(commercialMode){
@@ -149,6 +159,8 @@ try{
   report.commercial=await runStagingCommercial(admin,users,state.commercial);
   passed('real_database_billing_replay_failure_cancellation_and_isolation');
  }
+ if(workersMode){phase='worker_coordination';report.workers=await runStagingWorkers(admin,users);passed('bounded_real_worker_concurrency_recovery_and_isolation');}
+ if(processorsMode){phase='processor_recovery';report.processors=await runStagingProcessors(admin,users);passed('journal_model_external_persistence_recovery_and_isolation');}
  if(loadMode){
   phase='bounded_load';
   report.load=await runBoundedStagingLoad(admin,users);
@@ -177,7 +189,7 @@ try{
  report.passed=true;
 }catch(error){
  report.passed=false;report.failedPhase=phase;process.exitCode=1;
- if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure||error instanceof StripeCheckFailure)report.failedCheck=error.message;
+ if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure||error instanceof StripeCheckFailure||error instanceof WorkerCheckFailure)report.failedCheck=error.message;
  if(error instanceof StagingLoadFailure&&error.diagnostics)report.diagnostics=error.diagnostics;
  console.error(JSON.stringify({failedPhase:phase,failedCheck:report.failedCheck,note:'Remote response and credentials omitted.'}));
 }finally{

@@ -27,8 +27,8 @@ test('external intelligence database: tenants, jobs, provenance, preferences, ca
  await db.query("insert into commercial_accounts(user_id,market_code) values($1,'BR') on conflict(user_id) do update set market_code='BR'",[user]);await db.exec("update commercial_markets set status='ACTIVE',disable_ai_requests=false where code='BR'");
  const reserve=async(feature,id=crypto.randomUUID(),cost=.001)=>(await db.query('select reserve_external_ai($1,$2,$3,$4,$5,$6) r',[user,company,id,cost,feature,id])).rows[0].r;
  assert.equal((await reserve('WEB_SEARCH_DEEP')).reason,'PRO_REQUIRED');const id=crypto.randomUUID();assert.equal((await reserve('WEB_SEARCH_QUICK',id)).allowed,true);await db.query("select finish_ai_request($1,'UNKNOWN',null)",[id]);const snapshot=(await db.query("select commercial_usage($1,'lifetime') r",[user])).rows[0].r;assert.ok(Number(snapshot.cost)>=.001);assert.equal(snapshot.diagnoses,0);
- assert.equal((await reserve('WEB_SEARCH_QUICK',crypto.randomUUID(),50)).reason,'HARD_LIMIT');
- await db.exec("update commercial_settings set value=jsonb_set(value,'{max_company_month_usd}','0.001') where id='external_research'");assert.equal((await reserve('EXTERNAL_SYNTHESIS')).reason,'HARD_LIMIT');
+ assert.equal((await reserve('WEB_SEARCH_QUICK',crypto.randomUUID(),50)).reason,'EXTERNAL_BUDGET');
+ await db.exec("update commercial_settings set value=jsonb_set(value,'{max_company_month_usd}','0.001') where id='external_research'");assert.equal((await reserve('EXTERNAL_SYNTHESIS')).reason,'EXTERNAL_BUDGET');
  });
  await t.test('research deletion removes jobs, sources and claims without erasing the cost ledger',async()=>{await db.query('delete from external_research_runs where company_id=$1',[company]);for(const table of ['external_research_runs','external_research_jobs','external_sources','external_claims','external_claim_sources'])assert.equal((await db.query('select count(*) n from '+table)).rows[0].n,0);assert.ok((await db.query('select count(*) n from ai_requests')).rows[0].n>0);});
  }finally{await db.close();}

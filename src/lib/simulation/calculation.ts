@@ -1,5 +1,5 @@
 /** Versioned, pure scenario arithmetic. This module never calls a model or predicts demand. */
-export const CALCULATION_VERSION = '1.0.0';
+export const CALCULATION_VERSION = '1.0.1';
 export type Interval = { min: number; max: number; approximate: boolean };
 export type Period = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR' | 'ONCE';
 export type Quantity = Interval & {
@@ -77,6 +77,7 @@ export const FORMULAS = {
   SIMPLE_PAYBACK: {expression:'investment ÷ incremental_period_contribution',inputs:['investment','incremental_period_contribution']},
   CHANGED_PRICE: {expression:'price × (1 + change_ratio)',inputs:['price','change_ratio']},
   DISCOUNT_PRICE: {expression:'price × (1 − discount_ratio)',inputs:['price','discount_ratio']},
+  REDUCED_VOLUME: {expression:'volume × (1 − loss_ratio)',inputs:['volume','loss_ratio']},
 } as const;
 export type Formula = keyof typeof FORMULAS;
 export type Calculation = {formula:Formula;version:string;inputs:Record<string,Quantity>;output:Quantity;rounding:'NONE';limitations:string[]};
@@ -108,6 +109,7 @@ export function calculate(formula:Formula,inputs:Record<string,Quantity>):Calcul
     case 'SIMPLE_PAYBACK':money(a);money(b);positive(b);if(a.period!=='ONCE'||b.period==='ONCE')fail('PAYBACK_REQUIRES_RECURRING_CONTRIBUTION');result=divide(a,b);unit='UNITS';period=b.period;currency=null;limitations.push('PERIOD_COUNT_NOT_DISCOUNTED_CASH_FLOW');break;
     case 'CHANGED_PRICE':price(a);if(b.unit!=='RATIO'||b.period!=='ONCE'||b.min<=-1)fail('INVALID_PRICE_CHANGE');result=multiply(a,add(interval(1),b));break;
     case 'DISCOUNT_PRICE':price(a);share(b);if(b.max>=1)fail('INVALID_PRICE_CHANGE');result=multiply(a,subtract(interval(1),b));break;
+    case 'REDUCED_VOLUME':units(a);share(b);result=multiply(a,subtract(interval(1),b));limitations.push('CONDITIONAL_VOLUME_NOT_A_FORECAST');break;
   }
   return {formula,version:CALCULATION_VERSION,inputs:structuredClone(inputs),output:{...result,unit,period,currency,scope:a.scope},rounding:'NONE',limitations};
 }

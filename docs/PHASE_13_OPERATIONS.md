@@ -2,6 +2,10 @@
 
 Estado: implementação local; beta fechado ainda não liberado. Este documento é um procedimento técnico, não uma política jurídica aprovada. Não contém credenciais.
 
+Atualização de 16/10/2026: o [histórico do banco foi reconciliado](MIGRATION_HISTORY.md). Não reaplicar instalações antigas. O Stripe também passou em preview HTTPS privado, com duas contas fictícias e pagamento de teste: falha sem concessão de plano, reenvio oficial, repetição concorrente, isolamento, cancelamento e evento atrasado. O cron estava desligado e nenhuma chave de IA/e-mail foi adicionada. Após os testes, removeram-se o endpoint, o token temporário de acesso, quatro variáveis de preview e o deployment temporário. Não foram alterados os projetos/domínios publicados ou os limites dos planos.
+
+O modo `SEED_STAGING_HOSTED_BILLING=true` exige `SEED_ENV=staging`, `VERCEL_ENV=preview`, banco de staging exato e separado, domínio de preview, chave Stripe de teste, jobs/IA/e-mail pausados e controles operacionais ativos. Não pode coexistir com os modos local de billing ou core-only. O roteiro é `node scripts/test-staging.mjs --run --stripe-hosted`; sua preparação privada fica em `.test-build/hosted-stripe/`. Não reutilizar um estado com limpeza pendente. Não imprimir URL com token de bypass, webhook secret ou chave Stripe. O ensaio comprova reenvio explícito pelo provedor, não o calendário de retries automáticos nem cobrança real.
+
 ## Primeiro ambiente de testes
 
 1. No Supabase, criar `seed-ai-staging` vazio, preferencialmente na mesma região da produção. Não clonar dados pessoais ou empresariais da produção.
