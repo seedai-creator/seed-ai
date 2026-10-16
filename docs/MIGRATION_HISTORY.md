@@ -23,12 +23,15 @@ Após o reparo de histórico, `20261016133617_allowance_guards.sql` foi aplicada
 
 O advisor de segurança mantém 13 avisos informativos de tabelas fechadas por RLS sem políticas de cliente e 19 avisos sobre RPCs `SECURITY DEFINER` acessíveis a usuários autenticados. Esses contratos já fazem parte das fontes/testes de autorização; não são 19 novas concessões dessa migração. Não retirar as verificações de identidade nem abrir políticas para silenciar o advisor. [Explicação do aviso de RPC](https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable).
 
-## Ainda não aplicado
+## Publicação autorizada — 16/10/2026
 
-- Staging: nenhuma migração local pendente nesta conferência.
-- Produção: sete migrações operacionais entre `202610100001_production_readiness.sql` e `20261016100618_operational_queue_coverage.sql`, além de `20261016133617_allowance_guards.sql`.
+As oito migrações operacionais foram aplicadas em produção após autorização explícita, conferência do backup físico de 16/10/2026 às 09:05:10 UTC e comparação do catálogo anterior. Cada instalação foi conferida; os identificadores gerados foram alinhados às versões locais numa transação de metadados com guardas e comparação integral dos comandos. Não houve reaplicação do SQL. Ambos os ambientes têm agora **43 migrações, 81 tabelas e 106 funções**. Nenhuma migração local pendente nesta conferência.
 
-Essas diferenças são intencionais. Nunca marcar trabalho pendente como executado. A proposta de franquias/ofertas não foi ativada. A publicação operacional ainda exige aprovação específica.
+Produção instalou a migração de controles depois das tabelas da landing já existentes. Por isso, seu laço cria oito políticas restritivas adicionais nessas tabelas, ausentes numa instalação em ordem cronológica. A ordem real foi reproduzida em banco local: o catálogo corresponde a essa instalação, conservando apenas três pares de hashes históricos de corpos já revisados. As oito tabelas continuam sem privilégios de cliente ou políticas permissivas; o acesso de servidor da landing permanece intacto. Não se afirma igualdade estrita entre ambientes nem se removem políticas para ocultar essa diferença.
+
+Planos, preços e mercados foram comparados integralmente com a cópia anterior, sem alterações. Novas assinaturas continuam bloqueadas e ofertas/franquias candidatas não foram ativadas. O controle `closed_beta` foi habilitado em produção, conforme o fechamento público autorizado, sem publicar convites ou documentos legais. Evidências privadas em `.test-build/releases/operations-2026-10-16/`.
+
+O advisor de produção mantém cinco avisos informativos de tabelas internas sem políticas de cliente e 19 avisos dos contratos RPC autenticados conhecidos. A proteção contra senhas vazadas foi habilitada no Auth e seu aviso deixou de aparecer. [Proteção de senhas do Supabase](https://supabase.com/docs/guides/auth/password-security). Outros requisitos de senha não foram alterados.
 
 ## Procedimento futuro
 

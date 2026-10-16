@@ -1,6 +1,9 @@
 name: SeedAI operational health
-# No schedule before publication approval and a real failure/recovery drill.
+# Publication/schedule authorized; failure/recovery delivery verified 2026-10-16.
+# The repository activation variable remains the independent final gate.
 on:
+  schedule:
+    - cron: '*/10 * * * *'
   workflow_dispatch:
     inputs:
       initialize_state:
