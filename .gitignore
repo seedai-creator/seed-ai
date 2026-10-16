@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.test-build/
+.env*
+.vercel/
+*.tsbuildinfo
+docs/
+CLAUDE.md
+SUPABASE_SETUP.md
+evals/
+scripts/audit-goals-live.mjs
+scripts/verify-*-live.mjs
+scripts/verify-cockpit-readonly.mjs

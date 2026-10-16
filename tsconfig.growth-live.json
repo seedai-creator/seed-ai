@@ -1,0 +1,6 @@
+{
+ "extends":"./tsconfig.test.json",
+ "compilerOptions":{"outDir":".test-build/growth-runtime","rootDir":"."},
+ "include":["src/lib/growth/server.ts","src/lib/openai/pipeline.ts","src/lib/commercial/metering.ts"],
+ "exclude":["node_modules",".test-build"]
+}

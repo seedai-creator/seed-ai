@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.test.json",
+  "compilerOptions": {"outDir": ".test-build/goals-runtime", "rootDir": "."},
+  "include": ["src/lib/goals/server.ts", "src/lib/goals/radar.ts", "src/lib/journal/server.ts", "src/lib/journal/requests.ts", "src/lib/openai/pipeline.ts"],
+  "exclude": ["node_modules", ".test-build"]
+}

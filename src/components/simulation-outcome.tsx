@@ -1,0 +1,14 @@
+'use client';
+import {useState,type FormEvent} from 'react';
+import {useI18n} from '@/lib/i18n/provider';
+import {readSimulationResults,compareSimulationResult,type SavedSimulation} from '@/app/simulation/actions';
+import type {ObservedResult} from '@/lib/simulation/outcomes';
+export function SimulationOutcome({companyId,row}:{companyId:string;row:SavedSimulation}){
+ const {locale}=useI18n(),[results,setResults]=useState<ObservedResult[]|null>(null),[busy,setBusy]=useState(false),[message,setMessage]=useState('');
+ const words=locale==='en-US'?['Compare with actual result','Assumption','Observed result','I confirm these refer to the same metric, unit and business scope.','Compare','No linked result yet. Record a result for this decision, plan or experiment in the conversation.','Unable to compare. Refresh and try again.']:locale==='es-ES'?['Comparar con el resultado real','Premisa','Resultado observado','Confirmo que se refieren al mismo indicador, unidad y alcance del negocio.','Comparar','Todavía no hay resultados vinculados. Registra un resultado de esta decisión, plan o experimento en la conversación.','No se pudo comparar. Actualiza e inténtalo de nuevo.']:['Comparar com resultado real','Premissa','Resultado observado','Confirmo que se referem ao mesmo indicador, unidade e escopo do negócio.','Comparar','Ainda não há resultado vinculado. Registre um resultado desta decisão, plano ou experimento na conversa.','Não foi possível comparar. Atualize e tente novamente.'];
+ async function load(){setBusy(true);try{setResults(await readSimulationResults(companyId,row.id));}catch{setMessage(words[6]);}finally{setBusy(false);}}
+ async function compare(event:FormEvent<HTMLFormElement>){event.preventDefault();const data=new FormData(event.currentTarget);setBusy(true);try{setMessage(await compareSimulationResult(companyId,row.id,String(data.get('input')),String(data.get('result')),data.get('confirm')==='on'));}catch{setMessage(words[6]);}finally{setBusy(false);}}
+ const selected=row.snapshot.scenarios.find(s=>s.id===row.selected_scenario);
+ const assumptions=row.snapshot.extraction.inputs.filter(i=>i.kind!=='FACT'&&selected?.assumption_ids.includes(i.id));if(!assumptions.length)return null;
+ return <div style={{marginBlock:12}}><button className="text-button" disabled={busy} onClick={load}>{words[0]}</button>{results?.length===0&&<p>{words[5]}</p>}{!!results?.length&&<form onSubmit={compare}><label>{words[1]}<select name="input">{assumptions.map(i=><option key={i.id} value={i.id}>{i.label}</option>)}</select></label><label>{words[2]}<select name="result">{results.map(r=><option key={r.id} value={r.id}>{r.description}</option>)}</select></label><label style={{display:'block'}}><input type="checkbox" name="confirm" required/>{words[3]}</label><button className="text-button" disabled={busy}>{words[4]}</button></form>}{message&&<p role="status">{message}</p>}</div>;
+}
