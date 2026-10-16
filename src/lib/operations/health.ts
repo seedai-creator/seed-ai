@@ -6,22 +6,31 @@ export function healthAuthorized(header:string|null,token:string|undefined) {
   const expected=Buffer.from('Bearer '+token),actual=Buffer.from(header??'');
   return actual.length===expected.length&&timingSafeEqual(actual,expected);
 }
-export type HealthObservation={database:boolean;lastCron:string|null;alertDeliveryBlocked:boolean};
+export type HealthObservation={database:boolean;lastCron:string|null;alertDeliveryBlocked:boolean;backgroundJobsBlocked:boolean};
+export const queueHealthKeys=['journal_overdue','business_model_overdue','radar_overdue','external_overdue','growth_overdue'] as const;
+export function backgroundJobsBlocked(value:unknown):boolean {
+  if(!value||typeof value!=='object'||Array.isArray(value))throw Error('HEALTH_READ_FAILED');
+  const counters=value as Record<string,unknown>;
+  for(const key of queueHealthKeys)if(typeof counters[key]!=='number'||!Number.isSafeInteger(counters[key])||(counters[key] as number)<0)throw Error('HEALTH_READ_FAILED');
+  return queueHealthKeys.some(key=>(counters[key] as number)>0);
+}
 export async function readOperationalHealthFrom(db:SupabaseClient,now=Date.now()):Promise<HealthObservation> {
   const cutoff=new Date(now-15*60000).toISOString();
-  const [controls,cron,delivery]=await Promise.all([
+  const [controls,cron,delivery,queues]=await Promise.all([
     db.from('operations_controls').select('id').eq('id',true).single(),
     db.from('operational_events').select('created_at').eq('feature','scheduler').eq('code','CRON_FINISHED').order('created_at',{ascending:false}).limit(1).maybeSingle(),
     db.from('operational_alerts').select('id').or(`and(status.eq.FAILED,created_at.gte.${cutoff}),and(status.in.(QUEUED,SENDING),available_at.lt.${cutoff})`).limit(1),
+    db.rpc('operational_queue_health'),
   ]);
-  if(controls.error||cron.error||delivery.error||!controls.data||!Array.isArray(delivery.data))throw Error('HEALTH_READ_FAILED');
-  return {database:true,lastCron:cron.data?.created_at??null,alertDeliveryBlocked:delivery.data.length>0};
+  if(controls.error||cron.error||delivery.error||queues.error||!controls.data||!Array.isArray(delivery.data))throw Error('HEALTH_READ_FAILED');
+  return {database:true,lastCron:cron.data?.created_at??null,alertDeliveryBlocked:delivery.data.length>0,backgroundJobsBlocked:backgroundJobsBlocked(queues.data)};
 }
 export function evaluateHealth(observation:HealthObservation,now:number) {
   const checks:{code:string;healthy:boolean}[]=[{code:'DATABASE',healthy:observation.database}];
   const last=observation.lastCron===null?NaN:Date.parse(observation.lastCron);
   checks.push({code:'SCHEDULER',healthy:Number.isFinite(now)&&Number.isFinite(last)&&last<=now+60000&&now-last<=5*60000});
   checks.push({code:'ALERT_DELIVERY',healthy:!observation.alertDeliveryBlocked});
+  checks.push({code:'BACKGROUND_JOBS',healthy:!observation.backgroundJobsBlocked});
   return {status:checks.every(c=>c.healthy)?'ok':'degraded',checks};
 }
 export async function healthResponse(request:Request,token:string|undefined,read:()=>Promise<HealthObservation>,now=Date.now()) {

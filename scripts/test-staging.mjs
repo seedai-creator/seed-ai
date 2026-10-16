@@ -1,19 +1,22 @@
 // Opt-in integration test. Uses only the isolated staging project and fictitious
-// accounts; never contacts OpenAI, Stripe or production. Passwords stay in memory.
+// accounts; never contacts OpenAI or production. The explicit --stripe-network
+// option contacts Stripe test mode only. Passwords stay in memory.
 import {createClient} from '@supabase/supabase-js';
 import {randomUUID,randomBytes} from 'node:crypto';
 import {mkdir,readFile,writeFile} from 'node:fs/promises';
 import {loadStagingEnvironment,stagingDatabaseConfig} from './staging-config.mjs';
 import {runBoundedStagingLoad,StagingLoadFailure} from './staging-load.mjs';
 import {runStagingCommercial,CommercialCheckFailure} from './staging-commercial.mjs';
+import {stripeFixtureClient,runStagingStripe,cleanupStripeFixture,StripeCheckFailure} from './staging-stripe.mjs';
 
 const manifestPath=new URL('../.test-build/staging-integration-state.json',import.meta.url);
 const loadMode=process.argv.includes('--load');
 const commercialMode=process.argv.includes('--commercial');
-const reportName=commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
+const stripeMode=process.argv.includes('--stripe-network');
+const reportName=stripeMode?'staging-stripe-report.json':commercialMode?'staging-commercial-report.json':loadMode?'staging-load-report.json':'staging-integration-report.json';
 const reportPath=new URL('../.test-build/'+reportName,import.meta.url);
 const report={startedAt:new Date().toISOString(),checks:[],cleanup:false};
-let phase='configuration',admin,state;
+let phase='configuration',admin,state,stripe;
 class CheckFailure extends Error {}
 function requireTrue(value,label){if(!value)throw new CheckFailure(label);}
 function data(result,label){requireTrue(!result.error,label);return result.data;}
@@ -24,6 +27,9 @@ function client(url,key){return createClient(url,key,{auth:{persistSession:false
 
 async function cleanup(){
  phase='cleanup';
+ if(state.commercial?.stripe){
+  report.stripeCleanup=await cleanupStripeFixture(stripe,state.commercial,state.run);
+ }
  // Also recover an account whose creation response timed out. Never delete by
  // prefix or user-provided ID alone: match the exact fixture email manifest.
  const fixtures=[];
@@ -71,12 +77,13 @@ async function cleanup(){
 
 try{
  requireTrue(process.argv.includes('--run'),'Use --run to execute the isolated integration test.');
- requireTrue(!(loadMode&&commercialMode),'run_load_and_commercial_separately');
+ requireTrue([loadMode,commercialMode,stripeMode].filter(Boolean).length<=1,'run_load_and_commercial_separately');
  const config=stagingDatabaseConfig(await loadStagingEnvironment());
  report.project=config.project;
  await mkdir(new URL('../.test-build/',import.meta.url),{recursive:true});
  try{const previous=JSON.parse(await readFile(manifestPath,'utf8'));requireTrue(previous.status==='cleaned','previous_test_cleanup_required');}catch(error){if(error.code!=='ENOENT')throw error;}
  admin=client(config.url,config.serverKey);
+ if(stripeMode)stripe=await stripeFixtureClient();
  const controls=data(await admin.from('operations_controls').select('*').eq('id',true).single(),'controls_read');
  requireTrue(controls.closed_beta&&controls.disable_ai&&controls.disable_uploads,'staging_must_remain_closed');
  requireTrue(data(await admin.rpc('operations_can_call_ai',{p_feature:'CHAT',p_model:'fixture-model'}),'ai_pause_check')===false,'ai_pause_failed');
@@ -127,6 +134,13 @@ try{
  requireTrue(data(await b.session.from('company_facts').select('id').eq('company_id',a.company),'cross_fact_read').length===0,'cross_fact_leak');
  denied(await b.session.rpc('save_company_fact',{p_company_id:a.company,p_key:'segment',p_value:'FORBIDDEN',p_expected_version:1}),'cross_fact_rpc_write');
  passed('confirmed_memory_rpc_and_tenant_isolation');
+ if(stripeMode){
+  phase='stripe_test_network';
+  state.commercial={stripe:true,started:Math.floor(Date.now()/1000),productId:'prod_seed_fixture_'+run.replaceAll('-',''),priceId:randomUUID(),eventIds:Array.from({length:3},(_,i)=>'evt_fixture_network_'+run+'_'+i)};
+  await saveState();
+  report.stripe=await runStagingStripe(stripe,admin,users,state.commercial,run,saveState);
+  passed('stripe_test_network_checkout_subscription_cancellation');
+ }
  if(commercialMode){
   phase='commercial_reconciliation';
   state.commercial={priceId:randomUUID(),providerPriceId:'price_fixture_'+run,customerId:'cus_fixture_'+run,
@@ -163,7 +177,7 @@ try{
  report.passed=true;
 }catch(error){
  report.passed=false;report.failedPhase=phase;process.exitCode=1;
- if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure)report.failedCheck=error.message;
+ if(error instanceof CheckFailure||error instanceof StagingLoadFailure||error instanceof CommercialCheckFailure||error instanceof StripeCheckFailure)report.failedCheck=error.message;
  if(error instanceof StagingLoadFailure&&error.diagnostics)report.diagnostics=error.diagnostics;
  console.error(JSON.stringify({failedPhase:phase,failedCheck:report.failedCheck,note:'Remote response and credentials omitted.'}));
 }finally{

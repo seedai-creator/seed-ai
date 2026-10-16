@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {checkOperationalHealth} from '../scripts/check-operational-health.mjs';
 const env={SEED_HEALTH_URL:'https://appseedai.com/api/internal/health',SEED_HEALTH_TOKEN:'fictitious_monitor_'.repeat(3)};
-const good=()=>({status:'ok',checks:['DATABASE','SCHEDULER','ALERT_DELIVERY'].map(code=>({code,healthy:true}))});
+const good=()=>({status:'ok',checks:['DATABASE','SCHEDULER','ALERT_DELIVERY','BACKGROUND_JOBS'].map(code=>({code,healthy:true}))});
 test('external checker cannot transmit its token to an arbitrary host, query, path or redirect',async()=>{
  for(const url of ['https://attacker.invalid/api/internal/health','https://appseedai.com.evil.invalid/api/internal/health','https://appseedai.com/api/internal/journal',env.SEED_HEALTH_URL+'?token=secret'])
   await assert.rejects(checkOperationalHealth({...env,SEED_HEALTH_URL:url},()=>{throw Error('MUST_NOT_FETCH');}));

@@ -17,8 +17,15 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; staging hospedado e protegido, MFA, exportação, recuperação, backup restaurado e troca da chave OpenAI verificados. Em 15/10, exclusão fictícia com empresa compartilhada, carga limitada, correção de conflitos e reversão do endereço Preview também passaram. A liberação do beta continua condicionada às pendências operacionais e jurídicas. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: em implementação; staging protegido, MFA, exportação, recuperação, restauração de backup, rotação da chave, exclusão fictícia e reversão de Preview verificados. Em 16/10, monitoramento de cinco filas, carga limitada de 4.001 itens e ciclo de assinatura com a API Stripe em teste passaram; 510 testes locais aprovados. Ativação do monitor externo, entrega real dos webhooks, reconciliação do histórico e liberação revisada continuam pendentes. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
+
+Diretriz de lançamento confirmada pelo titular em 15/10/2026: abertura pública da
+SeedAI como produto funcional **com cobrança**, sem anunciar beta ou teste gratuito.
+As validações anteriores são internas. Stripe continua em modo de teste e as
+compras das lojas não estão implementadas; esses estados não bastam para a abertura
+comercial. O titular informou que os documentos foram revisados e enviará os ajustes;
+as minutas locais aguardam essa incorporação e a aprovação da versão final.
 
 Privacidade: [minuta da política em português brasileiro](docs/legal/POLITICA_DE_PRIVACIDADE_PT_BR.md), preparada em 15/10/2026 para revisão. Ainda não aprovada nem publicada; [decisões e evidências](docs/legal/REVISAO_PRIVACIDADE.md). O aviso da lista de espera tem escopo separado.
 

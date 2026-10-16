@@ -1,8 +1,31 @@
-# Fase 13 — preparação para beta fechado
+# Fase 13 — preparação operacional para o lançamento
 
 Em implementação desde 10/10/2026. **NOT READY FOR CLOSED BETA.** A aprovação visual e a publicação da Fase 12 não significam que os controles operacionais desta fase estejam concluídos.
 
-## Atualização de 15/10/2026
+## Diretriz atual do titular — lançamento comercial
+
+Em 15/10/2026, o titular esclareceu que anunciará e abrirá a SeedAI como aplicativo funcional **com cobrança**, e não como beta público ou teste gratuito. As validações anteriores à abertura são internas. Não voltar a propor um lançamento gratuito por conveniência técnica. As referências a beta neste histórico e no nome dos controles de acesso não definem a oferta ao público.
+
+A classificação `NOT READY FOR CLOSED BETA` vem da especificação original; tampouco existe aprovação para lançamento comercial. Para a abertura paga, os canais efetivamente ofertados precisam ter compras, confirmação de acesso, renovação, restauração quando aplicável, cancelamento, falhas e reembolso implementados e validados. Stripe em teste e a aprovação dos cadastros Apple/Google não comprovam cobrança de produção nem compras dentro dos aplicativos. A publicação e a ativação de cobrança continuam sujeitas aos critérios e às autorizações de liberação; esta decisão não inicia a Fase 14.
+
+O titular também informou que **os documentos já foram revisados e enviará os ajustes**. A pendência atual é receber e incorporar essa revisão, conferir a versão final e sua correspondência com a oferta/implementação. Não solicitar novamente a contratação de um revisor. As minutas locais ainda não representam a versão revisada e não devem ser publicadas ou marcadas como aprovadas por inferência.
+
+## Atualização técnica de 16/10/2026
+
+O titular pediu continuidade técnica e deixou a consolidação dos documentos para depois. Nenhuma minuta foi alterada, aprovada ou publicada por inferência. A abertura continua sendo comercial; estes ensaios são internos e não iniciam a Fase 14.
+
+- **Filas:** a migração `20261016100618_operational_queue_coverage.sql` foi aplicada somente no staging. Journal, Modelo Vivo, Radar, pesquisa externa e Growth Map agora alimentam os alertas e o indicador de saúde com contagens agregadas. Processamento futuro, espera para nova tentativa e itens resolvidos não entram como atraso. Recibos antigos conservam o mesmo texto no reenvio. Consultas incompletas falham de forma fechada; cliente autenticado/anônimo não pode acessar a RPC global.
+- **Validação real das filas:** cinco famílias, limites de tempo, execução, reagendamento e resolução passaram no PostgreSQL hospedado. Um segundo ensaio inseriu **4.001 itens fictícios** e validou **20 leituras, cada uma abaixo de 1 segundo**. Ambas as transações foram revertidas; contas e convites remanescentes: zero. Isso testa a consulta agregada, não o processamento dos workers, provedores ou capacidade de usuários simultâneos.
+- **Catálogo:** 38 migrações locais, 73 tabelas e 96 funções comparadas com o staging, sem divergências. Objetos da landing preservados. Os advisors continuam com 13 avisos informativos de tabelas internas fechadas e 19 avisos de funções privilegiadas já existentes; o novo endpoint SQL é invoker e exclusivo do servidor. A verificação de catálogo não repara o histórico de migrações.
+- **Performance ainda aberta:** advisor do staging lista 118 referências sem índice de apoio, 40 avisos de avaliação de Auth/RLS por linha, seis combinações de políticas permissivas, 16 índices ainda sem uso observado e um aviso de configuração de conexões Auth. Não foram removidos índices nem alteradas políticas para silenciar o relatório. A carga pequena aprovada não elimina esses riscos; priorizar planos de execução dos fluxos efetivamente usados antes de aumentar a coorte. Orientações: [Auth/RLS](https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan) e [índices de referências](https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys).
+- **Stripe pela rede, em teste:** dez grupos de integração passaram com duas contas Auth fictícias e Supabase real. Checkout criado e expirado sem conceder plano; pagamento fictício confirmado pela API; aplicação idempotente da assinatura, acesso isolado, cancelamento agendado/efetivo e memória preservada. Clientes removidos, sessões abertas expiradas, assinaturas canceladas e produto/preço arquivados. Sem dinheiro real, envio de e-mails ou mudança da oferta. O Stripe conserva histórico de faturas/eventos fictícios. Nenhum metadado de roteamento da aplicação publicada foi enviado: a associação com o usuário de staging ocorreu localmente, usando identificadores sintéticos de evento. **Não comprova Checkout concluído no navegador nem entrega de webhook assinado pela rede.**
+- **Qualidade:** 510 testes locais, lint, typecheck e build isolado aprovados. Carga adicional das filas reexecutada após sua inclusão. CI precisa corresponder ao commit final; o resultado anterior não valida código novo. A consulta real de saúde continua corretamente degradada pela ausência de cron no staging, sem fabricar recibos de sucesso.
+
+As falhas iniciais dos roteiros foram preservadas: conta de fila sem convite foi recusada e preço fictício sem fim de validade colidiu com a proteção do catálogo. Os roteiros foram corrigidos; permissões e catálogo reais foram preservados. Evidências privadas em `.test-build/phase-13-private-reports/QUEUE_COVERAGE_2026_10_16.json`, `QUEUE_LOAD_2026_10_16.json`, `STRIPE_NETWORK_2026_10_16.json` e logs de verificação; nenhum segredo versionado.
+
+**Pendências técnicas de liberação:** comprovar entrega de webhook assinado e fechamento do Checkout no ambiente candidato; completar carga/recuperação dos workers e uploads; reconciliar o histórico das instalações manuais; ativar e ensaiar monitor/aviso independente após aprovação da publicação. Orçamento operacional e metas da coorte precisam de aceite; os limites atuais não foram elevados. Produção, bloqueio público e landing não foram alterados. Os documentos finais ficam em uma frente separada, conforme solicitado.
+
+## Histórico de 15/10/2026
 
 Esta atualização prevalece sobre as observações históricas de 10/10 abaixo. Evidências operacionais detalhadas ficam em relatórios privados ignorados pelo Git.
 

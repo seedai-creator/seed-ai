@@ -38,6 +38,18 @@ test('a retry uses the same body and provider idempotency key, and acceptance is
   assert.equal(requests[0].body, requests[1].body);
   assert.equal(new Headers(requests[0].headers).get('Idempotency-Key'), new Headers(requests[1].headers).get('Idempotency-Key'));
 });
+
+test('queue metrics extend new receipts without changing older messages on retry',()=>{
+  const old=renderOperationalAlert(fixture());
+  assert.doesNotMatch(old.text,/Modelo Vivo|Radar|Pesquisas externas|Mapas de crescimento/);
+  const queues={business_model_overdue:1,radar_overdue:2,external_overdue:3,growth_overdue:4};
+  const current={...fixture(),metrics:{...fixture().metrics,...queues}};
+  const rendered=renderOperationalAlert(current);
+  for(const phrase of ['Modelo Vivo','Radar','Pesquisas externas','Mapas de crescimento'])assert.match(rendered.text,new RegExp(phrase));
+  assert.equal(rendered.text.replace(/\n(?:Tarefas do Modelo Vivo|Empresas com processamento do Radar|Pesquisas externas|Mapas de crescimento)[^\n]*/g,''),old.text);
+  for(const key of Object.keys(queues))for(const invalid of [undefined,null,'1',-1,0.1,Infinity])
+    assert.throws(()=>renderOperationalAlert({...current,metrics:{...current.metrics,[key]:invalid}}));
+});
 test('transient failures retry but rejected credentials, invalid content and malformed input do not', async () => {
   for (const status of [429, 500, 503]) {
     const result = await deliverOperationalAlert(fixture(), '', async () => new Response('PRIVATE PROVIDER ERROR', {status}));

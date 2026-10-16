@@ -2,6 +2,8 @@
 
 Documento de preparação da Fase 13, atualizado em **15/10/2026**. A [minuta em português brasileiro](POLITICA_DE_PRIVACIDADE_PT_BR.md) não está aprovada, não foi inserida no banco e não foi publicada. A criação deste arquivo não encerra a Fase 13 nem autoriza a Fase 14.
 
+**Atualização do titular em 15/10:** os documentos já foram revisados e os ajustes serão enviados. A pendência passa a ser receber e incorporar esses ajustes e conferir a versão final. Não pedir novamente revisão inicial nem publicar a minuta atual por inferência. O lançamento pretendido é comercial, com cobrança; o aviso final deverá corresponder aos canais e tratamentos efetivamente habilitados antes da abertura.
+
 ## Identificação confirmada pelo titular
 
 - Responsável pelo aplicativo: **Seed Tecnologias LTDA**.

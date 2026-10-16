@@ -9,6 +9,12 @@ export const alertMetrics = {
   accounted_or_reserved_usd_today: 'Custo contabilizado ou reservado no dia UTC (US$)',
   budget_reference_usd: 'Menor limite diário global dos planos disponíveis (US$)',
 } as const;
+const additionalQueueMetrics = {
+  business_model_overdue: 'Tarefas do Modelo Vivo atrasadas há mais de 15 minutos',
+  radar_overdue: 'Empresas com processamento do Radar atrasado há mais de 15 minutos',
+  external_overdue: 'Pesquisas externas em andamento há mais de 15 minutos',
+  growth_overdue: 'Mapas de crescimento atrasados há mais de 15 minutos',
+} as const;
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const email = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 function validEmail(value: unknown): value is string {
@@ -38,6 +44,14 @@ export function renderOperationalAlert(raw: unknown) {
     if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) throw Error('INVALID_ALERT');
     return `${label}: ${value}`;
   });
+  // Older durable receipts must keep exactly the same email on retry. Append
+  // fields only when the newer collector stored them in the immutable payload.
+  const hasQueues=Object.keys(additionalQueueMetrics).some(key=>Object.hasOwn(metrics,key));
+  if(hasQueues)for(const [key,label] of Object.entries(additionalQueueMetrics)){
+    const value=metrics[key];
+    if(typeof value!=='number'||!Number.isSafeInteger(value)||value<0)throw Error('INVALID_ALERT');
+    lines.push(`${label}: ${value}`);
+  }
   return {
     from: row.sender, to: [row.recipient],
     subject: `[SeedAI ${row.environment}] ${row.severity} — verificar operação`,

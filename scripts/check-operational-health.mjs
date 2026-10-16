@@ -10,7 +10,7 @@ export async function checkOperationalHealth(env,transport=fetch) {
     const response=await transport(url,{headers:{Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.timeout(8000)});
     if(response.status!==200){await response.body?.cancel();return {healthy:false,code:'HTTP_FAILURE'};}
     const body=await response.json();
-    const expected=['DATABASE','SCHEDULER','ALERT_DELIVERY'];
+    const expected=['DATABASE','SCHEDULER','ALERT_DELIVERY','BACKGROUND_JOBS'];
     const healthy=body?.status==='ok'&&Array.isArray(body.checks)&&body.checks.length===expected.length
       &&expected.every(code=>body.checks.filter(c=>c?.code===code&&c.healthy===true).length===1);
     return {healthy,code:healthy?'HEALTHY':'INVALID_HEALTH_RESPONSE'};

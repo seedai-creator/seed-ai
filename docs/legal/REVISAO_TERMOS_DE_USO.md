@@ -2,6 +2,8 @@
 
 Preparação da Fase 13 em **15/10/2026**. A [minuta dos Termos](TERMOS_DE_USO_PT_BR.md) está disponível para revisão, sem aprovação, inserção no banco, aceite em nome de usuários ou publicação. Este documento registra propostas contratuais e sua correspondência com o produto; não é um parecer jurídico.
 
+**Atualização do titular em 15/10:** os documentos já foram revisados; os ajustes serão enviados. Aguardar e incorporar a versão revisada, sem pedir novamente revisão inicial nem presumir aprovação das minutas atuais. O lançamento anunciado será comercial, com cobrança e produto funcional. Qualquer referência a beta deve descrever apenas validação interna anterior ou hipótese efetivamente oferecida, nunca rotular o lançamento pago como teste público.
+
 ## Dados da empresa e escopo
 
 O titular informou: **Seed Tecnologias LTDA**, **CNPJ 61.526.298/0001-62**, **Rua Cassiano Dornas, nº 175, Itaúna/MG, Brasil, CEP 35680-347**. O CEP recebido como `35.680.347` foi apenas normalizado. Os dígitos verificadores do CNPJ passaram na conferência matemática; não houve consulta cadastral à Receita nem comprovação do endereço ou da representação legal.
