@@ -1,6 +1,6 @@
 # Operação da Fase 13 — procedimento de liberação
 
-Estado: implementação local; beta fechado ainda não liberado. Este documento é um procedimento técnico, não uma política jurídica aprovada. Não contém credenciais.
+Estado em 16/10/2026: pacote operacional publicado com autorização, aplicação fechada ao público e planos desativados. Este documento é um procedimento técnico, não uma política jurídica aprovada. Não contém credenciais. As seções de preparação abaixo preservam o histórico; prevalecem o [estado da publicação](PHASE_13_STATUS.md) e o [estado do monitor](INDEPENDENT_MONITOR.md).
 
 Atualização de 16/10/2026: o [histórico do banco foi reconciliado](MIGRATION_HISTORY.md). Não reaplicar instalações antigas. O Stripe também passou em preview HTTPS privado, com duas contas fictícias e pagamento de teste: falha sem concessão de plano, reenvio oficial, repetição concorrente, isolamento, cancelamento e evento atrasado. O cron estava desligado e nenhuma chave de IA/e-mail foi adicionada. Após os testes, removeram-se o endpoint, o token temporário de acesso, quatro variáveis de preview e o deployment temporário. Não foram alterados os projetos/domínios publicados ou os limites dos planos.
 
@@ -8,13 +8,13 @@ O modo `SEED_STAGING_HOSTED_BILLING=true` exige `SEED_ENV=staging`, `VERCEL_ENV=
 
 ## Primeiro ambiente de testes
 
-Preparação final de 16/10: staging agora possui as 43 migrações, incluindo a correção de reservas/custos, com catálogo estritamente igual às fontes e integração real aprovada. Preços/franquias candidatas continuam inativos. A publicação operacional está delimitada no [candidato de release](PHASE_13_RELEASE_CANDIDATE.md). O [monitor independente](INDEPENDENT_MONITOR.md) está implementado, mas desativado; execução real, mensagens e agendamento ainda dependem da aprovação correspondente. Os registros datados abaixo preservam o histórico; as pendências já encerradas não devem ser reabertas por leitura isolada de uma seção antiga.
+Publicação de 16/10: produção e staging possuem 43 migrações, com diferenças de ordem histórica explicitamente documentadas e catálogo comercial preservado. Preços/franquias candidatas continuam inativos. O [registro de release](PHASE_13_RELEASE_CANDIDATE.md) identifica versão, backup e rollback. A rota de saúde está publicada, o cron real concluiu e dois e-mails de teste foram entregues. A configuração/validação do GitHub ainda aguarda autorização específica para os dois secrets; não há monitor externo ativo por mera existência do workflow. Os registros datados abaixo preservam o histórico; pendências já encerradas não devem ser reabertas por leitura isolada de uma seção antiga.
 
 1. No Supabase, criar `seed-ai-staging` vazio, preferencialmente na mesma região da produção. Não clonar dados pessoais ou empresariais da produção.
 2. Guardar a senha do banco e a chave de servidor no gerenciador de senhas. Informar à equipe somente a URL pública para identificar o projeto; nunca colar secrets no chat.
 3. Configurar o ambiente local com `SEED_ENV=development`, `SEED_PRODUCTION_SUPABASE_REF=gqumxaapjyujrpqggnon`, URL/chaves do **novo** projeto e endereço local. No Preview da Vercel, usar `SEED_ENV=staging`, o novo banco e URL HTTPS própria.
 4. A configuração local antiga aponta para produção. O novo validador a recusará até a separação ser feita. Não contornar essa proteção definindo o ambiente local como produção.
-5. Aplicar as migrações, em ordem, somente no novo banco. A migração `202610100001_production_readiness.sql` ainda não está aprovada para produção. Testar primeiro com dois usuários e duas empresas fictícias.
+5. Aplicar as migrações, em ordem, somente no novo banco vazio. Produção já recebeu as oito migrações aprovadas em 16/10; não reaplicar bootstrap nem fontes históricas. Testar mudanças futuras primeiro com dois usuários e duas empresas fictícias.
 6. Usar Stripe test mode e um projeto/chave OpenAI de teste com orçamento próprio. Desligar cron e chamadas de IA até a revisão dos limites. Nenhuma autorização temporária de fases anteriores se estende a esta fase.
 7. Configurar os retornos de login do novo projeto, validar confirmação de e-mail e recuperação. A URL de recuperação termina em `/auth/callback?recovery=1`. Verificar expiração e reutilização do link.
 8. Criar o administrador de staging por procedimento controlado. Ativar `SEED_OPERATIONS_ENABLED=true` somente após a migração. Publicar documentos jurídicos aprovados antes de liberar participantes; conteúdo fictício só em staging.
@@ -53,7 +53,7 @@ Revisar o projeto selecionado no SQL Editor antes de instalar o bootstrap. Se ho
 ## Rollback
 
 1. Identificar release, incidente e alteração causadora; pausar a função afetada ou IA. Não apagar evidências.
-2. Para falha de aplicação, promover o deployment anterior previamente verificado. A última referência conhecida antes da Fase 13 é `dpl_2d66KWybZboa2MJVgQfrKARVS3kD`; confirmar disponibilidade no Vercel antes da liberação.
+2. Para falha de aplicação, promover o deployment anterior previamente verificado. A referência preservada na publicação operacional de 16/10 é `dpl_8KbUX5kd9oZJ2y1DDiagPCfEekzS`; reconfirmar disponibilidade na Vercel. Essa versão antiga não contém o endpoint novo de saúde, portanto o monitor deve continuar indicando degradação até correção revisada.
 3. As tabelas da Fase 13 são aditivas. Preferir manter o esquema e corrigir para frente. Não executar DROP ou restaurar banco sobre dados recentes como rollback de interface.
 4. Restrição de beta e revogação vivem no banco, inclusive nas funções existentes. Voltar o código não remove essas proteções. Desativar uma restrição só com decisão documentada; não reabrir cadastro para corrigir indisponibilidade.
 5. Validar login, leitura de dados próprios, isolamento, chat, jobs, cobrança test e saúde. Registrar horário, responsável e resultado. Rollback de aplicação não substitui recuperação de banco.
@@ -87,7 +87,7 @@ Ao terminar um ensaio, preservar o relatório, confirmar que nenhum sistema depe
 | P2 | Falha localizada, latência, resposta de IA inadequada sem impacto crítico | Registrar identificador e versão, reproduzir com fixture, corrigir, validar regressão |
 | P3 | Ajuste visual, sugestão | Registrar feedback e priorizar |
 
-Definir plantonista e substituto, horários e metas de resposta antes do beta. Não há compromisso de atendimento 24/7 configurado. Canal de alerta externo e entrega ainda não foram validados.
+O titular assumiu os alertas pelo e-mail de suporte informado; dois avisos de teste foram entregues em 16/10. Definir substituto, horários e metas de resposta antes da abertura. Não há compromisso de atendimento 24/7 configurado. Execução e persistência do monitor no GitHub ainda precisam da configuração autorizada e validação; a entrega do teste não substitui essa etapa.
 
 Para incidente de IA: guardar identificadores da requisição, empresa, modelo e versão da regra; recuperar apenas os dados necessários mediante autorização, separar fato/hipótese, corrigir memória incorreta pelo fluxo existente, pausar modelo/função quando necessário, acrescentar caso anonimizado ao conjunto de avaliações. Não reproduzir dados reais em logs ou tickets externos.
 
@@ -105,7 +105,7 @@ Procedimento manual obrigatório:
 
 1. Confirmar identidade por sessão/reautenticação, escopo e autoridade sobre cada empresa; não pedir senha no suporte.
 2. Listar memberships, empresas compartilhadas, assinaturas e retenções aplicáveis. Exclusão da conta não autoriza apagar dados de outros membros.
-3. Para exportação, usar o download autenticado de JSON em `/support`, validado em staging. O endpoint limita os dados ao titular e às empresas autorizadas, excluindo secrets, controles administrativos e conteúdo de outras empresas. Conferir o manifesto e tenant em cada conjunto. Esse fluxo ainda depende da publicação aprovada da Fase 13 para estar disponível na produção.
+3. Para exportação, usar o download autenticado de JSON em `/support`, validado em staging e incluído na publicação operacional. O endpoint limita os dados ao titular e às empresas autorizadas, excluindo secrets, controles administrativos e conteúdo de outras empresas. Conferir o manifesto e tenant em cada conjunto. O bloqueio público continua ativo; não o retirar para atender uma solicitação sem um procedimento de acesso revisado.
 4. Para exclusão, explicar impacto, resolver assinatura pelo gateway correto, obter confirmação final, preservar apenas retenções justificadas e executar procedimento revisado. **Não há exclusão automática nesta fase da implementação.**
 5. Registrar IDs, escopo, datas e resultado sem copiar conteúdo empresarial. Encerrar solicitação apenas após comprovar atendimento. Falha parcial permanece aberta.
 
@@ -227,7 +227,9 @@ O manifesto privado registra IDs antes da conciliação. A limpeza confere metad
 
 `tests/fixtures/operational-queues.sql` verifica as cinco famílias, e `operational-queue-load.sql` verifica 4.001 itens e 20 leituras com teto de 1 segundo por leitura. Os testes locais carregam todas as migrações; no staging, executar somente os roteiros de fixtures em suas transações, sem reaplicar schema. Há rollback integral e limite de duração. Não há inferência ou processamento de worker. O resultado não é certificação de usuários simultâneos, fila distribuída ou latência de produção.
 
-## Verificação externa de saúde — candidata, ainda sem ativação
+## Verificação externa de saúde — histórico da preparação
+
+Esta seção descreve a preparação anterior. Para os scripts atuais, publicação, teste real dos dois avisos e configuração do agendamento, seguir [Monitor independente](INDEPENDENT_MONITOR.md). O endpoint/token de servidor já estão publicados; secrets e ativação do GitHub continuam pendentes. Não executar novamente uma inicialização quando já existir estado de incidente.
 
 `GET /api/internal/health` exige `Authorization: Bearer <SEED_HEALTH_TOKEN>`, token dedicado de 32 a 256 caracteres seguros para URL. O validador recusa reutilizar credenciais privilegiadas ou expor esse token em `NEXT_PUBLIC_*`. Autenticação ocorre antes de acessar o banco; respostas são mínimas e não armazenáveis. O token permite somente consultar saúde, não executar cron, ler dados empresariais ou alterar controles.
 

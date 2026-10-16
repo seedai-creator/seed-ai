@@ -1,12 +1,12 @@
 # Candidato operacional da Fase 13
 
-Preparado em 16/10/2026 na revisão `phase13-admin-privacy-validation`, PR #1. **Não é uma autorização de publicação ou abertura comercial.** O código dessa revisão ainda não é a versão que atende `appseedai.com`.
+Preparado e publicado em 16/10/2026 após autorização explícita do titular. O commit `ecf7bfe0bd20cb0b7b4ff4f7bffbb58229d0e66a` passou na CI e foi integrado pelo PR #1. A promoção na Vercel ocorreu às **22:42:29 UTC**, deployment `dpl_Be81VbTputSNzvdf7VcZZiFLEhv1`. Aplicativo fechado ao público, landing acessível e novas assinaturas bloqueadas. Esta publicação operacional não é abertura comercial nem início da Fase 14.
 
-## Escopo para aprovação
+## Escopo autorizado e executado
 
 Publicar os controles operacionais já testados: acesso administrativo com MFA, suporte e solicitações/exportação de privacidade, controles de pausa e acesso, observabilidade de falhas/custos/filas, verificador de saúde, correções de medição e limites. Preservar a experiência FREE já publicada, os preços/franquias combinados, o bloqueio de novas assinaturas, a landing e o bloqueio público do aplicativo. Nenhuma oferta candidata será ativada. Documentos jurídicos finais não serão publicados por inferência.
 
-Aplicar exclusivamente estas oito migrações pendentes em produção, após conferir backup, fontes, catálogo e histórico:
+Foram aplicadas exclusivamente estas oito migrações pendentes em produção, após conferir backup, fontes, catálogo e histórico:
 
 1. `202610100001_production_readiness.sql`
 2. `202610100002_admin_mfa.sql`
@@ -30,8 +30,8 @@ As migrações já existem e foram instaladas no staging, com comparação estri
 
 ## Reversão e limites
 
-A versão atual de produção é `dpl_8KbUX5kd9oZJ2y1DDiagPCfEekzS`; reconfirmar disponibilidade antes da promoção. Em problema de aplicação, retornar ao deployment preservado e verificar a landing/bloqueio novamente. Banco é aditivo, mas altera funções: rollback de interface não reverte permissões, filas ou cálculo. Preferir correção aditiva revisada; não executar DROP nem restauração sobre dados novos para desfazer uma tela.
+A versão de retorno preservada é `dpl_8KbUX5kd9oZJ2y1DDiagPCfEekzS`, conferida antes da promoção. Em problema de aplicação, retornar ao deployment preservado e verificar a landing/bloqueio novamente. Banco é aditivo, mas altera funções: rollback de interface não reverte permissões, filas ou cálculo. A versão antiga também não fornece o novo endpoint de saúde; o monitor deve indicar essa degradação até uma correção revisada. Não executar DROP nem restauração sobre dados novos para desfazer uma tela.
 
-O novo monitor ainda não enviou e-mails nem executou no GitHub. Sua preparação local não conclui a validação operacional. Os testes de Stripe usaram exclusivamente pagamentos fictícios e provam webhook/reenvio/cancelamento, não cobrança live, calendário de cobrança automática, reembolso ou compras Apple/Google. Os ensaios não estabelecem SLA ou capacidade para número ilimitado de usuários.
+O endpoint publicado e o envio real dos dois avisos de teste passaram; ativação e execução no GitHub ainda dependem da configuração dos secrets. Os testes de Stripe usaram exclusivamente pagamentos fictícios e provam webhook/reenvio/cancelamento, não cobrança live, calendário de cobrança automática, reembolso ou compras Apple/Google. Os ensaios não estabelecem SLA ou capacidade para número ilimitado de usuários.
 
-A especificação do titular determina: “NÃO fazer deploy de produção sem minha autorização explícita.” Esta publicação operacional e os novos avisos precisam de aprovação específica. A reconciliação do histórico já concluída não foi uma publicação de schema ou app.
+A especificação do titular determina: “NÃO fazer deploy de produção sem minha autorização explícita.” A autorização desta publicação, das oito migrações, periodicidade e avisos foi recebida antes da execução. A revisão automática exigiu confirmação adicional para armazenar os dois secrets no GitHub; essa gravação foi interrompida, sem contorno. Novas publicações continuam sujeitas à regra da especificação.

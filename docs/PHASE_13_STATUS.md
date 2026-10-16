@@ -10,7 +10,23 @@ A classificação `NOT READY FOR CLOSED BETA` vem da especificação original; t
 
 O titular também informou que **os documentos já foram revisados e enviará os ajustes**. A pendência atual é receber e incorporar essa revisão, conferir a versão final e sua correspondência com a oferta/implementação. Não solicitar novamente a contratação de um revisor. As minutas locais ainda não representam a versão revisada e não devem ser publicadas ou marcadas como aprovadas por inferência.
 
-## Estado mais recente — reconciliação e HTTPS — 16/10/2026
+## Estado mais recente — publicação operacional autorizada — 16/10/2026
+
+Esta seção substitui as pendências equivalentes dos registros históricos abaixo. O titular autorizou a publicação operacional, oito migrações, monitor a cada dez minutos e dois avisos de teste, mantendo planos desativados, app fechado e landing funcionando.
+
+- **Publicado:** commit `ecf7bfe`, deployment `dpl_Be81VbTputSNzvdf7VcZZiFLEhv1`, promoção em 16/10 às 22:42:29 UTC. [CI do candidato](https://github.com/seedai-creator/seed-ai/actions/runs/38968846303) e [CI após merge](https://github.com/seedai-creator/seed-ai/actions/runs/38977217853) aprovadas: lint, tipos, 554 testes, scanner, auditoria de dependências e build. Build real de produção na Vercel também aprovado. Manifesto de 251 arquivos de aplicação, sem arquivos privados.
+- **Banco:** oito migrações instaladas; 43 registradas em produção e staging. Catálogo de produção validado contra sua ordem real de instalação: 81 tabelas/106 funções, oito políticas restritivas adicionais sobre as tabelas históricas da landing e três diferenças de formatação históricas já revisadas. [Detalhes da reconciliação](MIGRATION_HISTORY.md). Backup físico de 16/10 às 09:05:10 UTC conferido antes da alteração.
+- **Fechamento preservado:** `/`, `/login` e `/billing` continuam redirecionando para a landing; `/seedai/pt-BR` responde 200. Firewall ativo, com única nova exceção exata para `/api/internal/health`, que recusa acesso sem token com 401. Webhook e cron continuam protegidos. `closed_beta=true` também limita o acesso no banco; nenhum convite ou documento jurídico publicado. Planos, preços e mercados integralmente iguais à cópia anterior, novas assinaturas bloqueadas, propostas de franquias/ofertas não ativadas.
+- **Operação publicada:** ambiente explícito, controles operacionais e alertas internos configurados. Saúde confirma banco, conclusão real do agendador, entrega de alertas e cinco famílias de filas sem atraso. A primeira consulta identificou corretamente a ausência de ciclo do novo agendador; após sua execução real, passou a 200. Não foram fabricados recibos nem apagados trabalhos para obter resultado saudável.
+- **Segurança Auth:** proteção contra senhas vazadas habilitada no projeto publicado e aviso removido do advisor. Outros requisitos de senha preservados. Restam cinco avisos informativos de tabelas internas sem políticas de cliente e 19 avisos conhecidos de RPC autenticada; não foram abertos acessos para silenciá-los.
+- **Dois avisos reais entregues:** o verificador detectou um HTTP 503 local controlado e a recuperação consultou a saúde de produção. Resend confirmou dois e-mails entregues, sem rejeição/falha, identificados como teste. Aplicação e landing não foram interrompidas. Isso comprova verificador e transporte, ainda não execução no GitHub.
+- **Monitor independente:** cron de dez minutos preparado no workflow, condicionado à variável de ativação e secrets. A revisão automática bloqueou especificamente o envio dos dois segredos ao GitHub por exigir autorização desse destino. A gravação não foi executada nem contornada; pergunta específica enviada ao titular. [Estado de ativação e limitações](INDEPENDENT_MONITOR.md).
+
+Evidências privadas em `.test-build/releases/operations-2026-10-16/`, incluindo catálogos antes/depois, versões, manifesto, verificação HTTP, recibos dos testes e prova da proteção Auth. Retorno de aplicação preservado no deployment anterior; não reverte schema nem é ensaio de restauração de produção.
+
+**Restante:** configurar e validar a execução/persistência do monitor no GitHub após confirmação do destino dos secrets; incorporar os ajustes finais dos documentos e formalizar metas/orçamento de operação. A publicação técnica não encerra automaticamente a Fase 13 nem autoriza abertura comercial. Stripe segue em teste; cobranças live, compras nas lojas e reembolsos não foram certificados. Fase 14 não iniciada.
+
+## Histórico — reconciliação e HTTPS — 16/10/2026
 
 Esta seção substitui as pendências equivalentes dos registros históricos abaixo. Planos continuam desativados; landing e bloqueio público preservados. Fase 14 não iniciada.
 

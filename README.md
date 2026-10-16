@@ -4,7 +4,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 
 Atualização de 16/10/2026: [histórico compartilhado reconciliado](docs/MIGRATION_HISTORY.md) nos bancos de staging e produção, preservando seus schemas. O ensaio `node scripts/test-staging.mjs --run --stripe-hosted` passou com entrega HTTPS assinada, falha/reenvio, idempotência e cancelamento. Requer preparação privada do preview e webhook fictício; não é executado pelo CI. As credenciais, webhook e preview temporários foram removidos após o ensaio. Planos continuam desativados; a landing permanece publicada. [Situação e bloqueadores atuais da Fase 13](docs/PHASE_13_STATUS.md).
 
-O staging está alinhado às 43 migrações; a correção final de custos passou em dez grupos de integração sem mudar planos/preços. O [monitor independente](docs/INDEPENDENT_MONITOR.md) e o [candidato de publicação](docs/PHASE_13_RELEASE_CANDIDATE.md) estão preparados. Agendamento e novos e-mails não foram ativados. Suíte local: 554 testes aprovados; conferir a CI do commit exato antes de publicar.
+O pacote operacional foi publicado com autorização em 16/10/2026: oito migrações aplicadas, 43 registradas em cada ambiente, saúde/cron reais conferidos e dois alertas de teste entregues. Planos e preços preservados; aplicativo fechado ao público e landing funcionando. O [monitor independente](docs/INDEPENDENT_MONITOR.md) tem periodicidade de dez minutos preparada, ainda sem ativação no GitHub enquanto aguarda confirmação específica para armazenar seus dois secrets. [Publicação e rollback](docs/PHASE_13_RELEASE_CANDIDATE.md). CI do candidato e da integração aprovadas com 554 testes, lint, tipos, auditoria e build.
 
 ## Estado das fases
 - Fase 1: implementada; teste real confirmado pelo proprietário na conversa.
@@ -21,7 +21,7 @@ O staging está alinhado às 43 migrações; a correção final de custos passou
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: em implementação; staging protegido, MFA, exportação, recuperação, restauração de backup, rotação da chave, exclusão fictícia e reversão de Preview verificados. Em 16/10, Checkout e portal Stripe no navegador, eventos assinados pela rede, renovação/falha/recuperação, processamento concorrente das cinco famílias de filas e anexos limitados passaram em testes isolados. Suíte local de 544 testes aprovada, além da guarda adicional de limpeza do relógio Stripe; lint, tipos e build aprovados. Monitor independente, reconciliação do histórico compartilhado e liberação revisada continuam pendentes. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: pacote operacional publicado com autorização; histórico reconciliado, 554 testes e CI aprovados. Staging, Auth/RLS/MFA, privacidade, backup/restore, Stripe em teste, filas e anexos validados conforme limites do relatório. Rota de saúde e alertas reais conferidos. Monitor no GitHub aguarda configuração/validação; documentos finais e metas operacionais continuam separados. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
 
 Diretriz de lançamento confirmada pelo titular em 15/10/2026: abertura pública da
@@ -85,8 +85,8 @@ confirma a rejeição de senha comprometida. Ambos removem somente suas fixtures
 Após `npm test`, `node scripts/test-staging-health.mjs --run` consulta a saúde do
 staging sem gravar dados. `node scripts/prepare-schema-audit.mjs` prepara o catálogo
 esperado para comparação, sem reparar o histórico nem aplicar migrações remotas.
-O monitor externo é opcional e ainda não está ativo: consulte a seção correspondente
-no [procedimento operacional](docs/PHASE_13_OPERATIONS.md).
+O endpoint de saúde já está publicado; a ativação externa permanece condicionada
+à configuração e validação descritas em [Monitor independente](docs/INDEPENDENT_MONITOR.md).
 
 Ensaios adicionais (opt-in, com fixtures e limpeza): `node scripts/test-staging.mjs --run --stripe-webhook`
 valida Checkout/portal e entrega assinada pela CLI oficial no candidato local;
@@ -677,7 +677,7 @@ Após compilar os testes, `node scripts/eval-allowances.mjs --run` executa casos
 
 Os ajustes de limites de 16/10 estão preparados, sem ativação: `src/lib/commercial/pro-proposal.ts` fixa PRO 1/3/5 em R$99,99/R$199,99/R$399,99 e franquias compartilhadas de US$4/US$8/US$16. O modo `analysis_limit_mode: budget` remove a segunda cota de 200 análises e usa o ciclo da assinatura; FREE e políticas antigas continuam com contagem. Não há IDs de preços Stripe nem alteração automática de assinaturas nesta proposta.
 
-A migração local `20261016133617_allowance_guards.sql` separa saldo do ciclo, reserva da solicitação, proteção diária e pausa operacional. O orçamento geral mantém a proteção base e soma uma franquia por conta paga elegível; os alertas usam a mesma referência. Preserva autorização, isolamento, limite de frequência, concorrência e registros financeiros. Inclui preço separado para contexto longo do modelo estratégico, sem alterar o histórico. Validar e aplicar no staging antes de uma futura publicação autorizada; não foi aplicada aos bancos remotos nesta revisão.
+A migração `20261016133617_allowance_guards.sql` separa saldo do ciclo, reserva da solicitação, proteção diária e pausa operacional. O orçamento geral mantém a proteção base e soma uma franquia por conta paga elegível; os alertas usam a mesma referência. Preserva autorização, isolamento, limite de frequência, concorrência e registros financeiros. Inclui preço separado para contexto longo do modelo estratégico, sem alterar o histórico. Validada no staging e aplicada em produção na publicação autorizada de 16/10/2026; nenhuma oferta candidata foi ativada.
 
 A medição de aplicação e testes usa `response-cost.ts`, incluindo cache, escrita de cache e todas as buscas retornadas. Uma quantidade de buscas maior que a solicitada gera diagnóstico/alerta, sem apagar o custo conhecido. Falhas sem uso confirmado continuam reservadas. Pesquisas podem reduzir a cobertura para caber no saldo, mantendo modelo e preço, com resultado marcado como parcial. Valores de simulações sem evidência do período exigem confirmação; cálculos independentes continuam disponíveis.
 
