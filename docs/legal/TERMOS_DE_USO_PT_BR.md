@@ -1,14 +1,14 @@
 # Termos de Uso da SeedAI
 
-**Minuta para revisão jurídica e operacional · versão 0.1 · 15 de outubro de 2026**
+**Versão consolidada 0.2 · 17 de outubro de 2026 · preparação para publicação**
 
-Esta versão ainda não foi aprovada nem publicada como contrato vigente. As decisões necessárias antes da publicação estão no [documento de revisão](REVISAO_TERMOS_DE_USO.md).
+O titular autorizou a consolidação dos ajustes e metas operacionais em 17/10/2026, após informar revisão profissional anterior. Este arquivo ainda não é contrato publicado: vigência, correspondência com a oferta habilitada e versão final de aceite devem ser registradas na liberação. Pendências operacionais estão no [documento de revisão](REVISAO_TERMOS_DE_USO.md).
 
 ## 1. Quem presta o serviço
 
 A **SeedAI** é uma plataforma de inteligência estratégica empresarial oferecida pela **Seed Tecnologias LTDA**, inscrita no CNPJ sob o nº **61.526.298/0001-62**, com endereço na **Rua Cassiano Dornas, nº 175, Itaúna, Minas Gerais, Brasil, CEP 35680-347**.
 
-Nosso canal de atendimento é **[seedtecnologias.suporte@gmail.com](mailto:seedtecnologias.suporte@gmail.com)**. Você pode utilizá-lo para dúvidas, problemas de acesso, solicitações sobre assinatura e questões de privacidade. Não envie senhas, códigos de acesso ou dados completos de cartão.
+Nosso canal de atendimento é **[suporte@appseedai.com](mailto:suporte@appseedai.com)**. Você pode utilizá-lo para dúvidas, problemas de acesso e solicitações sobre assinatura. O canal de privacidade permanece **[seedtecnologias.suporte@gmail.com](mailto:seedtecnologias.suporte@gmail.com)**. Não envie senhas, códigos de acesso ou dados completos de cartão.
 
 Estes Termos regulam o acesso ao aplicativo e às funcionalidades efetivamente disponibilizadas em seu plano. A [Política de Privacidade](POLITICA_DE_PRIVACIDADE_PT_BR.md) explica o tratamento de dados pessoais. A página institucional e sua lista de espera possuem aviso próprio; inscrever-se na lista não cria conta, assinatura ou autorização de cobrança.
 
@@ -18,7 +18,7 @@ Estes Termos regulam o acesso ao aplicativo e às funcionalidades efetivamente d
 - A IA pode produzir informações incorretas, incompletas ou desatualizadas. Decisões importantes exigem conferência e, quando necessário, avaliação profissional.
 - Os planos têm limites de uso. O PRO não significa uso ilimitado. Atingir um limite não autoriza cobrança adicional automática.
 - O uso da IA incluído no plano é fornecido pela SeedAI: você não precisa contratar uma assinatura da OpenAI ou comprar créditos diretamente dela para usar essas funcionalidades.
-- No beta sem cobrança e nos fluxos identificados como teste, não há conversão automática em assinatura paga. Uma contratação real depende de oferta clara e confirmação específica.
+- O acesso FREE e concessões temporárias não se convertem automaticamente em assinatura paga. Uma contratação real depende de oferta clara e confirmação específica.
 - Cancelar a renovação, encerrar a conta e solicitar exclusão de dados são ações diferentes. Você pode pedir orientação pelo atendimento.
 
 ## 3. Cadastro, capacidade e representação
@@ -65,9 +65,9 @@ Sair de uma empresa ou encerrar sua conta não autoriza apagar os registros dos 
 
 Os recursos, quantidades disponíveis, período de utilização, restrições e preço de cada plano serão apresentados antes de uma contratação. A tela de assinatura informa o plano e os dados de consumo disponíveis. As condições específicas da oferta integram a contratação e não são substituídas por exemplos de preço ou recursos futuros.
 
-Na configuração atual, o FREE possui uma franquia total de análises, sem renovação mensal automática. O PRO utiliza o período aplicável à assinatura. A existência de um período de testes, uma concessão temporária ou um benefício promocional será informada separadamente, com sua validade. Esses benefícios não significam acesso permanente ao PRO.
+O FREE oferece até três análises no total, sujeito aos controles de segurança e processamento informados, sem renovação mensal automática. O convite para conhecer o PRO ocorre depois de uma análise útil, sem obrigação de contratar. O PRO utiliza o ciclo mensal aplicável à assinatura; a franquia não utilizada não se acumula automaticamente para o ciclo seguinte. Benefícios promocionais e concessões temporárias terão sua validade informada e não significam acesso permanente ao PRO.
 
-Análises de conversa e relatórios automáticos têm contabilização distinta. Os relatórios automáticos são restritos ao PRO na configuração atual e não descontam a franquia de análises de conversa. Ainda assim, tarefas automáticas e manuais utilizam processamento e estão sujeitas aos limites técnicos e financeiros do serviço.
+O PRO não é limitado apenas por uma contagem de mensagens: o processamento de análises, relatórios automáticos e outras tarefas de IA utiliza a mesma franquia do usuário em todas as suas empresas. Uma tarefa mais complexa pode consumir mais que uma análise simples. Relatórios automáticos são exclusivos do PRO e também consomem essa franquia. O aplicativo informa a situação de consumo e as restrições; apresentar contadores separados não significa processamento automático gratuito ou ilimitado.
 
 Além das franquias, existem controles de frequência, simultaneidade e custo. Um limite de segurança pode interromper uma solicitação antes de terminar a franquia de análises. Incidentes e proteções globais também podem causar indisponibilidade temporária. A SeedAI deve informar a restrição e orientar o próximo passo; não tratará uma falha persistente na entrega de um serviço pago como autorização irrestrita para deixar de prestá-lo.
 
@@ -77,11 +77,13 @@ O consumo do plano não constitui saldo financeiro sacável. A interrupção de 
 
 ## 8. Assinatura, cobrança e canais de contratação
 
-**Situação desta minuta:** a integração web de pagamento está em modo de teste. As condições desta seção para cobrança real só se aplicam quando houver um plano pago efetivamente disponibilizado e contratado. Este documento não ativa cobrança, não fixa preços e não confirma disponibilidade nas lojas.
+**Situação desta versão preparada:** a integração web de pagamento está em modo de teste, com novas assinaturas bloqueadas. A oferta acordada para preparação é PRO com 1 empresa por R$ 99,99/mês, 3 empresas por R$ 199,99/mês ou 5 empresas por R$ 399,99/mês, por usuário. Não está disponível para contratação por meio deste arquivo. O resumo da oferta efetivamente habilitada, seus limites e o valor total serão apresentados antes da confirmação. A versão pública deverá corresponder ao catálogo implementado e validado; este documento não confirma disponibilidade nas lojas.
 
 Antes de contratar, você receberá informações sobre preço, moeda, tributos ou despesas adicionais, período, recursos, limites, renovação e meios de cancelamento. O processamento de IA incluído no plano está abrangido pelo preço apresentado pela SeedAI. Serviços profissionais contratados por você fora da SeedAI e sua conexão à internet não fazem parte dessa assinatura.
 
 Uma assinatura recorrente somente será iniciada após sua confirmação das condições. Havendo renovação automática expressamente contratada, ela seguirá a periodicidade e o preço informados. Um acesso gratuito ou PRO temporário concedido para testes não autoriza, sozinho, uma futura cobrança. Mudanças de preço não serão aplicadas retroativamente e deverão observar a oferta e os requisitos legais de informação e concordância.
+
+Uma mudança de plano dependerá de sua confirmação em um fluxo que informe o novo preço, a data de aplicação, eventual cobrança proporcional, o tratamento do consumo já realizado e dos espaços de empresa. Não há promessa de troca imediata ou reposição da franquia no mesmo ciclo. Falhas de pagamento podem suspender novas funcionalidades pagas conforme o estado da assinatura, com orientação para regularização; o histórico não é apagado simplesmente por esse motivo.
 
 Nas futuras versões distribuídas pela **App Store** ou pelo **Google Play**, quando a compra ocorrer pelo sistema da loja, o pagamento, os recibos, a renovação e os procedimentos de cancelamento ou reembolso seguirão o canal identificado na contratação e as regras aplicáveis. Nas compras diretas pelo site, será utilizado o provedor informado no pagamento. O suporte da SeedAI permanece disponível; as regras da loja ou do provedor não eliminam direitos legais nem transferem integralmente a eles a responsabilidade pelo serviço.
 
@@ -95,7 +97,7 @@ Quando o direito de arrependimento previsto no art. 49 do Código de Defesa do C
 
 Falha na prestação, cobrança indevida e outras situações protegidas pela legislação poderão justificar correção, abatimento, encerramento ou restituição. Não existe nestes Termos uma regra de “nenhum reembolso em qualquer hipótese”. O pedido será analisado conforme sua causa, a oferta e os direitos aplicáveis; cancelar uma renovação futura não equivale, automaticamente, a estornar todo o histórico de pagamentos.
 
-Você pode enviar pedidos a **[seedtecnologias.suporte@gmail.com](mailto:seedtecnologias.suporte@gmail.com)**, mesmo sem acesso à conta. Quando aplicável à contratação de consumo eletrônico, estarão disponíveis também os meios de arrependimento e as confirmações exigidos pela legislação. Os procedimentos específicos das lojas serão indicados junto ao canal da assinatura.
+Você pode enviar pedidos a **[suporte@appseedai.com](mailto:suporte@appseedai.com)**, mesmo sem acesso à conta. Quando aplicável à contratação de consumo eletrônico, estarão disponíveis também os meios de arrependimento e as confirmações exigidos pela legislação. Os procedimentos específicos das lojas serão indicados junto ao canal da assinatura.
 
 ## 10. Uso permitido e condutas proibidas
 
@@ -128,15 +130,15 @@ A SeedAI limita o acesso às informações empresariais às pessoas e aos fornec
 
 Prefira dados agregados e evite inserir informações pessoais ou confidenciais desnecessárias. Você deve ter legitimidade para enviar informações de colaboradores, clientes e fornecedores. Para obter informações, corrigir dados ou solicitar exportação e exclusão, utilize o canal de privacidade indicado na política.
 
-## 13. Disponibilidade, suporte e beta
+## 13. Disponibilidade e suporte
 
 A SeedAI depende de serviços de hospedagem, autenticação, IA e comunicação. Podem ocorrer manutenção, falhas ou interrupções. A Seed Tecnologias LTDA adotará medidas razoáveis de prevenção, diagnóstico e recuperação e informará ocorrências relevantes por meios adequados. A participação de fornecedores não elimina suas próprias responsabilidades perante o usuário.
 
-Não há, nesta minuta, compromisso contratual de disponibilidade ininterrupta, suporte 24 horas ou tempo específico de recuperação. Isso não afasta prazos legais de atendimento ou as condições específicas de uma oferta contratada.
+O atendimento humano funciona de segunda a sexta-feira, das 9h às 18h, horário de Brasília, exceto feriados locais. A meta de primeira resposta é de um dia útil; primeira resposta não significa resolução. Pedidos podem ser enviados fora desse período. Os prazos legais aplicáveis e as confirmações de recebimento exigidas prevalecem sobre essa meta.
 
-**O beta é uma etapa de testes com acesso restrito antes da abertura pública.** Se você for convidado, serão informados o período, os recursos e as condições do teste. Recursos experimentais podem mudar ou ficar indisponíveis; eventuais limitações devem ser identificadas. O caráter experimental não autoriza descumprir a oferta nem renunciar a direitos legais.
+Objetivos internos de disponibilidade, monitoramento e recuperação orientam a operação. Não representam garantia de funcionamento ininterrupto, plantão humano 24 horas ou prazo contratual universal de recuperação, sem afastar as responsabilidades legais da Seed Tecnologias LTDA.
 
-O encerramento de um beta gratuito não gera assinatura paga automática. Se houver futura oferta de continuidade paga, ela dependerá de sua escolha. A data de lançamento e a disponibilidade em cada loja serão comunicadas nos canais oficiais quando confirmadas; estes Termos não constituem confirmação de aprovação por uma loja.
+Testes internos anteriores à abertura não caracterizam o lançamento comercial como beta público. Eventuais recursos experimentais serão identificados separadamente. A data de lançamento e a disponibilidade em cada loja serão comunicadas nos canais oficiais quando confirmadas; estes Termos não constituem confirmação de aprovação por uma loja.
 
 ## 14. Restrições de acesso e encerramento
 
@@ -170,4 +172,4 @@ Buscaremos resolver dúvidas pelo canal de atendimento, sem tornar essa tentativ
 
 Rua Cassiano Dornas, nº 175, Itaúna/MG, Brasil, CEP 35680-347
 
-[seedtecnologias.suporte@gmail.com](mailto:seedtecnologias.suporte@gmail.com)
+[suporte@appseedai.com](mailto:suporte@appseedai.com)

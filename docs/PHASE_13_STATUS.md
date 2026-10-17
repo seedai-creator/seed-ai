@@ -1,6 +1,22 @@
 # Fase 13 — preparação operacional para o lançamento
 
-Em implementação desde 10/10/2026. **NOT READY FOR CLOSED BETA.** A aprovação visual e a publicação da Fase 12 não significam que os controles operacionais desta fase estejam concluídos.
+Em implementação desde 10/10/2026. **NOT READY FOR CLOSED BETA.** Verificação de 17/10 e critérios restantes descritos abaixo; a conclusão de ensaios não autoriza abrir a operação comercial.
+
+## Consolidação e preparação Stripe — 17/10/2026
+
+**Atualização posterior nesta data:** [retenção e ofertas publicadas com autorização](PHASE_13_RETENTION_OFFERS.md). Duas novas migrações em staging e produção (45 registros), 568 testes locais, dez grupos de integração com os três planos, seis de privacidade e oito de navegador aprovados; CI e build de produção aprovados. Deployment `dpl_H7D3hbfSdb4KZLL512KjtULdmKdt`, promovido às 20:23 UTC, retenção habilitada, saúde e agendador reais confirmados. Landing disponível, firewall integralmente preservado, aplicativo fechado, nenhuma oferta disponível ou documento jurídico publicado. Produtos/preços Stripe e vínculos no staging preparados **inativos**, sem vínculos novos em produção. A limitação histórica de um único PRO indicada abaixo foi superada. [Contratos e configurações](legal/FORNECEDORES_E_CONTRATOS.md) inventariados; [limites de retenção](ACCESS_RETENTION.md) mantidos. Sem nova IA paga ou teste de e-mail; Fase 14 não iniciada. Os parágrafos seguintes preservam a conferência anterior à publicação.
+
+[Relatório da conferência](PHASE_13_CLOSEOUT.md): 559 testes locais, 10 grupos de integração comercial/RLS, 5 de privacidade e 7 de navegador aprovados; lint, tipos e build de staging passaram. Correção do nome da marca no roteiro de MFA validada após falha preservada. Landing: 17 testes. Não houve deploy, alteração de planos ou IA paga nesta rodada.
+
+O titular aprovou as [metas operacionais](OPERATIONAL_TARGETS.md), ajustes documentais e preparação Stripe, mantendo as ofertas desativadas e a landing disponível. Termos/Política na versão preparada 0.2; catálogo acordado de 1/3/5 empresas a R$ 99,99/199,99/399,99, com US$ 4/8/16 por conta/ciclo. A revisão profissional anterior foi informada; não solicitar sua repetição. As comprovações factuais de privacidade estão separadas na [matriz](legal/CONTROLES_DE_PRIVACIDADE.md).
+
+Conferência de produção somente leitura: `closed_beta=true`, zero documentos aprovados; BR impede novas assinaturas, demais mercados com billing desligado. Landing e aviso público respondem 200, `/`, `/login` e `/billing` redirecionam à landing, saúde sem token retorna 401. Nenhuma migração, plano, preço ou documento de produção foi alterado.
+
+O monitor teve oito execuções periódicas consecutivas bem-sucedidas na amostra de 17/10, com intervalos entre 19min11s e 31min15s. [Evidência](https://github.com/seedai-creator/seed-ai/actions/runs/39058689415). A primeira execução automática está agora comprovada; o intervalo de dez minutos permanece uma solicitação, não garantia.
+
+No primeiro inventário somente de preços ativos, havia um preço compatível com R$ 99,99 e nenhum com R$ 199,99/399,99. Posteriormente foram preparados três produtos/preços inativos e a associação oferta/preço/assinatura/limites foi implementada no candidato e validada em staging. [Preparação de ativação](STRIPE_ACTIVATION.md). Nenhum PRO global foi ampliado, oferta liberada ou cobrança criada.
+
+Metas adotadas não significam medição de 30 dias concluída, prontidão live ou documentos publicados. Falta comprovar os tratamentos/retenções indicados na matriz, consolidar vigência e entrega dos documentos, e fechar os fluxos do canal comercial antes da abertura. O titular autorizou preparação, não ativação. A Fase 14 não foi iniciada.
 
 ## Diretriz atual do titular — lançamento comercial
 

@@ -307,6 +307,8 @@
   "billing.confirming": "Waiting for payment confirmation. Returning from checkout does not activate your subscription.",
   "billing.setup": "Commercial configuration is not yet available for this account.",
   "billing.current": "Current plan",
+  "billing.companies": "Up to {count} business(es)",
+  "billing.unavailable": "Subscriptions are not yet available.",
   "billing.month": "month",
   "billing.continuous": "Memory, diagnoses, strategies, decisions and experiments, with a fair use policy.",
   "billing.test": "Test environment — no real charges.",

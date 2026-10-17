@@ -146,6 +146,14 @@ try{
  }
  await page.screenshot({path:fileURLToPath(new URL('../.test-build/staging-settings.png',import.meta.url)),fullPage:true,caret:'initial'});
  passed('company_memory_diagnosis_plan_settings_pages');
+ phase='inactive_offers';await page.goto(base+'/billing');
+ for(const [count,price] of [[1,'99,99'],[3,'199,99'],[5,'399,99']]){
+  const offer=page.locator(`section[aria-label="PRO · ${count}"]`);
+  await expect(offer).toBeVisible();await expect(offer).toContainText(price);
+  await expect(offer.locator('form,button,input[name=offer_id]')).toHaveCount(0);
+ }
+ await page.screenshot({path:fileURLToPath(new URL('../.test-build/staging-inactive-offers.png',import.meta.url)),fullPage:true});
+ passed('three_exact_offers_visible_without_checkout_controls');
  phase='support_page';await page.goto(base+'/support');
  await page.locator('select[name=category]').selectOption('PRIVACY');
  await page.locator('textarea[name=description]').fill('FICTITIOUS BROWSER PRIVACY REQUEST');
@@ -179,15 +187,19 @@ try{
  }
  phase='admin_second_factor';
  const auth=client(config.url,config.publicKey);data(await auth.auth.signInWithPassword({email:operator.email,password:operator.password}),'admin_login');
+ phase='admin_mfa_enrollment';
  const factor=data(await auth.auth.mfa.enroll({factorType:'totp',issuer:'SEED QA',friendlyName:'FICTITIOUS QA'}),'mfa_enroll');
  data(await auth.auth.mfa.challengeAndVerify({factorId:factor.id,code:totp(factor.totp.secret)}),'mfa_enrollment_verify');
  const adminContext=await browser.newContext(),adminPage=await adminContext.newPage();adminPage.setDefaultTimeout(60000);adminPage.setDefaultNavigationTimeout(90000);
+ phase='admin_password_only_denied';
  await login(adminPage,operator);await adminPage.goto(base+'/admin');await expect(adminPage).toHaveURL(/\/admin\/security$/);
  // TOTP verification cannot reuse the enrollment code in the same 30s window.
  await new Promise(resolve=>setTimeout(resolve,31000-Date.now()%30000));
+ phase='admin_totp_verification';
  await adminPage.locator('input[name=code]').fill(totp(factor.totp.secret));
  await adminPage.locator('form button').click();await adminPage.waitForURL('**/admin');
- await expect(adminPage.getByRole('heading',{name:'Operação da SEED',exact:true})).toBeVisible();
+ phase='admin_authenticated_heading';
+ await expect(adminPage.getByRole('heading',{name:'Operação da SeedAI',exact:true})).toBeVisible();
  await adminPage.goto(base+'/admin/operations');await expect(adminPage.getByRole('heading',{name:'Operação do beta',exact:true})).toBeVisible();
  passed('admin_password_only_blocked_and_real_totp_accepted');
  phase='locales';

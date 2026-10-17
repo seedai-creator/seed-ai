@@ -1,5 +1,19 @@
 # Revisão da Política de Privacidade da SeedAI
 
+## Retenção e fornecedores — complemento de 17/10/2026
+
+A Política candidata 0.3 esclarece armazenamento temporário de pesquisa em segundo plano. O código atual de `src/lib/external/request.ts` utiliza `background:true`; a referência histórica abaixo a pesquisa exclusivamente em foreground não descreve mais esse caminho. [Inventário de fornecedores](FORNECEDORES_E_CONTRATOS.md) separa condições públicas, evidências da conta e pendências contratuais.
+
+Retenção mínima de acessos implementada no candidato, desativada por padrão, com schema no staging e caminho privado Vercel ensaiado; falta publicação autorizada. Preview e registros do ensaio removidos. O novo ensaio de privacidade passou em seis grupos, incluindo reaplicação de supressão de conversa após snapshot lógico. Isso não representa expurgo universal de todas as categorias/fornecedores. [Procedimento e limitações](../ACCESS_RETENTION.md).
+
+## Consolidação autorizada — 17/10/2026
+
+O titular autorizou os ajustes e adotou as metas operacionais. A versão 0.2 incorpora o monitor GitHub/Resend, distingue registros legais de acesso dos demais logs e esclarece o prazo de primeira resposta. [Matriz de controles](CONTROLES_DE_PRIVACIDADE.md) preparada com responsáveis, marcos, rotinas e provas pendentes. Cinco grupos de privacidade passaram novamente no staging em 17/10; fixtures removidas, nenhuma exclusão real.
+
+A informação de revisão profissional anterior foi preservada. Não é necessário repetir a revisão inicial. Permanecem verificações factuais: instrumentos de transferência efetivamente aplicáveis, configurações/retenção dos fornecedores, preservação legal dos registros de acesso e reaplicação de exclusões após restore. Aprovar metas não comprova essas configurações. A versão não foi publicada nem marcada como vigente no banco.
+
+Leitura pública em 17/10: a política da landing responde 200 e ainda identifica João Gabriel Carvalho, sem menção à Seed Tecnologias LTDA. O titular confirmou em seguida que a **Seed Tecnologias LTDA é responsável por ambos**, aplicativo e lista de espera. Preparar a correção do aviso para refletir essa identificação, mantendo finalidade e escolhas de contato; não converter consentimento existente em autorização para novas finalidades nem retroagir versão. A página publicada ainda precisa receber essa correção, sem retirar a landing do ar.
+
 Documento de preparação da Fase 13, atualizado em **15/10/2026**. A [minuta em português brasileiro](POLITICA_DE_PRIVACIDADE_PT_BR.md) não está aprovada, não foi inserida no banco e não foi publicada. A criação deste arquivo não encerra a Fase 13 nem autoriza a Fase 14.
 
 **Atualização do titular em 15/10:** os documentos já foram revisados e os ajustes serão enviados. A pendência passa a ser receber e incorporar esses ajustes e conferir a versão final. Não pedir novamente revisão inicial nem publicar a minuta atual por inferência. O lançamento pretendido é comercial, com cobrança; o aviso final deverá corresponder aos canais e tratamentos efetivamente habilitados antes da abertura.

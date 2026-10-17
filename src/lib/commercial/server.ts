@@ -2,7 +2,7 @@ import "server-only";
 import {guardBackgroundAccess} from '../operations/server';
 import { createClient } from "@supabase/supabase-js";
 import { currentUser } from "../auth/context";
-import { effectivePlan, getPlanEntitlements, getUsagePolicy } from "./entitlements";
+import { getPlanEntitlements, getUsagePolicy } from "./entitlements";
 import type { Flags, Market, Override, Plan, Subscription } from "./contracts";
 import {operationsEnabled} from '../operations/server';
 import {ChatError} from '../chat/contracts';
@@ -31,12 +31,11 @@ export async function commercialContextForUser(user: {id:string}) {
   const item = overrides.data?.[0];
   const override: Override | null = item ? { ...item.settings, expires_at: item.expires_at } : null;
   const subscription = subscriptions.data?.[0] as Subscription | undefined;
-  const planCode = effectivePlan(subscription ?? null, override, new Date());
   const [planResult, marketResult] = await Promise.all([
-    db.from("commercial_plans").select("*").eq("code", planCode).single(),
+    db.rpc("commercial_effective_plan", { p_user: user.id }),
     db.from("commercial_markets").select("*").eq("code", account.data.market_code).single(),
   ]);
-  if (planResult.error || marketResult.error) throw new Error("COMMERCIAL_CONFIGURATION_UNAVAILABLE");
+  if (planResult.error || !planResult.data || marketResult.error) throw new Error("COMMERCIAL_CONFIGURATION_UNAVAILABLE");
   const plan = planResult.data as Plan, market = marketResult.data as Market;
   return { db, user, plan, market, subscription, flags: getPlanEntitlements(global.data.value as Flags, plan, market, override, new Date()), policy: getUsagePolicy(plan, override, new Date()), override };
 }

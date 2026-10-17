@@ -1,8 +1,8 @@
 # Política de Privacidade — SeedAI
 
-**Minuta para revisão jurídica e operacional · versão 0.1 · 15 de outubro de 2026**
+**Versão consolidada 0.3 · 17 de outubro de 2026 · preparação para publicação**
 
-Esta versão ainda não foi aprovada nem publicada como política vigente. As confirmações necessárias antes da publicação estão no [documento de revisão](REVISAO_PRIVACIDADE.md).
+O titular autorizou a consolidação dos ajustes em 17/10/2026, após informar revisão profissional anterior. Este arquivo ainda não é a política publicada: vigência, comprovação dos tratamentos e versão final precisam ser registradas na liberação. As verificações factuais restantes estão no [documento de revisão](REVISAO_PRIVACIDADE.md).
 
 ## 1. Quem somos e como falar conosco
 
@@ -12,7 +12,7 @@ Para dúvidas sobre privacidade ou para exercer seus direitos, escreva para **[s
 
 Esta política explica o tratamento de dados pessoais no aplicativo SeedAI e no suporte relacionado. Dados pessoais são informações que identificam ou podem identificar uma pessoa, mesmo quando aparecem em registros empresariais.
 
-A página institucional e a lista de espera possuem um [aviso específico](https://appseedai.com/seedai/pt-BR/privacy). A inscrição nessa lista não cria uma conta no aplicativo. Esta minuta não substitui aquele aviso nem altera as autorizações de contato já registradas.
+A Seed Tecnologias LTDA também é responsável pelos cadastros da página institucional e da lista de espera, que possuem um [aviso específico](https://appseedai.com/seedai/pt-BR/privacy). A inscrição nessa lista não cria uma conta no aplicativo. Esta política não substitui aquele aviso nem altera as autorizações de contato já registradas.
 
 ## 2. Nossa responsabilidade e a da empresa usuária
 
@@ -62,7 +62,7 @@ A SeedAI utiliza a API da OpenAI para interpretar solicitações e produzir aná
 
 As conversas podem originar registros estruturados mantidos separadamente do histórico textual. Alguns são produzidos automaticamente; outros dependem de confirmação ou ação do usuário. Uma inferência pode estar incorreta. Verifique as informações e utilize as opções de correção disponíveis ou o suporte. A remoção de um item de memória não elimina, por si só, a mensagem de origem ou todos os registros relacionados.
 
-Segundo a [documentação da OpenAI](https://developers.openai.com/api/docs/guides/your-data), dados da API não são usados para treinamento por padrão, salvo adesão expressa ao compartilhamento. A SeedAI solicita que as respostas não sejam armazenadas como histórico de aplicação da API. Isso não significa retenção zero: o provedor informa que registros de monitoramento de abuso podem ser conservados por até 30 dias por padrão, com exceções previstas em suas condições. Esta política não concede autorização para treinamento para outras finalidades.
+Segundo a [documentação da OpenAI](https://developers.openai.com/api/docs/guides/your-data), dados da API não são usados para treinamento por padrão, salvo adesão expressa ao compartilhamento. A SeedAI solicita que as respostas não sejam armazenadas como histórico de aplicação da API. Isso não significa retenção zero: o provedor informa que registros de monitoramento de abuso podem ser conservados por até 30 dias por padrão, com exceções previstas em suas condições. Tarefas de pesquisa executadas em segundo plano também podem ter dados temporariamente conservados para consulta do resultado, aproximadamente dez minutos segundo o provedor. Esta política não concede autorização para treinamento para outras finalidades.
 
 Quando você utiliza pesquisa externa, consultas são encaminhadas a ferramentas de busca e fontes públicas podem ser acessadas. A SeedAI procura limitar a consulta às informações necessárias à pesquisa. Essa minimização não equivale a anonimização garantida. Informações públicas sobre pessoas continuam sujeitas à proteção de dados; não use a pesquisa para vigilância pessoal ou para expor informações confidenciais.
 
@@ -79,7 +79,8 @@ Pessoas autorizadas a prestar suporte e operar a SeedAI podem precisar acessar i
 | Supabase | Autenticação, banco de dados e cópias de segurança. Armazena dados da conta e os registros do aplicativo. |
 | Vercel | Hospedagem e processamento das requisições do aplicativo, entrega de páginas e registros operacionais. |
 | OpenAI | Processamento das informações selecionadas para tarefas de IA e ferramentas de pesquisa habilitadas. |
-| Resend | Envio de e-mails de autenticação e, quando habilitados, avisos operacionais. Recebe destinatário, conteúdo da mensagem e informações de entrega. |
+| Resend | Envio de e-mails de autenticação e avisos operacionais habilitados. Recebe destinatário, conteúdo da mensagem e informações de entrega. Os alertas operacionais utilizam contagens e estados, sem incluir o conteúdo das conversas. |
+| GitHub Actions | Verificação independente da saúde do serviço e execução de verificações do código. Recebe estados e contagens operacionais agregados, horários e recibos técnicos; o monitor não envia conversas, fatos empresariais ou dados de pagamento. Seu envio de alertas utiliza o Resend. |
 | Google/Gmail | Recebimento e atendimento das mensagens enviadas ao endereço de suporte e privacidade. O conteúdo enviado por você fica sujeito também ao processamento do serviço de e-mail. |
 | Zoho Mail | Recebimento, envio e armazenamento das mensagens da caixa empresarial suporte@appseedai.com. O conteúdo de uma solicitação encaminhada a essa caixa é processado pelo serviço de e-mail. |
 | Stripe | Fluxos de assinatura em modo de teste. Quando utilizado, recebe identificadores necessários ao fluxo de pagamento. Os campos de cartão são processados pelo provedor; a SeedAI não solicita que você envie número completo de cartão ou código de segurança pelo chat. |
@@ -116,7 +117,9 @@ Não foram incorporados pixels de publicidade ou análise opcional de visitantes
 Os critérios de conservação dependem da finalidade e do tipo de registro:
 
 - **Conta, conversas e memória empresarial:** durante a prestação do serviço e enquanto necessários para manter o histórico e o contexto da empresa, sujeitos a pedidos de correção, exclusão e às retenções justificadas.
-- **Segurança e uso:** pelo período necessário à investigação de incidentes, prevenção de abuso, controle de consumo e conciliação, reduzindo detalhes ou eliminando registros quando deixarem de ser necessários.
+- **Registros de acesso à aplicação:** quando abrangidos pelo art. 15 do Marco Civil da Internet, pelo prazo legal de seis meses, sob sigilo e controle de acesso, ressalvadas ordens válidas de preservação. Esses registros não se confundem com o conteúdo integral das conversas. [Marco Civil](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2014/lei/l12965.htm).
+- **Outros registros de segurança e uso:** pelo período necessário à investigação de incidentes, prevenção de abuso, controle de consumo e conciliação, reduzindo detalhes ou eliminando registros quando deixarem de ser necessários. Evidências vinculadas a incidentes ou obrigações devem ter finalidade, responsável e revisão de necessidade documentadas.
+- **Estado do monitor independente:** os artefatos técnicos são configurados para expirar após 30 dias no GitHub. Isso não define a retenção dos logs de execução, recibos de e-mail, registros de acesso ou dados do aplicativo, que devem ser avaliados separadamente.
 - **Suporte e solicitações de privacidade:** pelo período necessário ao atendimento e à comprovação de seu cumprimento, com revisão do conteúdo que precisa permanecer.
 - **Registros relacionados a obrigações ou disputas:** pelo período exigido pela obrigação aplicável ou necessário à defesa de direitos, sem estender essa justificativa a todo o histórico empresarial.
 - **Cópias de segurança:** conforme a rotação e as condições do serviço contratado. A exclusão na base ativa não representa remoção imediata de todas as cópias de segurança.
@@ -125,7 +128,7 @@ O encerramento de uma conta não elimina automaticamente dados que pertencem a u
 
 Pedidos podem exigir tratamento coordenado da conta, conversas, memória, registros derivados, e-mails e fornecedores. A SeedAI não oferece, nesta versão, apagamento universal e instantâneo em um único botão. Remover um item da visualização não comprova sua eliminação física de todas as bases. Se uma cópia de segurança for restaurada, as restrições e exclusões pertinentes precisam ser reaplicadas antes da retomada do uso desses dados.
 
-**Ponto pendente desta minuta:** os prazos por categoria, os responsáveis e o procedimento de eliminação precisam de aprovação e validação operacional. Não há promessa de expurgo automático em 30 dias para todos os dados do aplicativo. A retenção específica da lista de espera não se estende à conta e à memória empresarial.
+**Verificação antes da publicação:** a [matriz de conservação e fornecedores](CONTROLES_DE_PRIVACIDADE.md) registra os marcos, responsáveis e provas exigidas por categoria. O ensaio de exclusão com contas fictícias validou a revogação de acesso e a preservação da empresa compartilhada; não comprova expurgo em fornecedores, backups ou de todo conteúdo derivado. Os prazos de retenção ainda não comprovados permanecem identificados nessa matriz. Não há promessa de expurgo automático em 30 dias para todos os dados do aplicativo. A retenção específica da lista de espera não se estende à conta e à memória empresarial.
 
 ## 10. Seus direitos e como solicitar atendimento
 
@@ -133,7 +136,7 @@ Nos termos da legislação aplicável, você pode solicitar confirmação e aces
 
 Escreva para **[seedtecnologias.suporte@gmail.com](mailto:seedtecnologias.suporte@gmail.com)** e descreva o pedido. Podemos solicitar apenas as informações proporcionais necessárias para confirmar sua identidade e localizar os registros, preferindo meios autenticados quando disponíveis. Não é necessário manter uma assinatura paga para exercer direitos.
 
-O atendimento observará os prazos legais aplicáveis. Informaremos o encaminhamento, eventual necessidade de complementação e a justificativa de uma limitação. O exercício de direitos nos termos da LGPD é gratuito. Você também pode procurar a [Autoridade Nacional de Proteção de Dados — ANPD](https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares) e os órgãos competentes de defesa do consumidor.
+O atendimento observará os prazos legais aplicáveis a cada direito. A meta de primeira resposta humana é de um dia útil, com cobertura de segunda a sexta, 9h–18h, horário de Brasília, exceto feriados locais. Essa meta não amplia um prazo legal nem significa conclusão do pedido. Informaremos o encaminhamento, eventual necessidade de complementação e a justificativa de uma limitação. O exercício de direitos nos termos da LGPD é gratuito. Você também pode procurar a [Autoridade Nacional de Proteção de Dados — ANPD](https://www.gov.br/anpd/pt-br/assuntos/titular-de-dados/direito-dos-titulares) e os órgãos competentes de defesa do consumidor.
 
 Se os dados estiverem em uma empresa compartilhada, protegeremos também os direitos das demais pessoas. Isso pode exigir separar informações pessoais, registros empresariais e dados de terceiros. Não significa negar automaticamente o pedido. Quando atuarmos como operadora, ajudaremos a encaminhá-lo à empresa controladora responsável.
 

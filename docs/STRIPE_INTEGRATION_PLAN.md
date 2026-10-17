@@ -1,5 +1,7 @@
 # Stripe — plano validado pelo planejador
 
+**Estado atual em 17/10/2026:** o roteiro abaixo preserva o planejamento histórico de setembro. A preparação vigente está em [STRIPE_ACTIVATION.md](STRIPE_ACTIVATION.md): PRO de 1/3/5 empresas, preços R$ 99,99/199,99/399,99 e franquias US$ 4/8/16. Integração test mode validada, novos planos e cobrança real desativados. O adapter atual ainda aceita somente um PRO por mercado; não confundir a proposta com três ofertas já implantadas.
+
 Verificação em 28/09/2026 nesta conversa: MCP disponível, conta SEED TECNOLOGIAS retornada com `livemode: false`. Planejador chamado e escolhas aceitas no guia `iguide_61VU1aKcrdzszmlIZ41B8iUtsHOj7`.
 
 ## Escolhas

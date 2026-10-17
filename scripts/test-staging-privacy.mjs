@@ -118,6 +118,25 @@ try{
  check(data(await oldAccess.from('company_facts').select('id').eq('company_id',shared),'revoked_jwt_read').length===0,'revoked_jwt_leaks');
  check(Boolean((await oldAccess.rpc('save_company_fact',{p_company_id:shared,p_key:'city',p_value:'FORBIDDEN FIXTURE',p_expected_version:null})).error),'revoked_jwt_write');
  pass('existing_access_jwt_cannot_read_or_write_business_data_after_revocation');
+ phase='restore_suppression_replay';
+ // Logical snapshot rehearsal, separate from the earlier physical restore.
+ // Keep the minimal suppression ledger OUTSIDE the database being restored.
+ const snapshot=data(await admin.from('conversations').select('*').eq('id',privateConversation).single(),'snapshot_private_fixture');
+ const suppression={version:1,project:config.project,userId:leaving.id,conversationId:privateConversation,companyId:shared};
+ const ledger=new URL('suppression-'+run+'.json',directory);
+ await writeFile(ledger,JSON.stringify(suppression,null,2)+'\n');
+ data(await admin.from('conversations').delete().eq('id',privateConversation).eq('user_id',leaving.id),'suppress_before_restore');
+ data(await admin.from('conversations').insert(snapshot),'restore_old_private_fixture');
+ // Never reopen access between restoration and replay. Production restoration
+ // must also remain behind the public gate with jobs disabled throughout.
+ const replay=JSON.parse(await readFile(ledger,'utf8'));
+ check(replay.project===config.project&&replay.userId===leaving.id&&replay.conversationId===privateConversation&&replay.companyId===shared,'suppression_scope_mismatch');
+ data(await admin.from('beta_access').update({disabled:true}).eq('user_id',replay.userId),'replay_disabled_access');
+ data(await admin.from('conversations').delete().eq('id',replay.conversationId).eq('user_id',replay.userId).eq('company_id',replay.companyId),'replay_private_erasure');
+ check(data(await admin.from('conversations').select('id').eq('id',privateConversation),'verify_replayed_erasure').length===0,'restored_private_content_remains');
+ check(data(await oldAccess.from('company_facts').select('id').eq('company_id',shared),'verify_replayed_access').length===0,'restored_access_leaks');
+ check(data(await remaining.db.from('conversations').select('id').eq('id',sharedConversation),'verify_unaffected_shared_chat').length===1,'restore_replay_deleted_other_member');
+ pass('logical_snapshot_suppression_replayed_from_external_ledger_with_access_closed_and_shared_chat_preserved');
  phase='reviewed_fixture_cleanup';
  // This deliberately disposes fictitious financial rows. Real financial retention
  // and provider subscriptions require an independently approved manual decision.
