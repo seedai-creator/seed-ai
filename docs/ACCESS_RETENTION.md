@@ -1,6 +1,6 @@
 # SeedAI — retenção mínima de acessos e restauração
 
-17/10/2026. Implementado no candidato e instalado no staging. Coleta permanece desativada; produção não recebeu a migração nem este código. Não é confirmação de cumprimento integral da obrigação legal em produção.
+17/10/2026. Implementado no candidato e instalado no staging. Coleta ensaiada em preview privado temporário na Vercel e desligada ao remover esse preview; produção não recebeu a migração nem este código. Não é confirmação de cumprimento integral da obrigação legal em produção.
 
 ## Dados e limites
 
@@ -20,7 +20,15 @@ Landing `/seedai`, arquivos estáticos, rotas internas e webhook de cobrança s�
 4. O cron protegido existente chama `prune_application_access(false,1000)` antes de verificar as filas opcionais. O padrão da função chamada manualmente é simulação. Rodar simulação antes de qualquer intervenção; conferir contagens e registros preservados. Não apagar outras categorias por esse prazo.
 5. Acompanhar backlog/execução. O lote é limitado a mil registros por chamada e serializado; 1.000 por minuto é teto teórico, não garantia de vazão. Falha/atraso mantém dados até recuperação. Definir alerta específico de backlog antes de ampliar volume.
 
-Há uma gravação adicional no banco por requisição abrangida, com timeout de cinco segundos. Isso aumenta latência, armazenamento e custo; ainda falta medir tráfego real/abuso e o caminho Vercel. O desenho de falha fechada protege a coleta, mas pode reduzir disponibilidade. Não desativar silenciosamente a retenção para contornar uma falha; registrar incidente e decisão do responsável.
+Há uma gravação adicional no banco por requisição abrangida, com timeout de cinco segundos. Isso aumenta latência, armazenamento e custo; ainda falta medir tráfego real/abuso e carga. O desenho de falha fechada protege a coleta, mas pode reduzir disponibilidade. Não desativar silenciosamente a retenção para contornar uma falha; registrar incidente e decisão do responsável.
+
+## Evidência hospedada em 17/10
+
+Preview temporário no projeto exclusivo de staging, protegido por autenticação Vercel, com zero agendamentos e sem credenciais de IA, Stripe ou Resend. Seis requisições do ensaio geraram registros: a comparação no banco confirmou substituição do IP de exemplo enviado pelo cliente e vencimento correto em todos, sem imprimir endereços reais. Duas consultas finais retornaram 200 em 783 e 636 ms; o endpoint de saúde sem credencial própria retornou 401 e não gerou acesso nesse registro. Esses tempos incluem a página e não medem apenas a escrita.
+
+A primeira consulta não retornou 200; o roteiro original não conservou seu código HTTP, portanto a causa não foi comprovada. Consultas de diagnóstico e repetição passaram sem alteração da aplicação ou relaxamento da proteção. Não tratar a amostra como p95, garantia de disponibilidade, teste de volume ou prova completa de falha de banco. O ensaio local valida rejeição de origem ausente/inválida e os controles do banco separadamente.
+
+O preview e seu bypass temporário foram removidos; os seis registros exclusivos de teste foram removidos por identificadores e janela exatos, depois de conferir que a tabela estava vazia antes do ensaio. Nenhum registro de usuário/produção foi atingido. Evidências privadas em `.test-build/access-retention/`. A limpeza de teste não é um procedimento para apagar acessos reais antes do prazo.
 
 ## Exclusão e backup
 
