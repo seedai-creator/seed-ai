@@ -7,13 +7,17 @@ import { validateTestPrice } from "@/lib/billing/contracts";
 import { isPlanAvailable } from "@/lib/commercial/markets";
 import { getLocale } from "@/lib/i18n/server";
 import { billingMetadata } from "@/lib/billing/metadata";
-export async function startCheckout() {
+export async function startCheckout(form: FormData) {
   let destination: string;
   try {
     const c = await commercialContext();
     if(!process.env.STRIPE_WEBHOOK_SECRET?.startsWith("whsec_"))throw new Error("WEBHOOK_NOT_CONFIGURED");
     if (c.plan.code !== "FREE" || !isPlanAvailable(c.market, "PRO")) throw new Error("CHECKOUT_DISABLED");
-    const { data: price, error } = await c.db.from("commercial_prices").select("*").eq("market_code", c.market.code).eq("plan_code", "PRO").eq("provider", "stripe").eq("status", "ACTIVE").is("effective_to", null).lte("effective_from", new Date().toISOString()).single();
+    const offerId = form.get("offer_id");
+    if (typeof offerId !== "string" || !/^PRO_[135]_V[1-9][0-9]*$/.test(offerId)) throw new Error("OFFER_REQUIRED");
+    const offer = await c.db.from("commercial_offers").select("id").eq("id", offerId).eq("market_code",c.market.code).eq("available",true).single();
+    if (offer.error || !offer.data) throw new Error("OFFER_UNAVAILABLE");
+    const { data: price, error } = await c.db.from("commercial_prices").select("*").eq("offer_id",offerId).eq("market_code", c.market.code).eq("plan_code", "PRO").eq("provider", "stripe").eq("status", "ACTIVE").is("effective_to", null).lte("effective_from", new Date().toISOString()).single();
     if (error || !price) throw new Error("PRICE_UNAVAILABLE");
     const stripe = stripeClient(), priceId = price.provider_price_id;
     if (!priceId) throw new Error("PRICE_UNAVAILABLE");
@@ -66,7 +70,7 @@ export async function openCustomerPortal() {
     if (!configuration || !/^bpc_[a-zA-Z0-9]+$/.test(configuration)) throw new Error("PORTAL_NOT_CONFIGURED");
     const stripe = stripeClient();
     const portal = await stripe.billingPortal.configurations.retrieve(configuration);
-    if (!portal.active || portal.livemode || !portal.features.subscription_cancel.enabled || portal.features.subscription_cancel.mode !== "at_period_end") throw new Error("PORTAL_CONFIGURATION_INVALID");
+    if (!portal.active || portal.livemode || portal.features.subscription_update.enabled || !portal.features.subscription_cancel.enabled || portal.features.subscription_cancel.mode !== "at_period_end") throw new Error("PORTAL_CONFIGURATION_INVALID");
     const session = await stripe.billingPortal.sessions.create({ customer: data.provider_customer_id, configuration, return_url: billingSite() + "/billing" });
     destination = session.url;
   } catch { redirect("/billing?error=portal"); }

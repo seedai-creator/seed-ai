@@ -22,7 +22,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
   const state = c && !usage?.error && usage?.data && rollout?.data?.value.enabled === true
     ? usageState(Number(usage.data.cost),Number(usage.data.count),c.policy,Number(usage.data.diagnoses??0)) : null;
   const countries=!c?await Promise.resolve().then(()=>commercialDatabase().from("commercial_markets").select("code,name").eq("status","ACTIVE").eq("signup_enabled",true).eq("disable_new_signups",false)).catch(()=>null):null;
-  const price=c?await c.db.from("commercial_prices").select("currency,amount_minor").eq("market_code",c.market.code).eq("plan_code","PRO").eq("status","ACTIVE").is("effective_to",null).single():null;
+  const offers=c?await c.db.from("commercial_offers").select("id,currency,amount_minor,company_limit,available,commercial_prices(status,provider_price_id,effective_to,effective_from)").eq("market_code",c.market.code).order("company_limit"):null;
   return <main className="account-shell"><div className="account-top"><Brand/><Link href="/">{t("strategy.back")}</Link></div><section className="account-card">
     <p className="account-kicker">SeedAI</p><h1>{t("billing.title")}</h1><p>{t("billing.description")}</p>
     {query.error&&<p role="alert">{t("billing.error")}</p>}
@@ -30,7 +30,7 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
       ? <p role="status">{t("billing.confirmed")}</p>
       : <PaymentConfirmation message={t("billing.confirming")} refreshLabel={t("billing.refresh")}/>)}
     {!c?<><p>{t("billing.setup")}</p>{countries?.data?.length&&<form action={selectBillingCountry}><label>{t("fact.country")}<select name="country" required defaultValue=""><option value="" disabled>—</option>{countries.data.map(m=><option key={m.code} value={m.code}>{m.name}</option>)}</select></label><button className="primary-button">{t("billing.confirmCountry")}</button></form>}</>:<>
-      <p>{t("billing.current")}: <strong>{c.plan.code}</strong></p>
+      <p>{t("billing.current")}: <strong>{c.plan.code}{c.plan.offer_id ? ` · ${t("billing.companies",{count:c.plan.company_limit})}` : ""}</strong></p>
       {state&&<p role="status">{t(`billing.usage.${state}`)}</p>}
       {state&&usage?.data&&<div>
         {c.policy.analysis_limit_mode !== 'budget' && <p>{t("billing.analysisBalance",{used:Number(usage.data.diagnoses??0),limit:Number(usage.data.analysis_limit??c.policy.diagnoses)})}</p>}
@@ -44,10 +44,19 @@ export default async function BillingPage({searchParams}:{searchParams:Promise<R
         <p>{t("billing.financialProtection")}</p>
       </div>}
       <p>{t("billing.dataPreserved")}</p>
-      <h2>SeedAI PRO</h2>{price?.data&&<p>{new Intl.NumberFormat(locale,{style:"currency",currency:price.data.currency}).format(Number(price.data.amount_minor)/100)} / {t("billing.month")}</p>}
+      <h2>SeedAI PRO</h2>
+      {offers?.data?.map(offer=>{
+        const purchasable=offer.available&&isPlanAvailable(c.market,"PRO")&&offer.commercial_prices.some(p=>p.status==="ACTIVE"&&p.provider_price_id&&p.effective_to===null&&Date.parse(p.effective_from)<=Date.now());
+        return <section key={offer.id} aria-label={`PRO · ${offer.company_limit}`}>
+          <h3>{t("billing.companies",{count:offer.company_limit})}</h3>
+          <p>{new Intl.NumberFormat(locale,{style:"currency",currency:offer.currency}).format(Number(offer.amount_minor)/100)} / {t("billing.month")}</p>
+          {c.plan.code==="FREE"&&(purchasable
+            ? <form action={startCheckout}><input type="hidden" name="offer_id" value={offer.id}/><button className="primary-button">{t("billing.upgrade")}</button></form>
+            : <p>{t("billing.unavailable")}</p>)}
+        </section>;
+      })}
       <p>{t("billing.continuous")}</p>
       <p>{t("billing.test")}</p>
-      {c.plan.code==="FREE"&&isPlanAvailable(c.market,"PRO")&&<form action={startCheckout}><button className="primary-button">{t("billing.upgrade")}</button></form>}
       {customer?.data?.provider_customer_id&&<form action={openCustomerPortal}><button className="text-button">{t("billing.manage")}</button></form>}
     </>}
   </section></main>;

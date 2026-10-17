@@ -4,6 +4,8 @@
 
 ## Entrega desta rodada
 
+**Complemento posterior de 17/10:** o [relatório de retenção/ofertas](PHASE_13_RETENTION_OFFERS.md) substitui os itens equivalentes abaixo. Duas migrações novas no staging (45), 568 testes locais, dez grupos comerciais incluindo cada oferta e seis de privacidade aprovados. Produtos/preços inativos e resolução das três ofertas implementados; retenção mínima implementada com coleta desligada. Produção continua inalterada. Este documento preserva o histórico da primeira conferência; as afirmações de ausência dessas implementações não representam o candidato atual.
+
 - [Metas adotadas](OPERATIONAL_TARGETS.md): disponibilidade 99,5%, cobertura/primeira resposta, triagem e recuperação, RPO, exercícios, desempenho e controle financeiro. Metas são objetivos internos, não resultados medidos ou SLA comercial.
 - Termos e Política na versão preparada 0.2: preços acordados, franquia compartilhada, FREE sem renovação, suporte, monitor e distinção de registros legais. Revisão profissional anterior informada; nenhuma nova revisão inicial exigida. [Provas de privacidade](legal/CONTROLES_DE_PRIVACIDADE.md) separadas de aprovação editorial.
 - Identificação da Seed Tecnologias LTDA confirmada para aplicativo e lista de espera. Na fonte separada da landing (`work/seedai-institutional-v2/site`), seis avisos corrigidos em versão `privacy-controller-2026-10-17-v3`; demais parágrafos preservados. Nenhum cadastro ou consentimento antigo alterado; publicação da correção ainda pendente.
@@ -59,9 +61,9 @@ Evidências privadas: `.test-build/phase13-closeout-*`, `stripe-preparation.json
 
 ## Bloqueadores objetivos e responsáveis
 
-1. **Privacidade — Seed Tecnologias LTDA:** comprovar instrumentos e regiões dos fornecedores, retenção efetiva por categoria (inclusive registros legais de acesso), rotina de tratamento e reaplicação de exclusões após restore. Lista detalhada na matriz; não basta remover o texto “pendente”.
+1. **Privacidade — Seed Tecnologias LTDA:** vincular contratos às contas, comprovar as configurações restantes dos fornecedores e validar/publicar a retenção hospedada. A implementação e o ensaio de reaplicação de conversa após snapshot lógico já foram concluídos; não equivalem a expurgo universal. [Provas delimitadas](legal/FORNECEDORES_E_CONTRATOS.md).
 2. **Documentos — titular/operação:** publicar versões verificadas, com vigência e forma de aceite adequadas, e corrigir a identificação na landing. O aceite atual já distingue contrato de ciência da política. Não registrar aceite retroativo.
-3. **Cobrança — engenharia/titular, antes do lançamento pago:** implementar associação das ofertas às assinaturas, preparar/testar ambiente live, mudanças de plano, reembolso e canais móveis efetivamente oferecidos. Preparar não ativa planos.
+3. **Cobrança — engenharia/titular, antes do lançamento pago:** associação versionada implementada e testada no staging; completar Checkout hospedado por oferta, ambiente live, mudanças de plano, reembolso e canais móveis efetivamente oferecidos. Preparar não ativa planos.
 4. **Operação — titular:** executar rotina acordada, acompanhar medições e cobertura. Não exigir 30 dias passados como condição artificial para continuar o desenvolvimento; tampouco declarar disponibilidade mensal medida antes de existir a janela. Planejar capacidade antes de ampliar o público.
 
 ## Riscos e mitigação

@@ -6,6 +6,8 @@ Quatro migrações históricas da landing foram importadas sem alterar o SQL. `s
 
 ## Reconciliação executada
 
+Atualização de 17/10/2026: o titular instalou o pacote atômico de staging com `20261017190223_versioned_pro_offers.sql` e `20261017190428_access_retention.sql`. As versões canônicas foram registradas junto ao SQL na mesma transação e verificadas por leitura: **45 migrações no staging; 43 em produção**. Dois erros `Invalid or expired requestState` do conector precederam a execução manual; foi conferida ausência de alteração parcial. Não reaplicar o bundle. [Validação e estado inativo](PHASE_13_RETENTION_OFFERS.md). Os números das seções seguintes são históricos.
+
 | Ambiente | Histórico reconhecido | Reparo | Catálogo preservado |
 | --- | --- | --- | --- |
 | Staging | 42 migrações | Oito identificadores alinhados; 34 instalações manuais registradas | 81 tabelas, 105 funções |

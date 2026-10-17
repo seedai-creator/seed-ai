@@ -1,6 +1,6 @@
 # Política de Privacidade — SeedAI
 
-**Versão consolidada 0.2 · 17 de outubro de 2026 · preparação para publicação**
+**Versão consolidada 0.3 · 17 de outubro de 2026 · preparação para publicação**
 
 O titular autorizou a consolidação dos ajustes em 17/10/2026, após informar revisão profissional anterior. Este arquivo ainda não é a política publicada: vigência, comprovação dos tratamentos e versão final precisam ser registradas na liberação. As verificações factuais restantes estão no [documento de revisão](REVISAO_PRIVACIDADE.md).
 
@@ -62,7 +62,7 @@ A SeedAI utiliza a API da OpenAI para interpretar solicitações e produzir aná
 
 As conversas podem originar registros estruturados mantidos separadamente do histórico textual. Alguns são produzidos automaticamente; outros dependem de confirmação ou ação do usuário. Uma inferência pode estar incorreta. Verifique as informações e utilize as opções de correção disponíveis ou o suporte. A remoção de um item de memória não elimina, por si só, a mensagem de origem ou todos os registros relacionados.
 
-Segundo a [documentação da OpenAI](https://developers.openai.com/api/docs/guides/your-data), dados da API não são usados para treinamento por padrão, salvo adesão expressa ao compartilhamento. A SeedAI solicita que as respostas não sejam armazenadas como histórico de aplicação da API. Isso não significa retenção zero: o provedor informa que registros de monitoramento de abuso podem ser conservados por até 30 dias por padrão, com exceções previstas em suas condições. Esta política não concede autorização para treinamento para outras finalidades.
+Segundo a [documentação da OpenAI](https://developers.openai.com/api/docs/guides/your-data), dados da API não são usados para treinamento por padrão, salvo adesão expressa ao compartilhamento. A SeedAI solicita que as respostas não sejam armazenadas como histórico de aplicação da API. Isso não significa retenção zero: o provedor informa que registros de monitoramento de abuso podem ser conservados por até 30 dias por padrão, com exceções previstas em suas condições. Tarefas de pesquisa executadas em segundo plano também podem ter dados temporariamente conservados para consulta do resultado, aproximadamente dez minutos segundo o provedor. Esta política não concede autorização para treinamento para outras finalidades.
 
 Quando você utiliza pesquisa externa, consultas são encaminhadas a ferramentas de busca e fontes públicas podem ser acessadas. A SeedAI procura limitar a consulta às informações necessárias à pesquisa. Essa minimização não equivale a anonimização garantida. Informações públicas sobre pessoas continuam sujeitas à proteção de dados; não use a pesquisa para vigilância pessoal ou para expor informações confidenciais.
 

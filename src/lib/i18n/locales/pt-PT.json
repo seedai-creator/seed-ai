@@ -307,6 +307,8 @@
   "billing.confirming": "Aguardamos a confirmação do pagamento. O regresso do checkout não ativa a subscrição.",
   "billing.setup": "A configuração comercial ainda não está disponível para esta conta.",
   "billing.current": "Plano atual",
+  "billing.companies": "Até {count} empresa(s)",
+  "billing.unavailable": "Subscrições ainda indisponíveis.",
   "billing.month": "mês",
   "billing.continuous": "Memória, diagnósticos, estratégias, decisões e experiências, com uma política de utilização responsável.",
   "billing.test": "Ambiente de teste — sem cobranças reais.",

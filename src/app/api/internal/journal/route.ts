@@ -12,6 +12,7 @@ import { commercialDatabase } from "@/lib/commercial/server";
 import { journalEnabled,processJournalJob,queueWeekly } from "@/lib/journal/server";
 import { COMPANY_BATCH_SIZE,scheduledCompanyRange } from "@/lib/journal/schedule";
 import {processBusinessModelJob} from '@/lib/business-model/server';
+import {processAccessRetention} from '@/lib/operations/access-retention-server';
 export const runtime="nodejs";
 export const maxDuration=120;
 export async function GET(request:Request){
@@ -22,6 +23,7 @@ export async function GET(request:Request){
  const alerts=processOperationalAlerts();
  let completed=false;
  try{
+ await processAccessRetention();
  if(!journalEnabled()&&!radarEnabled()&&!externalEnabled()){completed=true;return Response.json({enabled:false});}
  const afterId=new URL(request.url).searchParams.get("after");
  if(afterId&&!/^[a-f0-9-]{36}$/.test(afterId))return new Response(null,{status:400});

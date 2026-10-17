@@ -1,5 +1,11 @@
 # Revisão da Política de Privacidade da SeedAI
 
+## Retenção e fornecedores — complemento de 17/10/2026
+
+A Política candidata 0.3 esclarece armazenamento temporário de pesquisa em segundo plano. O código atual de `src/lib/external/request.ts` utiliza `background:true`; a referência histórica abaixo a pesquisa exclusivamente em foreground não descreve mais esse caminho. [Inventário de fornecedores](FORNECEDORES_E_CONTRATOS.md) separa condições públicas, evidências da conta e pendências contratuais.
+
+Retenção mínima de acessos implementada no candidato, desativada por padrão, com schema instalado no staging; falta validação do caminho hospedado e publicação autorizada. O novo ensaio de privacidade passou em seis grupos, incluindo reaplicação de supressão de conversa após snapshot lógico. Isso não representa expurgo universal de todas as categorias/fornecedores. [Procedimento](../ACCESS_RETENTION.md).
+
 ## Consolidação autorizada — 17/10/2026
 
 O titular autorizou os ajustes e adotou as metas operacionais. A versão 0.2 incorpora o monitor GitHub/Resend, distingue registros legais de acesso dos demais logs e esclarece o prazo de primeira resposta. [Matriz de controles](CONTROLES_DE_PRIVACIDADE.md) preparada com responsáveis, marcos, rotinas e provas pendentes. Cinco grupos de privacidade passaram novamente no staging em 17/10; fixtures removidas, nenhuma exclusão real.

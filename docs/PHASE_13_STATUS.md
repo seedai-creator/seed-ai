@@ -4,6 +4,8 @@ Em implementação desde 10/10/2026. **NOT READY FOR CLOSED BETA.** Verificaçã
 
 ## Consolidação e preparação Stripe — 17/10/2026
 
+**Atualização posterior nesta data:** [retenção e ofertas](PHASE_13_RETENTION_OFFERS.md). Schema de duas novas migrações instalado e conferido no staging (45 registros), 568 testes locais, dez grupos de integração com os três planos e seis de privacidade aprovados. Produtos/preços Stripe e vínculos no staging preparados **inativos**. O código resolve ofertas versionadas; a limitação histórica de um único PRO indicada abaixo foi superada no candidato, ainda não publicado. [Contratos e configurações](legal/FORNECEDORES_E_CONTRATOS.md) inventariados; [retenção](ACCESS_RETENTION.md) implementada, com coleta desativada e validação hospedada pendente. Sem produção, IA paga ou cobrança.
+
 [Relatório da conferência](PHASE_13_CLOSEOUT.md): 559 testes locais, 10 grupos de integração comercial/RLS, 5 de privacidade e 7 de navegador aprovados; lint, tipos e build de staging passaram. Correção do nome da marca no roteiro de MFA validada após falha preservada. Landing: 17 testes. Não houve deploy, alteração de planos ou IA paga nesta rodada.
 
 O titular aprovou as [metas operacionais](OPERATIONAL_TARGETS.md), ajustes documentais e preparação Stripe, mantendo as ofertas desativadas e a landing disponível. Termos/Política na versão preparada 0.2; catálogo acordado de 1/3/5 empresas a R$ 99,99/199,99/399,99, com US$ 4/8/16 por conta/ciclo. A revisão profissional anterior foi informada; não solicitar sua repetição. As comprovações factuais de privacidade estão separadas na [matriz](legal/CONTROLES_DE_PRIVACIDADE.md).
@@ -12,7 +14,7 @@ Conferência de produção somente leitura: `closed_beta=true`, zero documentos 
 
 O monitor teve oito execuções periódicas consecutivas bem-sucedidas na amostra de 17/10, com intervalos entre 19min11s e 31min15s. [Evidência](https://github.com/seedai-creator/seed-ai/actions/runs/39058689415). A primeira execução automática está agora comprovada; o intervalo de dez minutos permanece uma solicitação, não garantia.
 
-Stripe consultado exclusivamente em teste: um preço compatível com R$ 99,99, nenhum com R$ 199,99 ou R$ 399,99. A arquitetura atual resolve somente um PRO por mercado. A [preparação de ativação](STRIPE_ACTIVATION.md) registra a associação de oferta/preço/assinatura/limites ainda necessária, sem adaptar o PRO global ou criar cobranças. Verificador novo recusa chaves live e nunca declara ativação pronta por encontrar um valor igual.
+No primeiro inventário somente de preços ativos, havia um preço compatível com R$ 99,99 e nenhum com R$ 199,99/399,99. Posteriormente foram preparados três produtos/preços inativos e a associação oferta/preço/assinatura/limites foi implementada no candidato e validada em staging. [Preparação de ativação](STRIPE_ACTIVATION.md). Nenhum PRO global foi ampliado, oferta liberada ou cobrança criada.
 
 Metas adotadas não significam medição de 30 dias concluída, prontidão live ou documentos publicados. Falta comprovar os tratamentos/retenções indicados na matriz, consolidar vigência e entrega dos documentos, e fechar os fluxos do canal comercial antes da abertura. O titular autorizou preparação, não ativação. A Fase 14 não foi iniciada.
 

@@ -49,16 +49,17 @@ async function cleanup(){
  }
  const ids=fixtures.map(user=>user.id);
  if(state.commercial){
-  const records=data(await admin.from('subscriptions').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_subscriptions');
+  const priceIds=[state.commercial.priceId,...(state.commercial.offerPriceIds??[])];
+  const records=data(await admin.from('subscriptions').select('id,user_id').in('price_id',priceIds),'cleanup_fixture_subscriptions');
   requireTrue(records.every(r=>ids.includes(r.user_id)),'cleanup_foreign_subscription_refused');
-  const attempts=data(await admin.from('checkout_attempts').select('id,user_id').eq('price_id',state.commercial.priceId),'cleanup_fixture_checkouts');
+  const attempts=data(await admin.from('checkout_attempts').select('id,user_id').in('price_id',priceIds),'cleanup_fixture_checkouts');
   requireTrue(attempts.every(r=>ids.includes(r.user_id)),'cleanup_foreign_checkout_refused');
-  data(await admin.from('subscriptions').delete().eq('price_id',state.commercial.priceId),'cleanup_subscriptions');
-  data(await admin.from('checkout_attempts').delete().eq('price_id',state.commercial.priceId),'cleanup_checkouts');
+  data(await admin.from('subscriptions').delete().in('price_id',priceIds),'cleanup_subscriptions');
+  data(await admin.from('checkout_attempts').delete().in('price_id',priceIds),'cleanup_checkouts');
   data(await admin.from('commercial_events').delete().in('dedupe_key',state.commercial.eventIds),'cleanup_commercial_events');
   data(await admin.from('billing_events').delete().in('provider_event_id',state.commercial.eventIds),'cleanup_billing_events');
-  data(await admin.from('commercial_prices').delete().eq('id',state.commercial.priceId),'cleanup_price');
-  requireTrue(data(await admin.from('commercial_prices').select('id').eq('id',state.commercial.priceId),'cleanup_price_check').length===0,'cleanup_price_remaining');
+  data(await admin.from('commercial_prices').delete().in('id',priceIds),'cleanup_price');
+  requireTrue(data(await admin.from('commercial_prices').select('id').in('id',priceIds),'cleanup_price_check').length===0,'cleanup_price_remaining');
  }
  if(ids.length){
   const memberships=data(await admin.from('company_members').select('company_id').in('user_id',ids),'cleanup_memberships');
@@ -80,6 +81,12 @@ async function cleanup(){
  requireTrue(data(await admin.from('beta_invitations').select('email').in('email',state.emails),'cleanup_invite_verify').length===0,'cleanup_invitations_remaining');
  const controls=data(await admin.from('operations_controls').select('*').eq('id',true).single(),'cleanup_controls');
  requireTrue(JSON.stringify(controls)===JSON.stringify(state.controls),'controls_changed_during_test');
+ if(state.commercialRollout){
+  const current=data(await admin.from('commercial_settings').select('value').eq('id','rollout').single(),'cleanup_rollout_read');
+  requireTrue([state.commercialRollout.enabled,state.commercialRollout.original].some(value=>JSON.stringify(current.value)===JSON.stringify(value)),'cleanup_rollout_changed');
+  data(await admin.from('commercial_settings').update({value:state.commercialRollout.original}).eq('id','rollout'),'cleanup_rollout_restore');
+  requireTrue(JSON.stringify(data(await admin.from('commercial_settings').select('value').eq('id','rollout').single(),'cleanup_rollout_verify').value)===JSON.stringify(state.commercialRollout.original),'cleanup_rollout_not_restored');
+ }
  state.status='cleaned';await saveState();report.cleanup=true;
 }
 
@@ -154,8 +161,13 @@ try{
  if(commercialMode){
   phase='commercial_reconciliation';
   state.commercial={priceId:randomUUID(),providerPriceId:'price_fixture_'+run,customerId:'cus_fixture_'+run,
-   subscriptionId:'sub_fixture_'+run,eventIds:Array.from({length:7},(_,i)=>'evt_fixture_'+run+'_'+i)};
+   subscriptionId:'sub_fixture_'+run,offerPriceIds:Array.from({length:3},()=>randomUUID()),eventIds:Array.from({length:16},(_,i)=>'evt_fixture_'+run+'_'+i)};
+  const original=data(await admin.from('commercial_settings').select('value').eq('id','rollout').single(),'fixture_rollout_read').value;
+  // Enforcement only. Does not enable an offer, market, price, AI or checkout.
+  // Persist restoration information before touching the staging-only switch.
+  state.commercialRollout={original,enabled:{...original,enabled:true}};
   await saveState();
+  data(await admin.from('commercial_settings').update({value:state.commercialRollout.enabled}).eq('id','rollout'),'fixture_enforcement');
   report.commercial=await runStagingCommercial(admin,users,state.commercial);
   passed('real_database_billing_replay_failure_cancellation_and_isolation');
  }

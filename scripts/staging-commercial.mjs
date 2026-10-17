@@ -49,6 +49,39 @@ export async function runStagingCommercial(admin,users,fixture) {
  check(await plan(a)==='FREE','cancellation_access');
  check(data(await a.session.from('company_facts').select('id').eq('company_id',a.company),'preserved_memory').length===1,'downgrade_deleted_memory');
  checks.push('payment_failure_recovery_out_of_order_and_cancellation');
+ // Versioned offer tests use explicit fictional checkout records, not an open
+ // market. Keep every real offer and price unavailable throughout this drill.
+ const offers=data(await admin.from('commercial_offers').select('*').order('company_limit'),'prepared_offers');
+ check(offers.length===3&&offers.every(o=>o.available===false),'offers_must_remain_inactive');
+ for(let i=0;i<offers.length;i++){
+  const o=offers[i],price=fixture.offerPriceIds[i],event=7+i*3;
+  check(o.company_limit===[1,3,5][i]&&o.policy.hard_usd===[4,8,16][i],'offer_contract_mismatch');
+  data(await admin.from('commercial_prices').insert({id:price,offer_id:o.id,plan_code:'PRO',market_code:'BR',currency:'BRL',amount_minor:o.amount_minor,
+   provider:'stripe',provider_price_id:'price_fixture_'+price,status:'INACTIVE',is_planning_hypothesis:true,
+   effective_from:start.toISOString(),effective_to:end.toISOString()}),'offer_fixture_price');
+  check(Boolean((await admin.rpc('begin_checkout',{p_user:a.id,p_market:'BR',p_price:price})).error),'closed_offer_checkout_accepted');
+  data(await admin.from('checkout_attempts').insert({user_id:a.id,market_code:'BR',price_id:price}),'offer_fixture_checkout');
+  const changes={price_id:price,provider_price_id:'price_fixture_'+price,provider_subscription_id:'sub_fixture_'+price,amount_minor:Number(o.amount_minor)};
+  data(await apply(admin,event,'invoice.paid',600+i*100,changes),'offer_fixture_activation');
+  const resolved=data(await admin.rpc('commercial_effective_plan',{p_user:a.id}),'offer_plan');
+  check(resolved.company_limit===o.company_limit&&resolved.policy.hard_usd===o.policy.hard_usd&&resolved.offer_id===o.id,'offer_resolution');
+  const balance=data(await admin.rpc('commercial_usage',{p_user:a.id,p_window:'lifetime'}),'offer_usage');
+  check(balance.policy.hard_usd===o.policy.hard_usd,'offer_budget_mismatch');
+  let members=data(await a.session.from('company_members').select('company_id').eq('user_id',a.id).eq('role','owner'),'offer_company_count');
+  while(members.length<o.company_limit){
+   data(await a.session.rpc('create_company',{company_name:'FICTIONAL OFFER TEST'}),'offer_create_company');
+   members=data(await a.session.from('company_members').select('company_id').eq('user_id',a.id).eq('role','owner'),'offer_updated_count');
+  }
+  check(Boolean((await a.session.rpc('create_company',{company_name:'FICTIONAL EXCESS'})).error),'offer_company_limit_missing');
+  check((await b.session.rpc('commercial_effective_plan',{p_user:a.id})).error?.code==='42501','offer_resolution_client_leak');
+  data(await apply(admin,event,'invoice.paid',600+i*100,changes),'offer_duplicate');
+  data(await apply(admin,event+1,'customer.subscription.deleted',650+i*100,{...changes,status:'canceled'}),'offer_cancel');
+  data(await apply(admin,event+2,'invoice.paid',610+i*100,changes),'offer_old_event');
+  check(await plan(a)==='FREE'&&await plan(b)==='FREE','offer_cancellation_isolation');
+  check(data(await a.session.from('companies').select('id'),'offer_history').length===o.company_limit,'offer_history_lost');
+  checks.push('inactive_'+o.id+'_company_limit_budget_isolation_replay_cancel_history');
+ }
+ check(data(await admin.from('commercial_offers').select('available'),'offer_final_state').every(o=>!o.available),'offer_was_enabled');
  return {passed:true,checks,provider:'synthetic_events_only',realAuth:true,realDatabase:true,paidCalls:0,
-  limitations:['Does not test Stripe network delivery, Checkout UI, refunds or store purchases. No global plan, market or budget changed.']};
+  limitations:['Does not test Stripe network delivery, Checkout UI, refunds or store purchases. Staging enforcement is temporarily enabled and restored by cleanup; no offer, market, plan or budget is activated.']};
 }

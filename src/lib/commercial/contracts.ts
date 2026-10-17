@@ -10,7 +10,7 @@ export type UsagePolicy = {
   interactions: number; diagnoses: number; max_concurrent: number; requests_per_minute: number;
   user_day_usd: number; user_month_usd: number; global_day_usd: number;
 };
-export type Plan = { code: PlanCode; available: boolean; company_limit: number; strategy_limit: number | null; flags: Flags; policy: UsagePolicy };
+export type Plan = { code: PlanCode; offer_id?: string; available: boolean; company_limit: number; strategy_limit: number | null; flags: Flags; policy: UsagePolicy };
 export type Market = {
   code: MarketCode; locale: string; currency: string; timezone: string;
   status: "DRAFT" | "READY" | "ACTIVE" | "PAUSED" | "DISABLED";

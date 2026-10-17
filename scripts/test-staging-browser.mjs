@@ -146,6 +146,14 @@ try{
  }
  await page.screenshot({path:fileURLToPath(new URL('../.test-build/staging-settings.png',import.meta.url)),fullPage:true,caret:'initial'});
  passed('company_memory_diagnosis_plan_settings_pages');
+ phase='inactive_offers';await page.goto(base+'/billing');
+ for(const [count,price] of [[1,'99,99'],[3,'199,99'],[5,'399,99']]){
+  const offer=page.locator(`section[aria-label="PRO · ${count}"]`);
+  await expect(offer).toBeVisible();await expect(offer).toContainText(price);
+  await expect(offer.locator('form,button,input[name=offer_id]')).toHaveCount(0);
+ }
+ await page.screenshot({path:fileURLToPath(new URL('../.test-build/staging-inactive-offers.png',import.meta.url)),fullPage:true});
+ passed('three_exact_offers_visible_without_checkout_controls');
  phase='support_page';await page.goto(base+'/support');
  await page.locator('select[name=category]').selectOption('PRIVACY');
  await page.locator('textarea[name=description]').fill('FICTITIOUS BROWSER PRIVACY REQUEST');
