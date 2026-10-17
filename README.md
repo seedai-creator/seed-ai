@@ -1,4 +1,6 @@
 # SeedAI
+
+Atualização de 17/10/2026: [metas operacionais adotadas](docs/OPERATIONAL_TARGETS.md), [documentos consolidados](docs/legal/REVISAO_TERMOS_DE_USO.md) e [preparação Stripe](docs/STRIPE_ACTIVATION.md). A preparação de PRO 1/3/5 preserva R$ 99,99/199,99/399,99 e US$ 4/8/16; não ativa ofertas nem cobra clientes. `node scripts/check-stripe-preparation.mjs --run`, após `npm test`, inventaria somente preços Stripe de teste, recusa chave live e gera relatório privado sem alterar o provedor. A associação das três ofertas às permissões e as verificações factuais de privacidade continuam necessárias antes da abertura. O [estado da Fase 13](docs/PHASE_13_STATUS.md) distingue validações concluídas de liberação comercial.
 Inteligência estratégica empresarial. Next.js 16 App Router, React, TypeScript,
 Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 

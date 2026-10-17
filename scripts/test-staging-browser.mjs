@@ -179,15 +179,19 @@ try{
  }
  phase='admin_second_factor';
  const auth=client(config.url,config.publicKey);data(await auth.auth.signInWithPassword({email:operator.email,password:operator.password}),'admin_login');
+ phase='admin_mfa_enrollment';
  const factor=data(await auth.auth.mfa.enroll({factorType:'totp',issuer:'SEED QA',friendlyName:'FICTITIOUS QA'}),'mfa_enroll');
  data(await auth.auth.mfa.challengeAndVerify({factorId:factor.id,code:totp(factor.totp.secret)}),'mfa_enrollment_verify');
  const adminContext=await browser.newContext(),adminPage=await adminContext.newPage();adminPage.setDefaultTimeout(60000);adminPage.setDefaultNavigationTimeout(90000);
+ phase='admin_password_only_denied';
  await login(adminPage,operator);await adminPage.goto(base+'/admin');await expect(adminPage).toHaveURL(/\/admin\/security$/);
  // TOTP verification cannot reuse the enrollment code in the same 30s window.
  await new Promise(resolve=>setTimeout(resolve,31000-Date.now()%30000));
+ phase='admin_totp_verification';
  await adminPage.locator('input[name=code]').fill(totp(factor.totp.secret));
  await adminPage.locator('form button').click();await adminPage.waitForURL('**/admin');
- await expect(adminPage.getByRole('heading',{name:'Operação da SEED',exact:true})).toBeVisible();
+ phase='admin_authenticated_heading';
+ await expect(adminPage.getByRole('heading',{name:'Operação da SeedAI',exact:true})).toBeVisible();
  await adminPage.goto(base+'/admin/operations');await expect(adminPage.getByRole('heading',{name:'Operação do beta',exact:true})).toBeVisible();
  passed('admin_password_only_blocked_and_real_totp_accepted');
  phase='locales';

@@ -1,5 +1,13 @@
 # Revisão dos Termos de Uso da SeedAI
 
+## Consolidação autorizada — 17/10/2026
+
+O titular autorizou adotar as metas, ajustar documentos e preparar o Stripe, mantendo planos desativados. A versão 0.2 dos Termos incorpora os preços aprovados para preparação, FREE sem renovação, consumo PRO compartilhado entre tarefas/empresas, canal empresarial e horário de suporte. Preserva cancelamento, direitos legais e ausência de cobrança automática. Referências à revisão inicial abaixo são históricas; não solicitá-la novamente.
+
+A frase de aceite em `src/lib/operations/copy.ts` já distingue aceite dos Termos de ciência da Política nos quatro idiomas; não foi necessário alterar o formulário. A nova oferta ainda não corresponde a três preços contratáveis: faltam associação da oferta à assinatura/permissões e fluxo de mudança de plano. Procedimentos comerciais definitivos devem acompanhar a implementação, conforme [preparação Stripe](../STRIPE_ACTIVATION.md). Não publicar promessa de upgrade/prorrateio não implementada.
+
+Metas internas adotadas: [OPERATIONAL_TARGETS](../OPERATIONAL_TARGETS.md). A aprovação de ajustes não comprova os instrumentos de transferência ou a retenção dos fornecedores, nem transforma a minuta local em contrato vigente. Sem aceite retroativo e sem inserir `approved=true` para contornar pendências factuais. Os controles do aplicativo permanecem fechados.
+
 Preparação da Fase 13 em **15/10/2026**. A [minuta dos Termos](TERMOS_DE_USO_PT_BR.md) está disponível para revisão, sem aprovação, inserção no banco, aceite em nome de usuários ou publicação. Este documento registra propostas contratuais e sua correspondência com o produto; não é um parecer jurídico.
 
 **Atualização do titular em 15/10:** os documentos já foram revisados; os ajustes serão enviados. Aguardar e incorporar a versão revisada, sem pedir novamente revisão inicial nem presumir aprovação das minutas atuais. O lançamento anunciado será comercial, com cobrança e produto funcional. Qualquer referência a beta deve descrever apenas validação interna anterior ou hipótese efetivamente oferecida, nunca rotular o lançamento pago como teste público.
@@ -21,14 +29,14 @@ Os Termos abrangem o aplicativo e os recursos contratados. A lista de espera per
 | Conta e consultoria | Conta individual; múltiplas empresas conforme o plano, com permissões separadas. Permitir entregas legítimas de consultoria, sem revenda de contas ou compartilhamento de senha. |
 | Serviço e IA | Sem garantia de retorno ou substituição de profissionais habilitados. Preservar a responsabilidade legal do fornecedor, sem cláusula de exoneração absoluta. |
 | Conteúdo | Autorização limitada ao serviço e seus fins legítimos; uso comercial dos resultados pelo cliente, respeitados direitos de terceiros. Confirmar cadeia de direitos e condições dos provedores antes da versão final. |
-| Preços | Ainda não fixados pelos Termos. Os exemplos de R$ 49,90 e R$ 99,90 discutidos no planejamento não foram transformados em oferta aprovada. Definir preço, moeda, tributos, canais e produtos antes de cobrança real. |
+| Preços | Proposta aprovada: R$ 99,99/199,99/399,99 mensais por usuário, com 1/3/5 empresas e orçamento interno compartilhado US$ 4/8/16. Catálogo e cobrança continuam desativados. Conferir total, tributos, canal e concessão correta de limites antes da venda. |
 | Limites | Informar franquias e restrições financeiras de maneira compreensível na oferta. Não anunciar uso ilimitado nem usar “uso responsável” como justificativa genérica para reduzir qualquer entrega paga. Confirmar tratamento de falhas, reservas e contestação de consumo. |
 | Continuidade paga | Renovação somente conforme contratação expressa; teste gratuito/PRO temporário sem conversão automática. Definir upgrade, downgrade, acumulação ou não de franquias, mudanças de preço e falhas de pagamento antes da venda. |
 | Cancelamento e reembolso | Diferenciar fim da renovação, arrependimento, defeito, estorno e exclusão. Validar procedimento por canal; não limitar direitos legais ao cancelamento ao fim do ciclo. |
-| Atendimento | Confirmar recebimento, registro, responsáveis, prazos legais e solução de falhas do portal/loja. A minuta não cria uma promessa fictícia de suporte 24 horas. |
+| Atendimento | Metas adotadas em 17/10: segunda a sexta, 9h–18h de Brasília, primeira resposta em um dia útil, exceto feriados locais. Confirmar recebimento, registro, prazos legais e solução de falhas do portal/loja. Não há plantão 24 horas comprovado. |
 | Suspensão e encerramento | Exigir motivo, proporcionalidade, revisão e informação quando cabível; tratar continuidade e dados. Não impor perda automática de todo o histórico como penalidade. |
 | Privacidade | Aprovar também retenção, transferências, fornecedores, atendimento e os demais pontos da [revisão da política](REVISAO_PRIVACIDADE.md). O aceite do contrato não substitui consentimentos opcionais. |
-| Forma do aceite | Manter versão e prova de aceite, acesso anterior ao texto e cópia conservável. Rever a frase atual que combina “aceito” Termos e Política para distinguir contrato de ciência do aviso; não tratar a caixa única como autorização universal. |
+| Forma do aceite | Manter versão e prova de aceite, acesso anterior ao texto e cópia conservável. A interface já distingue contrato de ciência da Política; não tratar a caixa como autorização universal. |
 | Regiões e idiomas | Validar os mercados realmente atendidos, normas locais, textos e oferta correspondentes. Não habilitar mercados somente porque há tradução da interface. |
 
 ## Evidências no projeto
