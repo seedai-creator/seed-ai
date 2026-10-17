@@ -8,7 +8,7 @@ O modo `SEED_STAGING_HOSTED_BILLING=true` exige `SEED_ENV=staging`, `VERCEL_ENV=
 
 ## Primeiro ambiente de testes
 
-Publicação de 16/10: produção e staging possuem 43 migrações, com diferenças de ordem histórica explicitamente documentadas e catálogo comercial preservado. Preços/franquias candidatas continuam inativos. O [registro de release](PHASE_13_RELEASE_CANDIDATE.md) identifica versão, backup e rollback. A rota de saúde está publicada, o cron real concluiu e dois e-mails de teste foram entregues. A configuração/validação do GitHub ainda aguarda autorização específica para os dois secrets; não há monitor externo ativo por mera existência do workflow. Os registros datados abaixo preservam o histórico; pendências já encerradas não devem ser reabertas por leitura isolada de uma seção antiga.
+Publicação de 16/10: produção e staging possuem 43 migrações, com diferenças de ordem histórica explicitamente documentadas e catálogo comercial preservado. Preços/franquias candidatas continuam inativos. O [registro de release](PHASE_13_RELEASE_CANDIDATE.md) identifica versão, backup e rollback. Rota de saúde e cron estão ativos, dois e-mails de teste foram entregues e o monitor do GitHub foi ativado após autorização específica dos secrets. Duas execuções reais validaram inicialização e continuidade sem mensagens duplicadas. A frequência de dez minutos é solicitada, sem garantia de pontualidade; acompanhar os atrasos do provedor conforme a meta operacional. Os registros datados abaixo preservam o histórico; pendências já encerradas não devem ser reabertas por leitura isolada de uma seção antiga.
 
 1. No Supabase, criar `seed-ai-staging` vazio, preferencialmente na mesma região da produção. Não clonar dados pessoais ou empresariais da produção.
 2. Guardar a senha do banco e a chave de servidor no gerenciador de senhas. Informar à equipe somente a URL pública para identificar o projeto; nunca colar secrets no chat.
@@ -87,7 +87,7 @@ Ao terminar um ensaio, preservar o relatório, confirmar que nenhum sistema depe
 | P2 | Falha localizada, latência, resposta de IA inadequada sem impacto crítico | Registrar identificador e versão, reproduzir com fixture, corrigir, validar regressão |
 | P3 | Ajuste visual, sugestão | Registrar feedback e priorizar |
 
-O titular assumiu os alertas pelo e-mail de suporte informado; dois avisos de teste foram entregues em 16/10. Definir substituto, horários e metas de resposta antes da abertura. Não há compromisso de atendimento 24/7 configurado. Execução e persistência do monitor no GitHub ainda precisam da configuração autorizada e validação; a entrega do teste não substitui essa etapa.
+O titular assumiu os alertas pelo e-mail de suporte informado; dois avisos de teste foram entregues em 16/10. Definir substituto, horários e metas de resposta antes da abertura. Não há compromisso de atendimento 24/7 configurado. Execução e persistência do monitor no GitHub também foram validadas em dois acionamentos reais; sua periodicidade está sujeita aos atrasos do provedor.
 
 Para incidente de IA: guardar identificadores da requisição, empresa, modelo e versão da regra; recuperar apenas os dados necessários mediante autorização, separar fato/hipótese, corrigir memória incorreta pelo fluxo existente, pausar modelo/função quando necessário, acrescentar caso anonimizado ao conjunto de avaliações. Não reproduzir dados reais em logs ou tickets externos.
 
@@ -229,7 +229,7 @@ O manifesto privado registra IDs antes da conciliação. A limpeza confere metad
 
 ## Verificação externa de saúde — histórico da preparação
 
-Esta seção descreve a preparação anterior. Para os scripts atuais, publicação, teste real dos dois avisos e configuração do agendamento, seguir [Monitor independente](INDEPENDENT_MONITOR.md). O endpoint/token de servidor já estão publicados; secrets e ativação do GitHub continuam pendentes. Não executar novamente uma inicialização quando já existir estado de incidente.
+Esta seção descreve a preparação anterior. Para os scripts atuais, publicação, teste real dos dois avisos e configuração do agendamento, seguir [Monitor independente](INDEPENDENT_MONITOR.md). Endpoint, secrets e GitHub estão ativos e validados. Não executar novamente uma inicialização quando já existir estado de incidente.
 
 `GET /api/internal/health` exige `Authorization: Bearer <SEED_HEALTH_TOKEN>`, token dedicado de 32 a 256 caracteres seguros para URL. O validador recusa reutilizar credenciais privilegiadas ou expor esse token em `NEXT_PUBLIC_*`. Autenticação ocorre antes de acessar o banco; respostas são mínimas e não armazenáveis. O token permite somente consultar saúde, não executar cron, ler dados empresariais ou alterar controles.
 

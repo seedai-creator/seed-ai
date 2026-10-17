@@ -4,7 +4,7 @@ Tailwind, OpenAI Responses API e Supabase Auth/PostgreSQL.
 
 Atualização de 16/10/2026: [histórico compartilhado reconciliado](docs/MIGRATION_HISTORY.md) nos bancos de staging e produção, preservando seus schemas. O ensaio `node scripts/test-staging.mjs --run --stripe-hosted` passou com entrega HTTPS assinada, falha/reenvio, idempotência e cancelamento. Requer preparação privada do preview e webhook fictício; não é executado pelo CI. As credenciais, webhook e preview temporários foram removidos após o ensaio. Planos continuam desativados; a landing permanece publicada. [Situação e bloqueadores atuais da Fase 13](docs/PHASE_13_STATUS.md).
 
-O pacote operacional foi publicado com autorização em 16/10/2026: oito migrações aplicadas, 43 registradas em cada ambiente, saúde/cron reais conferidos e dois alertas de teste entregues. Planos e preços preservados; aplicativo fechado ao público e landing funcionando. O [monitor independente](docs/INDEPENDENT_MONITOR.md) tem periodicidade de dez minutos preparada, ainda sem ativação no GitHub enquanto aguarda confirmação específica para armazenar seus dois secrets. [Publicação e rollback](docs/PHASE_13_RELEASE_CANDIDATE.md). CI do candidato e da integração aprovadas com 554 testes, lint, tipos, auditoria e build.
+O pacote operacional foi publicado com autorização em 16/10/2026: oito migrações aplicadas, 43 registradas em cada ambiente, saúde/cron reais conferidos e dois alertas de teste entregues. Planos e preços preservados; aplicativo fechado ao público e landing funcionando. O [monitor independente](docs/INDEPENDENT_MONITOR.md) está ativo no GitHub, após autorização específica dos dois secrets: inicialização e recuperação do estado passaram em execuções reais, sem e-mails adicionais. Cron de dez minutos configurado, sujeito a atrasos do GitHub. [Publicação e rollback](docs/PHASE_13_RELEASE_CANDIDATE.md). CI do candidato e da integração aprovadas com 554 testes, lint, tipos, auditoria e build.
 
 ## Estado das fases
 - Fase 1: implementada; teste real confirmado pelo proprietário na conversa.
@@ -21,7 +21,7 @@ O pacote operacional foi publicado com autorização em 16/10/2026: oito migraç
 - Fase 10: Goals & Metrics concluídos, publicados e aceitos pelo titular em 09/10/2026 (“TUDO CERTO”); duas migrações aplicadas, 353 testes e fluxo com OpenAI real aprovados. Consulte o [relatório da Fase 10](docs/PHASE_10_DELIVERY.md).
 - Fase 11: Growth Map concluído, publicado e aceito visualmente pelo titular em 09/10/2026. Duas migrações aplicadas; build final, regras, isolamento e interpretação com OpenAI real aprovados (US$0,02731805). Onze verificações HTTP e treze arquivos estáticos aprovados no site público. Acesso temporário encerrado; teste visual sem consumo de IA. Cobertura e limitações no [relatório da Fase 11](docs/PHASE_11_DELIVERY.md).
 - Fase 12: concluída e publicada em 10/10/2026, após aprovação visual local. Consulte [o relatório](docs/PHASE_12_DELIVERY.md).
-- Fase 13: pacote operacional publicado com autorização; histórico reconciliado, 554 testes e CI aprovados. Staging, Auth/RLS/MFA, privacidade, backup/restore, Stripe em teste, filas e anexos validados conforme limites do relatório. Rota de saúde e alertas reais conferidos. Monitor no GitHub aguarda configuração/validação; documentos finais e metas operacionais continuam separados. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
+- Fase 13: pacote operacional publicado com autorização; histórico reconciliado, 554 testes e CI aprovados. Staging, Auth/RLS/MFA, privacidade, backup/restore, Stripe em teste, filas e anexos validados conforme limites do relatório. Rota de saúde, alertas e monitor no GitHub ativos e validados. Documentos finais e metas operacionais continuam separados; não há liberação comercial. Planos desativados. [Estado e bloqueadores](docs/PHASE_13_STATUS.md).
 - Fase 14: não iniciada; exige autorização.
 
 Diretriz de lançamento confirmada pelo titular em 15/10/2026: abertura pública da
@@ -85,8 +85,8 @@ confirma a rejeição de senha comprometida. Ambos removem somente suas fixtures
 Após `npm test`, `node scripts/test-staging-health.mjs --run` consulta a saúde do
 staging sem gravar dados. `node scripts/prepare-schema-audit.mjs` prepara o catálogo
 esperado para comparação, sem reparar o histórico nem aplicar migrações remotas.
-O endpoint de saúde já está publicado; a ativação externa permanece condicionada
-à configuração e validação descritas em [Monitor independente](docs/INDEPENDENT_MONITOR.md).
+O endpoint de saúde e o monitor externo estão ativos; configuração, operação e
+limites estão descritos em [Monitor independente](docs/INDEPENDENT_MONITOR.md).
 
 Ensaios adicionais (opt-in, com fixtures e limpeza): `node scripts/test-staging.mjs --run --stripe-webhook`
 valida Checkout/portal e entrega assinada pela CLI oficial no candidato local;
