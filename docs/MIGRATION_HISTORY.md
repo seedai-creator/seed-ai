@@ -37,6 +37,14 @@ O advisor de produção mantém cinco avisos informativos de tabelas internas se
 
 ## Procedimento futuro
 
+### Publicação complementar de 17/10/2026
+
+Após autorização explícita, `versioned_pro_offers` e `access_retention` foram aplicadas em produção pela integração Supabase. Os dois SQLs registrados pelo provedor foram comparados integralmente com as fontes, normalizando somente finais de linha e espaços externos; timestamps de instalação `20261017201840`/`20261017201850` foram alinhados, sem reaplicação, às versões `20261017190223`/`20261017190428`. Staging e produção têm 45 registros canônicos.
+
+Backup físico de 17/10 às 09:08:14 UTC conferido. Catálogo de produção: 83 tabelas e 112 funções, permissões da landing preservadas e somente três diferenças históricas de formatação. A função comercial modificada foi verificada pela inversão exata da substituição contra o hash anterior revisado. Planos, preços antigos, assinaturas, mercados, controles e documentos preservados; ofertas novas indisponíveis. [Publicação e limites](PHASE_13_RETENTION_OFFERS.md). Evidências antes/depois e comandos de instalação permanecem privados em `.test-build/releases/retention-2026-10-17/`.
+
+### Próximas alterações
+
 Conferir projeto e histórico; criar novas migrações pela CLI; validar primeiro no staging com os testes de RLS/integração afetados. Usar uma lista explícita das migrações autorizadas. Não reaplicar bootstrap em banco instalado. Algumas migrações pendentes de produção antecedem as da landing: não executar `db push --include-all` sem revisar tudo que será incluído.
 
 `scripts/migration-history.mjs` apenas prepara SQL revisável, exige uma lista explícita das fontes instaladas e recusa conteúdo remoto diferente. Não abre conexão nem repara automaticamente. O comparador de schema, isoladamente, não constitui autorização para reparar histórico.

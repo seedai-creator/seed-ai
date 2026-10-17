@@ -1,6 +1,6 @@
 # SeedAI — retenção mínima de acessos e restauração
 
-17/10/2026. Implementado no candidato e instalado no staging. Coleta ensaiada em preview privado temporário na Vercel e desligada ao remover esse preview; produção não recebeu a migração nem este código. Não é confirmação de cumprimento integral da obrigação legal em produção.
+17/10/2026. Migração e código publicados em produção após autorização explícita, com `SEED_ACCESS_RETENTION_ENABLED=true`. Coleta ensaiada em preview privado temporário e rotina de expurgo incluída no agendador real de produção. O firewall público continua redirecionando antes da aplicação; a verificação pública não criou acessos nem removeu esse bloqueio. Confirmar o primeiro acesso autorizado antes da abertura. Isso não comprova cobertura integral da obrigação legal. [Publicação e evidências](PHASE_13_RETENTION_OFFERS.md).
 
 ## Dados e limites
 

@@ -14,7 +14,7 @@ Fonte executável: `src/lib/commercial/pro-proposal.ts`. São limites compartilh
 
 ## Integração preparada, ainda sem venda
 
-A migração `20261017190223_versioned_pro_offers.sql` está instalada somente no staging. As versões `PRO_1_V1`, `PRO_3_V1` e `PRO_5_V1` preservam PRO como família e associam contrato, preço, assinatura, limite de empresas e franquia no servidor. O Checkout exige uma oferta disponível e seu preço exato; o retorno do navegador não concede acesso. O resolvedor de permissões, a criação de empresas e a reserva de IA usam essa associação, preservando os contratos legados.
+A migração `20261017190223_versioned_pro_offers.sql` está instalada em staging e produção; o candidato foi publicado com autorização em 17/10. As versões `PRO_1_V1`, `PRO_3_V1` e `PRO_5_V1` preservam PRO como família e associam contrato, preço, assinatura, limite de empresas e franquia no servidor. O Checkout exige uma oferta disponível e seu preço exato; o retorno do navegador não concede acesso. O resolvedor de permissões, a criação de empresas e a reserva de IA usam essa associação, preservando os contratos legados. Ofertas continuam indisponíveis; nenhum preço novo foi vinculado em produção.
 
 Os três produtos e preços correspondentes foram criados no Stripe **test mode**, todos com `active:false`. As ofertas do banco têm `available:false`; os vínculos exatos dos preços estão registrados somente no staging como `INACTIVE`. Nenhum cliente, Checkout, pagamento ou assinatura foi criado nessa preparação. `scripts/prepare-stripe-test-offers.mjs --prepare-inactive`, após compilar os testes, usa identificadores estáveis e recusa objetos existentes ativos ou incompatíveis; o manifesto privado fica em `.test-build/stripe-inactive-offers.json`. O inventário somente leitura antigo consulta apenas preços ativos e não deve ser confundido com esse manifesto.
 
@@ -22,7 +22,7 @@ Os testes locais cobrem as três empresas máximas contratadas, franquia compart
 
 ## Sequência de liberação
 
-1. Publicar o candidato e suas migrações somente após autorização. A associação já foi implementada no staging; repetir o Checkout hospedado e a entrega assinada para cada oferta antes de liberá-la, distinguindo o ensaio de banco com eventos sintéticos dos testes anteriores de rede. Preservar assinaturas antigas e histórico.
+1. Candidato e migrações publicados com autorização. Repetir o Checkout hospedado e a entrega assinada para cada oferta antes de liberá-la, distinguindo o ensaio de banco com eventos sintéticos dos testes anteriores de rede. Preservar assinaturas antigas e histórico; publicação técnica não autoriza venda.
 2. Definir mudança de plano: data efetiva, proporcionalidade, saldo consumido no ciclo e tratamento de empresas excedentes no downgrade. Não anunciar botão de upgrade antes do fluxo testado; nunca recriar saldo no mesmo ciclo por reenvio de evento.
 3. Conferir aprovação da conta Stripe para receber pagamentos, titularidade, moeda/liquidação, obrigações fiscais, termos finais, suporte, recibos e política de reembolso. Dados bancários/documentos são preenchidos no provedor, sem passar pelo repositório ou chat.
 4. Preparar produtos e preços imutáveis por oferta no ambiente apropriado. Test e live possuem objetos/credenciais distintos. Obter uma chave de servidor com permissões mínimas e segredo do endpoint live; guardar somente em secrets. Não basta trocar uma variável: cliente, validação de preço, evento, portal e ambiente recusam live hoje.
